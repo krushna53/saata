@@ -1,0 +1,68 @@
+{
+  "title": "SAJTA – South Asian Journal of Transactional Analysis",
+  "description": "The SAJTA journal (formerly known as “SAATA Journal) is a peer-reviewed e-journal focusing on Transactional Analysis theory, principles, and application in the four fields of psychotherapy, counselling, education, and organizational development. The intention is to invite Transactional Analysis trainers and trainees to articulate their learnings, applications, and innovations in Transactional Analysis theory and practice in our region. This e-journal is published starting August 2015.",
+  "currentIssue": {
+    "title": "Current Issue",
+    "issue": {
+      "name": "SAJTA Volume 10, July 2024",
+      "link": "https://bit.ly/sajta-volume-10-July-2024"
+    }
+  },
+  "previousIssues": {
+    "title": "Previous Issues",
+    "issues": [
+      {
+        "name": "SAJTA Volume 9, Number 1: July 2023",
+        "link": "/SAJTA_Vol_9_Jul_2023.pdf"
+      },
+      {
+        "name": "SAJTA Volume 8, Number 1: July, 2022",
+        "link": "/SAJTA-Volume-8-Number-1-July-2022.pdf"
+      },
+      {
+        "name": "SAJTA Volume 7, Number 2: July, 2021",
+        "link": "/SAJTA-Volume-7-Number-2-July-2021.pdf"
+      },
+      {
+        "name": "SAJTA Volume 7, Number 1: Jan, 2021",
+        "link": "/SAJTA-Volume-7-Number-1-Jan-2021.pdf"
+      },
+      {
+        "name": "SAJTA Volume 6, Number 2: July, 2020",
+        "link": "/SAJTA-Volume-6-Number-2-Jul-2020.pdf"
+      },
+      {
+        "name": "SAJTA Volume 5, Number 2: July, 2019",
+        "link": "/SAJTA-Volume-5-Number-2-July-2019.pdf"
+      },
+      {
+        "name": "SAJTA Volume 5, Number 1: January, 2019",
+        "link": "/SAJTA-Volume-5-Number-1-Jan-2019.pdf"
+      },
+      {
+        "name": "SAJTA Volume 4, Number 2: July, 2018",
+        "link": "/SAJTA-Volume-4-Number-2-Jul-2018-2.pdf"
+      },
+      {
+        "name": "SAJTA Volume 4, Number 1: January, 2018",
+        "link": "/SAJTA-Journal-Volume-4-Number-1-January-2018.pdf"
+      },
+      {
+        "name": "SAATA Journal Volume 3, Number 1: January, 2017",
+        "link": "/SAATA-Journal-Volume-3-Number-1-January-2017.pdf"
+      },
+      {
+        "name": "SAATA Journal Volume 2, Number 2: August, 2016",
+        "link": "/SAATA-Journal-Volume-2-Number-2-August-2016.pdf"
+      },
+      {
+        "name": "SAATA Journal Volume 2, Number 1: January, 2016",
+        "link": "/SAATA-Journal-Volume-2-Number-1-January-2016.pdf"
+      },
+      {
+        "name": "SAATA Journal Volume 1, Number 1: August, 2015",
+        "link": "/SAATA-Journal-Volume-1-Number-1-August-2015.pdf"
+      }
+    ]
+  }
+}
