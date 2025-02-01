@@ -455,7 +455,7 @@ code {
 
 .board-of-members-image img {
   width: 100%;
-
+object-fit: cover;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -3153,4 +3153,21 @@ ul .menu_item:hover > a {
   .excel-display {
     max-width: 380px !important;
 }
+}
+.ticket-button-container{
+  margin: 10px auto;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.disabled-link {
+  cursor: not-allowed;
+  text-decoration: none;
+  padding: 10px 20px;
+  color:#fff;
+  border-radius: 8px;
+  border: none;
+  margin: auto;
+  background: #a37bb6;
+  text-transform: uppercase;
 }

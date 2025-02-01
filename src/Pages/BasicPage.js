@@ -87,6 +87,9 @@ const BasicPage = () => {
           const faqReferences = item.fields.faq || [];
           const hasFaqReference = faqReferences.length > 0;
 
+          // Check if the slug matches '/page/saata-conference'
+          const isSaataConference = slug === 'saata-conference';
+          
           return (
             <React.Fragment key={id}>
               <div className="about_us about_ta">
@@ -98,6 +101,14 @@ const BasicPage = () => {
                     <img src={imageUrl} alt={imageUrl.title} />
                     <h3>{subTitle}</h3>
                   </div>
+                  {/* Conditionally render the button above the content */}
+                  {isSaataConference && (
+                    <div className="ticket-button-container">
+                      <button disabled className="disabled-link">
+                        Tickets opening soon...
+                      </button>
+                    </div>
+                  )}
                   <div className="about_us_content">
                     {richTextContent}
                   </div>
