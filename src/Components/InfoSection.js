@@ -58,7 +58,11 @@ const InfoSection = () => {
   return (
     <div className="main-container">
       <h2 className="main_title"></h2>
-      {/* <h2 className="main_title">Multi Level Learning, Chennai 6th-7th January, 2024.</h2> */}
+      <div style={{color:"black", textAlign:"center", fontSize:"25px",margin:"10px 0"}}><a href="/page/saata-conference" style={{display:"block", width:"500px", margin:"auto"}}><img src="https://images.ctfassets.net/acxjtojz8lp2/3jJtJRK7b73qNqTgBzW2Hu/e9f26e13539025cf348ddb5c4f86cc2a/event-img.png" alt="banner"  style={{textAlign:"center", margin:"auto",}}/></a>
+      <h3 style={{marginBottom:"50px",marginTop:"20px", color:"#a37bb6", fontSize:"35px", textTransform:"uppercase"}}>
+      Tickets opening soon...
+      </h3>
+      </div>
       {info.map((item, index) => {
         const richTextContent = documentToReactComponents(item.infoDesc, {
           renderNode: {
