@@ -2201,7 +2201,9 @@ ul .menu_item:hover > a {
 
 .page-saata-calendar th,
 .page-saata-calendar td,
-.page-saata-calendar tr {
+.page-saata-calendar tr,
+.page-sajta-event tr,
+.page-sajta-event td{
   border: 1px solid #333 !important;
 }
 
@@ -2492,7 +2494,8 @@ ul .menu_item:hover > a {
   .page-saata-calendar .about_us.about_ta,
   .page-saata-bot .about_us.about_ta,
   .page-saata-conference .about_us.about_ta,
-  .page-saata-conference-2025 .about_us.about_ta {
+  .page-saata-conference-2025 .about_us.about_ta,
+  .page-sajta-event  .about_us.about_ta{
     padding: 18px 0px;
     max-width: 318px !important;
   }
@@ -2577,7 +2580,8 @@ ul .menu_item:hover > a {
   .page-newsletter-advertisement-policy .about_us,
   .page-journals .about_us,
   .page-awards .about_us,
-  .page-service-award .about_us {
+  .page-service-award .about_us,
+  .page-sajta-event .about_us {
     max-width: 342px;
     margin: 0px auto;
   }
@@ -2733,9 +2737,10 @@ ul .menu_item:hover > a {
   .page-ta-101-program-details .about_us_content table,
   .page-saata-calendar .about_us_content table,
   .page-saata-bot .about_us_content table,
+  .page-sajta-event .about_us_content table,
   table {
-    display: block;
-    overflow-y: scroll;
+    display: block !important;
+    overflow-y: scroll !important;
   }
   #tw-target-text a {
     display: block;
