@@ -1,49 +1,69 @@
 import React, { useState } from "react";
-// import ReCAPTCHA from "react-google-recaptcha";
+import jsPDF from "jspdf";
 
 const CertificateForm = () => {
   const [name, setName] = useState("");
-  // const [captchaValue, setCaptchaValue] = useState(null);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    
     if (!name) {
       setError("Name is required");
+      setSuccess(""); // Clear success message
       return;
     }
-    // if (!captchaValue) {
-    //   setError("Please complete the CAPTCHA");
-    //   return;
-    // }
 
-    // Validate if user was a participant
-    // const response = await fetch("/api/validate-participant", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ name }),
-    // });
-    // const data = await response.json();
-    // if (!data.valid) {
-    //   setError("You were not a registered participant.");
-    //   return;
-    // }
+    // Simulated participant validation
+    const registeredParticipants = ["John Doe", "Jane Smith", "Keshariya Vinod A"];
 
-    // // Save participant data
-    // await fetch("/api/save-participant", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ name, date: new Date().toISOString() }),
-    // });
+    if (!registeredParticipants.some(participant => participant.toLowerCase() === name.trim().toLowerCase())) {
+      setError("You were not a registered participant.");
+      setSuccess(""); // Clear success message
+      return;
+    }
 
-    // Redirect to download certificate
-    // window.location.href = `/api/generate-certificate?name=${encodeURIComponent(name)}`;
+    setError(""); // Clear any errors
+    generateCertificate(name);
+  };
+
+  const generateCertificate = (userName) => {
+    const pdf = new jsPDF("landscape");
+  
+    const img = new Image();
+    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
+  
+    img.onload = () => {
+      pdf.addImage(img, "JPEG", 0, 0, 297, 210); // Full certificate background
+  
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(26);
+  
+      // Calculate exact center position based on text width
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const nameWidth = pdf.getTextWidth(userName);
+      const nameX = (pageWidth - nameWidth) / 2.4; // Center horizontally
+      const nameY = 90; // Adjust to be aligned under "This certifies that"
+  
+      // Add participant's name in bold
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(userName, nameX, nameY);
+  
+      pdf.save(`${userName}_certificate.pdf`);
+
+      // Show success message after download
+      setSuccess(`Certificate successfully downloaded for ${userName}`);
+    };
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-2xl font-bold mb-4">Generate Your Certificate</h1>
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="certificate container mx-auto p-4 max-w-md">
+      <h1 className="text-2xl font-bold mb-4">Generate Your MLL Certificate</h1>
+      
+      {error && <p className="error text-red-500">{error}</p>}
+      {success && <p className="success text-green-500">{success}</p>}
+      
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -52,8 +72,7 @@ const CertificateForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {/* <ReCAPTCHA sitekey="your-site-key" onChange={setCaptchaValue} /> */}
-        <button type="submit" style={{background: 'blue'}}  className=" text-white p-2 w-full mt-4">
+        <button type="submit" className="submit-btn text-white w-full mt-4">
           Submit
         </button>
       </form>
