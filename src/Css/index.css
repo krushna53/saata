@@ -3177,12 +3177,10 @@ ul .menu_item:hover > a {
   text-transform: uppercase;
 }
 .submit-btn{
-  padding: 8px 20px;
-  border-radius: 8px;
-  border: none;
-  background: #a37bb6;
-  cursor: pointer;
-  margin-left: 25px;
+  padding: 8px 46px;
+    border-radius: 8px;
+    border: none;
+    background: #a37bb6;
 }
 .error{
   color: red;
