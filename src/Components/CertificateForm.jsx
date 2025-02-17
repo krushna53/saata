@@ -24,7 +24,7 @@ const CertificateForm = () => {
     }
 
     // Simulated participant validation
-    const registeredParticipants = ["John Doe", "Jane Smith"];
+    const registeredParticipants = ["Pooja Sahitya Choudhary", "Prathitha Gangadharan", "KANAKA RAVI"];
 
     if (!registeredParticipants.some(participant => participant.toLowerCase() === name.trim().toLowerCase())) {
       setError("You were not a registered participant.");
@@ -83,7 +83,7 @@ const CertificateForm = () => {
 
         {/* Google reCAPTCHA */}
         <ReCAPTCHA
-          sitekey="YOUR_GOOGLE_RECAPTCHA_SITE_KEY"
+          sitekey="6LfHadkqAAAAAKSfV8ZiBHt_NnBQDk8MZMozUdmk"
           onChange={() => setCaptchaVerified(true)}
           className="mb-4"
         />
