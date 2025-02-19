@@ -3176,7 +3176,8 @@ ul .menu_item:hover > a {
   background: #a37bb6;
   text-transform: uppercase;
 }
-.submit-btn{
+.submit-btn,
+.download-btn{
   padding: 8px 46px;
     border-radius: 8px;
     border: none;
