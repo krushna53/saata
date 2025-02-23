@@ -177,6 +177,9 @@ const CertificateForm = () => {
           Download Certificate
         </button>
       </div>
+<p>
+  Reach out at <a href="mailto:contact@saata.org">contact@saata.org</a> in case of any difficulties in generating the certificate.
+</p>
 
       {pdfUrl && (
         <div className="mt-6 text-center">
