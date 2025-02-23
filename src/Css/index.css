@@ -3176,12 +3176,12 @@ ul .menu_item:hover > a {
   background: #a37bb6;
   text-transform: uppercase;
 }
-.submit-btn,
+.preview-btn,
 .download-btn{
-  padding: 8px 46px;
-    border-radius: 8px;
-    border: none;
-    background: #a37bb6;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #a37bb6;
 }
 .error{
   color: red;
@@ -3193,6 +3193,17 @@ ul .menu_item:hover > a {
 .success{
   color: green;
 }
-.certificate input{
-  width: 20%;
+.certificate input,
+.error{
+  width: 23.8%;
+}
+.button-wrapper{
+  display: flex;
+  gap: 5px;
+}
+@media (max-width: 768px) {
+  .certificate input,
+  .error{
+    width: 100%;
+  }
 }

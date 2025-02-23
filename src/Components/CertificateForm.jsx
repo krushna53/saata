@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import jsPDF from "jspdf";
 import Recaptcha from "./Recaptcha";
@@ -6,12 +6,11 @@ import Recaptcha from "./Recaptcha";
 const CertificateForm = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [registeredParticipants, setRegisteredParticipants] = useState([]);
   const [captchaToken, setCaptchaToken] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null); // Store PDF preview URL
 
-  const recaptchaRef = useRef(null);
+  // const recaptchaRef = useRef(null);
 
   useEffect(() => {
     fetch("/certificateName.csv")
@@ -39,18 +38,14 @@ const CertificateForm = () => {
       });
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handlePreview = async () => {
     if (!name.trim()) {
       setError("Name is required");
-      setSuccess("");
       return;
     }
 
     if (!captchaToken) {
       setError("Please verify the reCAPTCHA.");
-      setSuccess("");
       return;
     }
 
@@ -59,8 +54,7 @@ const CertificateForm = () => {
         (p) => p?.toLowerCase() === name.trim().toLowerCase()
       )
     ) {
-      setError("You were not a registered participant.");
-      setSuccess("");
+      setError("You are either not a registered participant or your name does not match our records. Kindly ensure that you enter your name exactly as it appears in the records .");
       return;
     }
 
@@ -90,49 +84,99 @@ const CertificateForm = () => {
       const pdfBlob = pdf.output("blob");
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(pdfUrl);
-      // ✅ Clear input fields after successful download
-      setTimeout(() => {
-        setName("");
-        setSuccess("");
-        setError("");
-        setCaptchaToken(null);
-        recaptchaRef.current?.resetRecaptcha(); // Reset reCAPTCHA
-      }, 2000); // Clears after 2 seconds
     };
   };
 
   const downloadCertificate = () => {
-    if (!pdfUrl) return;
-    const link = document.createElement("a");
-    link.href = pdfUrl;
-    link.download = `${name}_certificate.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (!name.trim()) {
+      setError("Name is required");
+      return;
+    }
+  
+    if (!captchaToken) {
+      setError("Please verify the reCAPTCHA.");
+      return;
+    }
+  
+    if (
+      !registeredParticipants.some(
+        (p) => p?.toLowerCase() === name.trim().toLowerCase()
+      )
+    ) {
+      setError("You are either not a registered participant or your name does not match our records. Kindly ensure that you enter your name exactly as it appears in the records .");
+      return;
+    }
+  
+    // If the user is a registered participant, allow download
+    const pdf = new jsPDF("landscape");
+    const img = new Image();
+    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
+  
+    img.onload = () => {
+      pdf.addImage(img, "JPEG", 0, 0, 297, 210);
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(26);
+  
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const nameWidth = pdf.getTextWidth(name);
+      const nameX = (pageWidth - nameWidth) / 2.4;
+      const nameY = 90;
+  
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(name, nameX, nameY);
+  
+      const pdfBlob = pdf.output("blob");
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+      // Create and trigger the download link
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = `${name}_certificate.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      // Refresh the page after download
+      setTimeout(() => {
+        window.location.reload(); // Refresh the page after download
+      }, 100); // Delay the reload slightly to ensure download has started
+    };
   };
+  
+  
 
   return (
     <div className="certificate container mx-auto p-4 max-w-md">
       <h1 className="text-2xl font-bold mb-4">Generate Your MLL Certificate</h1>
 
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
+      {error && <p className="text-red-500 error">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="border p-2 w-full mb-4"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <input
+        type="text"
+        className="border p-2 w-full mb-4"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-        <Recaptcha onVerify={setCaptchaToken} />
+      <Recaptcha onVerify={setCaptchaToken} />
 
-        <button type="submit" className="submit-btn text-white w-full mt-4">
-          Submit
+      <div className="button-wrapper flex justify-between mt-4">
+        <button
+          type="button"
+          onClick={handlePreview}
+          className="preview-btn text-white w-1/2 mr-2"
+        >
+          Preview
         </button>
-      </form>
+        <button
+          type="button"
+          onClick={downloadCertificate}
+          className="download-btn text-white w-1/2 ml-2"
+        >
+          Download Certificate
+        </button>
+      </div>
 
       {pdfUrl && (
         <div className="mt-6 text-center">
@@ -144,12 +188,6 @@ const CertificateForm = () => {
             className="border rounded shadow-md"
             title="Certificate Preview"
           ></iframe>
-          <button
-            onClick={downloadCertificate}
-            className="download-btn mt-4 text-white"
-          >
-            Download Certificate
-          </button>
         </div>
       )}
     </div>
