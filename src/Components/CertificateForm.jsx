@@ -177,7 +177,7 @@ const CertificateForm = () => {
           Download Certificate
         </button>
       </div>
-<p>
+<p className="reach-text">
   Reach out at <a href="mailto:contact@saata.org">contact@saata.org</a> in case of any difficulties in generating the certificate.
 </p>
 

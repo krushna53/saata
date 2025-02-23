@@ -3203,6 +3203,12 @@ ul .menu_item:hover > a {
   display: flex;
   gap: 5px;
 }
+.reach-text{
+  margin: 10px 0;
+}
+.reach-text a{
+  text-decoration: underline;
+}
 @media (max-width: 768px) {
   .certificate input,
   .error{
