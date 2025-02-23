@@ -3193,9 +3193,11 @@ ul .menu_item:hover > a {
 .success{
   color: green;
 }
-.certificate input,
-.error{
+.certificate input{
   width: 23.8%;
+}
+.error{
+   width: 50%;
 }
 .button-wrapper{
   display: flex;
