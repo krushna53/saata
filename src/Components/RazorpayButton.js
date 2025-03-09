@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ref, set } from "firebase/database";
-import { auth, database } from "../Firebase";
 
 const RazorpayButton = () => {
   const [formData, setFormData] = useState({
@@ -68,47 +66,6 @@ const RazorpayButton = () => {
     }
     return true;
   };
-
-  // Save Payment Details to Firebase
-  const savePaymentToFirebase = (
-    paymentData,
-    formData,
-    conferenceType,
-    membershipType,
-    ticketType
-  ) => {
-    if (!auth.currentUser) {
-      console.error("User not authenticated, cannot save data.");
-      return;
-    }
-
-    const userId = auth.currentUser.uid;
-
-    set(
-      ref(database, `payments/${userId}/${paymentData.razorpay_payment_id}`),
-      {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        conferenceType: conferenceType.replace("_", " "),
-        membershipType: membershipType.replace("_", " "),
-        ticketType: ticketType.replace("_", " "),
-        amount: paymentData.amount,
-        currency: "INR",
-        paymentId: paymentData.razorpay_payment_id,
-        orderId: paymentData.order_id,
-        status: "Paid",
-        timestamp: new Date().toISOString(),
-      }
-    )
-      .then(() => {
-        console.log("Payment saved successfully!");
-      })
-      .catch((error) => {
-        console.error("Error saving payment:", error);
-      });
-  };
-
   // Handle Payment Process
   const handlePayment = async () => {
     if (!validateForm()) return;
@@ -137,10 +94,6 @@ const RazorpayButton = () => {
             order_id: orderData.id,
             amount: orderData.amount,
           };
-
-          // Save payment details to Firebase
-          savePaymentToFirebase(paymentData);
-
           alert("Payment Successful!");
           resetForm();
         },
