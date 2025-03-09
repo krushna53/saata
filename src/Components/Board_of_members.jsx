@@ -67,7 +67,7 @@ function BoardOfMembers() {
     try {
       const response = await client.getEntries({ content_type: "boardOfMembers" });
       const responseData = response.items;
-      console.log(responseData);
+      // console.log(responseData);
       if (responseData) {
         cleanUpInfo(responseData);
       } else {
