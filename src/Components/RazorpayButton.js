@@ -109,7 +109,7 @@ const RazorpayButton = () => {
 
           try {
             const saveResponse = await fetch(
-              "https://67ce929f15265f0008ebfe5f--saataorg.netlify.app/.netlify/functions/storePayment",
+              "https://saataorg.netlify.app/.netlify/functions/storePayment",
               {
                 method: "POST",
                 headers: {
