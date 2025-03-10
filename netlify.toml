@@ -1,6 +1,6 @@
 [build]
   publish = "build"
-  command = "npm install && npm run build --force"
+ command = "npm install --legacy-peer-deps && npm run build"
   functions = "Backend/netlify/functions"
 
 [[redirects]]
