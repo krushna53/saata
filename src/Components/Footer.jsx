@@ -14,7 +14,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <img src="../images/itaa2.png" alt="logo" />
+                  <img src="./images/itaa2.png" alt="logo" />
                 </a>
               </div>
             </div>
