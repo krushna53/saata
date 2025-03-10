@@ -1,17 +1,23 @@
-[[redirects]]
-from = "/create-order"
-to = "/.netlify/functions/create-order"
-status = 200
-force = true
+[build]
+  base = "Backend"  
+  publish = "build"  
+  command = "npm run build"  
+  functions = "netlify/functions"  
 
 [[redirects]]
-from = "/webhooks"
-to = "/.netlify/functions/webhooks"
-status = 200
-force = true
+  from = "/create-order"
+  to = "/.netlify/functions/create-order"
+  status = 200
+  force = true
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-force = true
+  from = "/store-payment"
+  to = "/.netlify/functions/storePayment"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
