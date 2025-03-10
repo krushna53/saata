@@ -3,33 +3,37 @@ const { format } = require("fast-csv");
 const db = require("../../firebaseAdmin");
 
 exports.handler = async (event) => {
+  const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
+  // ✅ Handle preflight (CORS OPTIONS request)
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: "",
+    };
+  }
+
+  // ✅ Ensure only POST requests are processed
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ success: false, message: "Method Not Allowed" }),
+    };
+  }
+
   try {
-    // ✅ Handle CORS preflight requests
-    if (event.httpMethod === "OPTIONS") {
-      return {
-        statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-        body: "",
-      };
-    }
-
-    if (event.httpMethod !== "POST") {
-      return {
-        statusCode: 405,
-        headers: { "Access-Control-Allow-Origin": "*" }, // ✅ CORS here
-        body: JSON.stringify({ success: false, message: "Method Not Allowed" }),
-      };
-    }
-
     const paymentData = JSON.parse(event.body);
+    
     if (!paymentData.id) {
       return {
         statusCode: 400,
-        headers: { "Access-Control-Allow-Origin": "*" }, // ✅ CORS here
+        headers: CORS_HEADERS,
         body: JSON.stringify({ success: false, message: "Invalid data" }),
       };
     }
@@ -38,8 +42,8 @@ exports.handler = async (event) => {
     const docRef = db.collection("payments").doc(paymentData.id);
     await docRef.set(paymentData);
 
-    // ✅ Append data to CSV (Netlify file system issue workaround)
-    const filePath = "/tmp/payments.csv"; // ✅ Netlify Functions can only write to /tmp
+    // ✅ Append data to CSV (Netlify can only write to `/tmp/`)
+    const filePath = "/tmp/payments.csv"; 
     const headers = ["id", "order_id", "amount", "currency", "status", "email", "contact", "method", "notes", "created_at"];
     
     let writeHeader = false;
@@ -56,7 +60,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { "Access-Control-Allow-Origin": "*" }, // ✅ Always include CORS
+      headers: CORS_HEADERS,
       body: JSON.stringify({ success: true, message: "Payment stored successfully" }),
     };
   } catch (error) {
@@ -64,7 +68,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" }, // ✅ CORS for errors too
+      headers: CORS_HEADERS,
       body: JSON.stringify({ success: false, message: "Internal Server Error" }),
     };
   }
