@@ -1,20 +1,17 @@
-[build]
-  functions = "Backend/netlify/functions"  # If your functions are inside Backend/
-  # OR
-  # functions = "netlify/functions"  # If your functions are at root level
+[[redirects]]
+from = "/create-order"
+to = "/.netlify/functions/create-order"
+status = 200
+force = true
 
 [[redirects]]
-  from = "/create-order"
-  to = "/.netlify/functions/create-order"
-  status = 200
+from = "/webhooks"
+to = "/.netlify/functions/webhooks"
+status = 200
+force = true
 
 [[redirects]]
-  from = "/webhooks"
-  to = "/.netlify/functions/webhooks"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
+from = "/*"
+to = "/index.html"
+status = 200
+force = true
