@@ -66,6 +66,7 @@ const RazorpayButton = () => {
     }
     return true;
   };
+
   // Handle Payment Process
   const handlePayment = async () => {
     if (!validateForm()) return;
@@ -77,7 +78,6 @@ const RazorpayButton = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount }),
       });
-      
 
       const orderData = await response.json();
       if (!orderData || !orderData.id)
@@ -91,12 +91,45 @@ const RazorpayButton = () => {
         order_id: orderData.id,
         handler: async function (response) {
           const paymentData = {
-            razorpay_payment_id: response.razorpay_payment_id,
+            id: response.razorpay_payment_id, // Use Razorpay payment ID as unique ID
             order_id: orderData.id,
             amount: orderData.amount,
+            currency: "INR",
+            status: "success",
+            email: formData.email,
+            contact: formData.phone,
+            method: "Razorpay",
+            notes: {
+              conferenceType: conferenceType.replace("_", " "),
+              membershipType: membershipType.replace("_", " "),
+              ticketType: ticketType.replace("_", " "),
+            },
+            created_at: new Date().toISOString(),
           };
-          alert("Payment Successful!");
-          resetForm();
+
+          try {
+            const saveResponse = await fetch(
+              "https://67ce929f15265f0008ebfe5f--saataorg.netlify.app/.netlify/functions/storePayment",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(paymentData),
+              }
+            );
+
+            const saveResult = await saveResponse.json();
+            if (saveResult.success) {
+              alert("Payment Successful! Data saved.");
+              resetForm();
+            } else {
+              throw new Error("Payment succeeded but data save failed.");
+            }
+          } catch (error) {
+            console.error("❌ Error saving payment:", error);
+            alert("Payment succeeded, but there was an issue saving the data.");
+          }
         },
         prefill: { ...formData },
         notes: {
@@ -224,10 +257,11 @@ const RazorpayButton = () => {
             </label>
           ))}
         </div>
-        {/* Amount Display */}
-        <div className="text-lg font-semibold text-gray-700 p-3 border rounded-md bg-gray-100">
+          {/* Amount Display */}
+          <div className="text-lg font-semibold text-gray-700 p-3 border rounded-md bg-gray-100">
           Total: ₹{amount.toLocaleString("en-IN")}
         </div>
+
 
         {/* Payment Button */}
         <button

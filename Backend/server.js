@@ -1,34 +1,30 @@
 const express = require("express");
+const serverless = require("serverless-http");
 const fs = require("fs");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const Razorpay = require("razorpay");
-// const axios = require("axios");
-const app = express();
-const PORT = process.env.PORT || 5000;
-const db = require("./firebaseAdmin");
+const db = require("../firebaseAdmin");
 const { format } = require("fast-csv");
 require("dotenv").config();
 
-// 🔹 Replace with your Razorpay credentials
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // ✅ Create Razorpay Order
 app.post("/create-order", async (req, res) => {
   try {
     const { amount } = req.body;
-    if (!amount)
-      return res
-        .status(400)
-        .json({ success: false, message: "Amount is required" });
+    if (!amount) {
+      return res.status(400).json({ success: false, message: "Amount is required" });
+    }
 
     const options = {
       amount: amount * 100,
@@ -51,34 +47,18 @@ app.post("/webhooks", async (req, res) => {
     console.log("🔍 Webhook received:", JSON.stringify(req.body, null, 2));
 
     const paymentData = req.body;
-
     if (!paymentData.id) {
-      console.error("❌ Invalid Webhook Data:", req.body);
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid webhook data" });
+      return res.status(400).json({ success: false, message: "Invalid webhook data" });
     }
 
-    console.log("✅ Extracted Payment Data:", paymentData);
+    let createdAt = paymentData.created_at
+      ? new Date(paymentData.created_at * 1000)
+      : new Date();
 
-    // ✅ Validate `created_at` timestamp
-    let createdAt;
-    if (paymentData.created_at && !isNaN(paymentData.created_at)) {
-      createdAt = new Date(paymentData.created_at * 1000);
-    } else {
-      console.warn("⚠️ Invalid or missing created_at, using current time.");
-      createdAt = new Date(); // Fallback to current time
-    }
-
-    // ✅ Check if `createdAt` is a valid date
     if (isNaN(createdAt.getTime())) {
-      console.error("❌ Invalid Date:", paymentData.created_at);
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid timestamp" });
+      return res.status(400).json({ success: false, message: "Invalid timestamp" });
     }
 
-    // ✅ Save data to Firestore (Database)
     const docRef = db.collection("payments").doc(paymentData.id);
     await docRef.set({
       id: paymentData.id,
@@ -90,14 +70,13 @@ app.post("/webhooks", async (req, res) => {
       contact: paymentData.contact || "",
       method: paymentData.method || "",
       notes: paymentData.notes || [],
-      created_at: createdAt.toISOString(), // ✅ Always valid
+      created_at: createdAt.toISOString(),
     });
 
     console.log("✅ Payment saved to Firestore with ID:", paymentData.id);
 
-    // ✅ Append data to CSV in table format
     const filePath = "payments.csv";
-    const writeHeader = !fs.existsSync(filePath); // Add headers if file doesn't exist
+    const writeHeader = !fs.existsSync(filePath);
 
     const headers = [
       "id",
@@ -112,15 +91,12 @@ app.post("/webhooks", async (req, res) => {
       "created_at",
     ];
 
-    const ws = fs.createWriteStream(filePath, { flags: "a" }); // Append mode
-    const csvStream = format({
-      headers: writeHeader,
-      includeEndRowDelimiter: true,
-    });
+    const ws = fs.createWriteStream(filePath, { flags: "a" });
+    const csvStream = format({ headers: writeHeader, includeEndRowDelimiter: true });
 
     csvStream.pipe(ws).on("finish", () => console.log("✅ CSV Write Complete"));
 
-    const csvData = [
+    csvStream.write([
       paymentData.id,
       paymentData.order_id || "",
       paymentData.amount || 0,
@@ -129,28 +105,17 @@ app.post("/webhooks", async (req, res) => {
       paymentData.email || "",
       paymentData.contact || "",
       paymentData.method || "",
-      JSON.stringify(paymentData.notes || []), // Convert notes to string
-      createdAt.toISOString(), // ✅ Valid date
-    ];
+      JSON.stringify(paymentData.notes || []),
+      createdAt.toISOString(),
+    ]);
+    csvStream.end();
 
-    csvStream.write(csvData);
-    csvStream.end(); // Close stream properly
-
-    console.log("✅ Payment appended to CSV:", filePath);
-
-    res
-      .status(200)
-      .json({ success: true, message: "Payment saved successfully" });
+    res.status(200).json({ success: true, message: "Payment saved successfully" });
   } catch (error) {
     console.error("❌ Webhook Processing Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
-
-// ✅ Start Server
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// Export Netlify Function
+module.exports.handler = serverless(app);

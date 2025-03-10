@@ -4,10 +4,26 @@ const db = require("../../firebaseAdmin");
 
 exports.handler = async (event) => {
   try {
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+        body: "",
+      };
+    }
+
     const paymentData = JSON.parse(event.body);
     
     if (!paymentData.id) {
-      return { statusCode: 400, body: JSON.stringify({ success: false, message: "Invalid data" }) };
+      return {
+        statusCode: 400,
+        headers: { "Access-Control-Allow-Origin": "*" },
+        body: JSON.stringify({ success: false, message: "Invalid data" }),
+      };
     }
 
     // Save to Firebase Firestore
@@ -26,9 +42,17 @@ exports.handler = async (event) => {
     csvStream.write(Object.values(paymentData));
     csvStream.end();
 
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    return {
+      statusCode: 200,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ success: true }),
+    };
   } catch (error) {
     console.error("❌ Payment Save Failed:", error);
-    return { statusCode: 500, body: JSON.stringify({ success: false, message: "Internal Server Error" }) };
+    return {
+      statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ success: false, message: "Internal Server Error" }),
+    };
   }
 };
