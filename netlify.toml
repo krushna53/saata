@@ -1,21 +1,17 @@
 [build]
-base = ""
-publish = "build"
-command = "npm run build"
-functions = "Backend/netlify/functions"
-
+  publish = "build"  # This should be your React app's build folder
+  command = "CI= npm run build"  # Ensure the React app builds correctly
+  functions = "Backend/netlify/functions"  # This is where your Netlify functions are
 
 [[redirects]]
   from = "/create-order"
   to = "/.netlify/functions/create-order"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/store-payment"
   to = "/.netlify/functions/storePayment"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/*"
