@@ -1,8 +1,9 @@
 [build]
-  base = "Backend"  
-  publish = "build"  
-  command = "npm run build"  
-  functions = "netlify/functions"  
+base = ""
+publish = "build"
+command = "npm run build"
+functions = "Backend/netlify/functions"
+
 
 [[redirects]]
   from = "/create-order"
