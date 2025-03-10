@@ -5,7 +5,7 @@
 
 [[redirects]]
   from = "/create-order"
-  to = "/.netlify/functions/create-order"
+  to = "/.netlify/functions/creatOorder"
   status = 200
 
 [[redirects]]
