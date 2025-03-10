@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { format } = require("fast-csv");
-const db = require("./firebaseAdmin");
+const db = require("../../firebaseAdmin");
 
 exports.handler = async (event) => {
   try {
