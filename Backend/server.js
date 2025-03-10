@@ -10,7 +10,6 @@ const db = require("./firebaseAdmin");
 const { format } = require("fast-csv");
 require("dotenv").config();
 
-
 // 🔹 Replace with your Razorpay credentials
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -62,6 +61,23 @@ app.post("/webhooks", async (req, res) => {
 
     console.log("✅ Extracted Payment Data:", paymentData);
 
+    // ✅ Validate `created_at` timestamp
+    let createdAt;
+    if (paymentData.created_at && !isNaN(paymentData.created_at)) {
+      createdAt = new Date(paymentData.created_at * 1000);
+    } else {
+      console.warn("⚠️ Invalid or missing created_at, using current time.");
+      createdAt = new Date(); // Fallback to current time
+    }
+
+    // ✅ Check if `createdAt` is a valid date
+    if (isNaN(createdAt.getTime())) {
+      console.error("❌ Invalid Date:", paymentData.created_at);
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid timestamp" });
+    }
+
     // ✅ Save data to Firestore (Database)
     const docRef = db.collection("payments").doc(paymentData.id);
     await docRef.set({
@@ -74,8 +90,9 @@ app.post("/webhooks", async (req, res) => {
       contact: paymentData.contact || "",
       method: paymentData.method || "",
       notes: paymentData.notes || [],
-      created_at: new Date(paymentData.created_at * 1000).toISOString(),
+      created_at: createdAt.toISOString(), // ✅ Always valid
     });
+
     console.log("✅ Payment saved to Firestore with ID:", paymentData.id);
 
     // ✅ Append data to CSV in table format
@@ -96,7 +113,10 @@ app.post("/webhooks", async (req, res) => {
     ];
 
     const ws = fs.createWriteStream(filePath, { flags: "a" }); // Append mode
-    const csvStream = format({ headers: writeHeader, includeEndRowDelimiter: true });
+    const csvStream = format({
+      headers: writeHeader,
+      includeEndRowDelimiter: true,
+    });
 
     csvStream.pipe(ws).on("finish", () => console.log("✅ CSV Write Complete"));
 
@@ -110,7 +130,7 @@ app.post("/webhooks", async (req, res) => {
       paymentData.contact || "",
       paymentData.method || "",
       JSON.stringify(paymentData.notes || []), // Convert notes to string
-      new Date(paymentData.created_at * 1000).toISOString(), // Convert timestamp
+      createdAt.toISOString(), // ✅ Valid date
     ];
 
     csvStream.write(csvData);
@@ -118,7 +138,9 @@ app.post("/webhooks", async (req, res) => {
 
     console.log("✅ Payment appended to CSV:", filePath);
 
-    res.status(200).json({ success: true, message: "Payment saved successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Payment saved successfully" });
   } catch (error) {
     console.error("❌ Webhook Processing Error:", error);
     res.status(500).json({

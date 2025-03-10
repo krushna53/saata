@@ -72,11 +72,12 @@ const RazorpayButton = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/create-order", {
+      const response = await fetch("/.netlify/functions/createOrder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount }),
       });
+      
 
       const orderData = await response.json();
       if (!orderData || !orderData.id)
