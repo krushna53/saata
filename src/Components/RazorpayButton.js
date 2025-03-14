@@ -6,43 +6,20 @@ const RazorpayButton = () => {
     email: "",
     phone: "",
     qualification: "",
+    organization: "",
+    designation: "",
     saataMember: "",
+    saataStudent: "",
+    membershipType: "",
     yearsTraining: "",
     trainerName: "",
     expectations: "",
     heardFrom: "",
   });
 
-  const [conferenceType, setConferenceType] = useState("");
-  const [membershipType, setMembershipType] = useState("");
-  const [ticketType, setTicketType] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(8000);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pricing Data
-  const pricing = {
-    conf: {
-      member: { super_early: 5000, early: 6000 },
-      non_member: { super_early: 7000, early: 8000 },
-    },
-    pre_conf: {
-      member: { super_early: 3000, early: 4000 },
-      non_member: { super_early: 5000, early: 6000 },
-    },
-    conf_plus_inst: {
-      member: { super_early: 8000, early: 9000 },
-      non_member: { super_early: 10000, early: 11000 },
-    },
-  };
-
-  // Calculate price dynamically
-  useEffect(() => {
-    if (conferenceType && membershipType && ticketType) {
-      setAmount(pricing[conferenceType]?.[membershipType]?.[ticketType] || 0);
-    }
-  }, [conferenceType, membershipType, ticketType]);
-
-  // Load Razorpay script dynamically
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -53,12 +30,10 @@ const RazorpayButton = () => {
     };
   }, []);
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Validate Form Before Payment
   const validateForm = () => {
     if (!formData.name || !formData.email || !formData.phone || amount === 0) {
       alert("Please fill in all required fields.");
@@ -67,7 +42,6 @@ const RazorpayButton = () => {
     return true;
   };
 
-  // Handle Payment Process
   const handlePayment = async () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
@@ -80,8 +54,7 @@ const RazorpayButton = () => {
       });
 
       const orderData = await response.json();
-      if (!orderData || !orderData.id)
-        throw new Error("Failed to create order");
+      if (!orderData || !orderData.id) throw new Error("Failed to create order");
 
       const options = {
         key: "rzp_test_eyzRpteMFBKUjv",
@@ -91,7 +64,7 @@ const RazorpayButton = () => {
         order_id: orderData.id,
         handler: async function (response) {
           const paymentData = {
-            id: response.razorpay_payment_id, // Use Razorpay payment ID as unique ID
+            id: response.razorpay_payment_id,
             order_id: orderData.id,
             amount: orderData.amount,
             currency: "INR",
@@ -100,9 +73,11 @@ const RazorpayButton = () => {
             contact: formData.phone,
             method: "Razorpay",
             notes: {
-              conferenceType: conferenceType.replace("_", " "),
-              membershipType: membershipType.replace("_", " "),
-              ticketType: ticketType.replace("_", " "),
+              organization: formData.organization,
+              designation: formData.designation,
+              saataMembership: formData.saataMember,
+              saataStudent: formData.saataStudent,
+              typeOfMembership: formData.membershipType,
             },
             created_at: new Date().toISOString(),
           };
@@ -112,9 +87,7 @@ const RazorpayButton = () => {
               "https://saataorg.netlify.app/.netlify/functions/storePayment",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(paymentData),
               }
             );
@@ -132,12 +105,6 @@ const RazorpayButton = () => {
           }
         },
         prefill: { ...formData },
-        notes: {
-          conferenceType: conferenceType.replace("_", " "),
-          membershipType: membershipType.replace("_", " "),
-          ticketType: ticketType.replace("_", " "),
-          totalAmount: amount,
-        },
         theme: { color: "#3399cc" },
       };
 
@@ -150,129 +117,73 @@ const RazorpayButton = () => {
     }
   };
 
-  // Reset form after successful payment
   const resetForm = () => {
     setFormData({
       name: "",
       email: "",
       phone: "",
       qualification: "",
+      organization: "",
+      designation: "",
       saataMember: "",
+      saataStudent: "",
+      membershipType: "",
       yearsTraining: "",
       trainerName: "",
       expectations: "",
       heardFrom: "",
     });
-    setConferenceType("");
-    setMembershipType("");
-    setTicketType("");
-    setAmount(0);
+    setAmount(8000);
     setIsSubmitting(false);
   };
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Conference Registration
-      </h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
 
       <div className="space-y-4">
-        {/* Name */}
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          placeholder="Name"
-          className="input-field"
-          onChange={handleChange}
-          required
-        />
-        {/* Email */}
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          placeholder="Email"
-          className="input-field"
-          onChange={handleChange}
-          required
-        />
-        {/* Phone */}
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          placeholder="Phone"
-          className="input-field"
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="name" value={formData.name} placeholder="Name" className="input-field" onChange={handleChange} required />
+        <input type="text" name="organization" value={formData.organization} placeholder="Organization" className="input-field" onChange={handleChange} required />
+        <input type="text" name="designation" value={formData.designation} placeholder="Designation" className="input-field" onChange={handleChange} required />
+        <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} required />
+        <input type="tel" name="phone" value={formData.phone} placeholder="Phone" className="input-field" onChange={handleChange} required />
 
-        {/* Conference Type */}
+        {/* SAATA Member Dropdown */}
         <div>
-          <p className="font-semibold">Select Conference Type:</p>
-          {["conf", "pre_conf", "conf_plus_inst"].map((value) => (
-            <label key={value} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="conferenceType"
-                value={value}
-                checked={conferenceType === value}
-                onChange={(e) => setConferenceType(e.target.value)}
-              />
-              {value.replace("_", " ")}
-            </label>
-          ))}
+          <p className="font-semibold">SAATA Member:</p>
+          <select name="saataMember" value={formData.saataMember} onChange={handleChange} className="input-field">
+            <option value="">Select</option>
+            <option value="yes">YES</option>
+            <option value="no">NO</option>
+          </select>
         </div>
 
-        {/* Membership Type */}
+        {/* SAATA Student Dropdown */}
         <div>
-          <p className="font-semibold">Select Membership Type:</p>
-          {["member", "non_member"].map((value) => (
-            <label key={value} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="membershipType"
-                value={value}
-                checked={membershipType === value}
-                onChange={(e) => setMembershipType(e.target.value)}
-              />
-              {value.replace("_", " ")}
-            </label>
-          ))}
+          <p className="font-semibold">SAATA Student:</p>
+          <select name="saataStudent" value={formData.saataStudent} onChange={handleChange} className="input-field">
+            <option value="">Select</option>
+            <option value="yes">YES</option>
+            <option value="no">NO</option>
+          </select>
         </div>
-        {/* Ticket Type */}
+
+        {/* Membership Type Dropdown */}
         <div>
-          <p className="font-semibold">Select Ticket Type:</p>
-          {["super_early", "early"].map((value) => (
-            <label key={value} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="ticketType"
-                value={value}
-                checked={ticketType === value}
-                onChange={(e) => setTicketType(e.target.value)}
-              />
-              {value.replace("_", " ")}
-            </label>
-          ))}
-        </div>
-          {/* Amount Display */}
-          <div className="text-lg font-semibold text-gray-700 p-3 border rounded-md bg-gray-100">
-          Total: ₹{amount.toLocaleString("en-IN")}
+          <p className="font-semibold">Type of Membership:</p>
+          <select name="membershipType" value={formData.membershipType} onChange={handleChange} className="input-field">
+            <option value="">Select</option>
+            <option value="Not Applicable">Not Applicable</option>
+            <option value="Associate Member">Associate Member</option>
+            <option value="Trainee Member">Trainee Member</option>
+            <option value="Certified Member">Certified Member</option>
+            <option value="Life Member">Life Member</option>
+          </select>
         </div>
 
+        <div className="text-lg font-semibold text-gray-700 p-3 border rounded-md bg-gray-100">Total: ₹{amount.toLocaleString("en-IN")}</div>
 
-        {/* Payment Button */}
-        <button
-          onClick={handlePayment}
-          className={`w-full py-3 text-white font-bold rounded-lg transition ${
-            isSubmitting || amount === 0
-              ? "bg-gray-400"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-          disabled={isSubmitting || amount === 0}
-        >
+        <button onClick={handlePayment} className={`w-full py-3 text-white font-bold rounded-lg transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`} disabled={isSubmitting || amount === 0}>
           {isSubmitting ? "Processing..." : "Pay Now"}
         </button>
       </div>
