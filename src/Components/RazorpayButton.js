@@ -94,14 +94,14 @@ const RazorpayButton = () => {
 
             const saveResult = await saveResponse.json();
             if (saveResult.success) {
-              alert("Payment Successful! Data saved.");
+              // alert("Payment Successful! Data saved.");
               resetForm();
             } else {
               throw new Error("Payment succeeded but data save failed.");
             }
           } catch (error) {
             console.error("❌ Error saving payment:", error);
-            alert("Payment succeeded, but there was an issue saving the data.");
+            // alert("Payment succeeded, but there was an issue saving the data.");
           }
         },
         prefill: { ...formData },
