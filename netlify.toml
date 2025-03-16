@@ -1,4 +1,25 @@
+[build]
+  publish = "build"
+  command = "npm install --legacy-peer-deps && npm run build"
+  functions = "Backend/netlify/functions"
+
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/create-order"
+  to = "/.netlify/functions/createOrder"
+  status = 200
+
+[[redirects]]
+  from = "/store-payment"
+  to = "/.netlify/functions/storePayment"
+  status = 200
+
+[[redirects]]
+  from = "/static/*"
+  to = "/static/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true

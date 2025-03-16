@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .table td, .table th {
     overflow-wrap: break-word; /* Allow wrapping of long text */
     white-space: normal; /* Ensure text wraps normally */

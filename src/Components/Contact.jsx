@@ -87,11 +87,11 @@ const Contact = () => {
           <form className="contact_form" onSubmit={handleSubmit}>
           
             <h2>Contact Us</h2>
-            <div class="address-container">
-    <div class="address-title">
+            <div className="address-container">
+    <div className="address-title">
       <p></p>
       </div>
-    <div class="address-line">
+    <div className="address-line">
      <p>L-505, Purva Belmont,Trichy Road, Singanallur,Coimbatore - 641005,Tamil Nadu, India <br /> </p> 
     </div>
   </div>

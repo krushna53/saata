@@ -18,6 +18,8 @@ import Faq from './Components/Faq';
 import ExcelDisplay from './Components/ExcelDisplay';
 import "./Css/input.css"
 import CertificateForm from './Components/CertificateForm';
+// import RazorpayButton from './Components/RazorpayButton';
+import Payment from './Pages/Payment'
 function App() {
   const location = useLocation();
   const activeSlug = location.pathname.split('/').pop(); // Get the last part of the URL path
@@ -50,7 +52,9 @@ function App() {
 
         <Route exact path='/mll-2025/generate-your-certificate' element={<CertificateForm />} />
         <Route exact path='/faq' element={<Faq />} />
+        <Route exact path='/Payment' element={<Payment />} />
       </Routes>
+      {/* <RazorpayButton/> */}
 
       <Footer />
     </>
