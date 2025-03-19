@@ -12,31 +12,30 @@ const CertificateForm = () => {
 
   // const recaptchaRef = useRef(null);
 
-
-    useEffect(() => {
-      fetch("/certificateName.csv")
-        .then((response) => response.text())
-        .then((csvText) => {
-          Papa.parse(csvText, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (result) => {
-              try {
-                const participants = result.data
-                  .map((row) => row.Name?.trim())
-                  .filter(Boolean);
-                setRegisteredParticipants(participants);
-              } catch (error) {
-                console.error("Error processing CSV:", error);
-                setError("Failed to load participant data.");
-              }
-            },
-          });
-        })
-        .catch((error) => {
-          console.error("Error loading CSV:", error);
-          setError("Error loading participant data.");
+  useEffect(() => {
+    fetch("/certificateName.csv")
+      .then((response) => response.text())
+      .then((csvText) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            try {
+              const participants = result.data
+                .map((row) => row.Name?.trim())
+                .filter(Boolean);
+              setRegisteredParticipants(participants);
+            } catch (error) {
+              console.error("Error processing CSV:", error);
+              setError("Failed to load participant data.");
+            }
+          },
         });
+      })
+      .catch((error) => {
+        console.error("Error loading CSV:", error);
+        setError("Error loading participant data.");
+      });
   }, []);
 
   const handlePreview = async () => {
@@ -66,9 +65,9 @@ const CertificateForm = () => {
   const generateCertificate = (userName) => {
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src =  "/Images/SATAA-certificate-2_page-0001.jpg?v=" + new Date().getTime();
+    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
+
     img.onload = () => {
-      console.log("✅ Image Loaded Successfully");
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
       pdf.setFont("times", "bold");
       pdf.setFontSize(26);
@@ -86,17 +85,6 @@ const CertificateForm = () => {
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(pdfUrl);
     };
-    img.onerror = (e) => {
-      console.error("❗ Image failed to load. Check the path or server response:", e);
-    };
-    img.onload = () => {
-      console.log("Image loaded successfully");
-      pdf.addImage(img, "JPEG", 0, 0, 297, 210);
-    };
-    img.onerror = (error) => {
-      console.error("Image failed to load:", error, img.src);
-    };
-    
   };
 
   const downloadCertificate = () => {
@@ -122,7 +110,7 @@ const CertificateForm = () => {
     // If the user is a registered participant, allow download
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA-certificate-2_page-0001.jpg?v=" + new Date().getTime();
+    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
   
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
@@ -155,7 +143,7 @@ const CertificateForm = () => {
     };
   };
   
- 
+  
 
   return (
     <div className="certificate container mx-auto p-4 max-w-md">
