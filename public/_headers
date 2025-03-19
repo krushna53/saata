@@ -6,7 +6,7 @@ Content-Type: text/csv
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=86400
 
-/*
+/*.pdf
   Content-Type: application/pdf
   Access-Control-Allow-Origin: *
   Content-Disposition: inline
