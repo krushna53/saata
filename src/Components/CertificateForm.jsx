@@ -13,7 +13,7 @@ const CertificateForm = () => {
   // const recaptchaRef = useRef(null);
 
   useEffect(() => {
-    fetch("/certificateName.csv")
+    fetch("/mll-2025/certificateName.csv")
       .then((response) => response.text())
       .then((csvText) => {
         Papa.parse(csvText, {

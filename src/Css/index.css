@@ -3193,8 +3193,8 @@ ul .menu_item:hover > a {
 .success{
   color: green;
 }
-.certificate input{
-  width: 23.8%;
+.page-generate-your-certificate .certificate input{
+  width: 74.8%;
 }
 .error{
    width: 50%;
