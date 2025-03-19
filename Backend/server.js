@@ -12,22 +12,11 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const path = require("path");
 
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-require("dotenv").config();
+// Serve static files from the public folder
+app.use("/Images", express.static(path.join(__dirname, "../public/Images")));
 
-const verifyRecaptchaRoute = require("./api/verify-recaptcha"); // Ensure correct path
-const PORT = process.env.PORT || 5000;
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use("/api", verifyRecaptchaRoute); // <-- Ensure this is set
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
