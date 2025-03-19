@@ -65,7 +65,7 @@ const CertificateForm = () => {
   const generateCertificate = (userName) => {
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
+    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
 
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
@@ -110,7 +110,7 @@ const CertificateForm = () => {
     // If the user is a registered participant, allow download
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
+    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
   
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
