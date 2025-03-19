@@ -65,7 +65,7 @@ const CertificateForm = () => {
   const generateCertificate = (userName) => {
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
+    img.src = "https://images.ctfassets.net/acxjtojz8lp2/5pXWHLBEqK7wi4xaISKGrc/4e58d2f10db44947f1a0c70abdd09c21/SATAA_certificate-2_page-0001.jpg";
 
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
@@ -110,7 +110,7 @@ const CertificateForm = () => {
     // If the user is a registered participant, allow download
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA certificate-2_page-0001.jpg";
+    img.src = "https://images.ctfassets.net/acxjtojz8lp2/5pXWHLBEqK7wi4xaISKGrc/4e58d2f10db44947f1a0c70abdd09c21/SATAA_certificate-2_page-0001.jpg";
   
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
