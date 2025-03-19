@@ -103,11 +103,18 @@ const RazorpayButton = () => {
             contact: formData.phone,
             method: "Razorpay",
             notes: {
+              age: formData.age,
+              gender: formData.gender,
+              qualification: formData.qualification,
+              occupation: formData.occupation,
               organization: formData.organization,
               designation: formData.designation,
               saataMembership: formData.saataMember,
               saataStudent: formData.saataStudent,
               typeOfMembership: formData.membershipType,
+              delegateType: formData.delegateType,
+              participation: formData.participation,
+              pricingCategory: formData.pricingCategory
             },
             created_at: new Date().toISOString(),
           };
