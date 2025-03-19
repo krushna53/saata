@@ -3,8 +3,3 @@
 /Images/*
   Content-Type: image/jpeg
   Access-Control-Allow-Origin: *
-
-/*
-  Content-Type: application/pdf
-  Access-Control-Allow-Origin: *
-  Content-Disposition: inline
