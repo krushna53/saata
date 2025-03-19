@@ -1,2 +1,4 @@
 /certificateName.csv
 Content-Type: text/csv
+/Images/*
+  Content-Type: image/jpeg
