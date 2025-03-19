@@ -66,8 +66,7 @@ const CertificateForm = () => {
   const generateCertificate = (userName) => {
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
-    console.log("✅ Image Loaded Successfully");
+    img.src =  "/Images/SATAA-certificate-2_page-0001.jpg?v=" + new Date().getTime();
     img.onload = () => {
       console.log("✅ Image Loaded Successfully");
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
@@ -90,6 +89,14 @@ const CertificateForm = () => {
     img.onerror = (e) => {
       console.error("❗ Image failed to load. Check the path or server response:", e);
     };
+    img.onload = () => {
+      console.log("Image loaded successfully");
+      pdf.addImage(img, "JPEG", 0, 0, 297, 210);
+    };
+    img.onerror = (error) => {
+      console.error("Image failed to load:", error, img.src);
+    };
+    
   };
 
   const downloadCertificate = () => {
@@ -115,7 +122,7 @@ const CertificateForm = () => {
     // If the user is a registered participant, allow download
     const pdf = new jsPDF("landscape");
     const img = new Image();
-    img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
+    img.src = "/Images/SATAA-certificate-2_page-0001.jpg?v=" + new Date().getTime();
   
     img.onload = () => {
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
@@ -148,7 +155,7 @@ const CertificateForm = () => {
     };
   };
   
-  
+ 
 
   return (
     <div className="certificate container mx-auto p-4 max-w-md">
