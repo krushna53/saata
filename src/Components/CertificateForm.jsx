@@ -13,23 +13,57 @@ const CertificateForm = () => {
   // const recaptchaRef = useRef(null);
 
   useEffect(() => {
-    fetch(`${window.location.origin}/certificateName.csv`)
-    .then(response => response.text())
-    .then(csvText => {
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (result) => {
-          const participants = result.data.map((row) => row.Name?.trim()).filter(Boolean);
-          setRegisteredParticipants(participants);
+    console.log("Starting CSV Fetch...");
+    const csvPath = `${window.location.origin}/certificateName.csv`;
+  
+    fetch(csvPath)
+      .then((response) => {
+        console.log("Response Status:", response.status);
+        console.log("Response Headers:", Object.fromEntries(response.headers.entries()));
+  
+        if (!response.ok) {
+          throw new Error(`HTTP Error! Status: ${response.status} - ${response.statusText}`);
         }
+        return response.text();
+      })
+      .then((csvText) => {
+        console.log("CSV Text Received (First 500 chars):", csvText.slice(0, 500));
+        
+        if (!csvText.trim()) {
+          throw new Error("CSV is empty or invalid");
+        }
+  
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            console.log("Parsed Data:", result.data);
+  
+            if (result.errors.length > 0) {
+              console.error("CSV Parsing Errors:", result.errors);
+              setError("Error in CSV format. Please check the data.");
+            } else {
+              try {
+                const participants = result.data
+                  .map((row) => row.Name?.trim())
+                  .filter(Boolean);
+  
+                console.log("Registered Participants:", participants);
+                setRegisteredParticipants(participants);
+              } catch (error) {
+                console.error("Error processing CSV:", error);
+                setError("Failed to load participant data.");
+              }
+            }
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Fetch or Parse Error:", error.message);
+        setError(error.message);
       });
-    })
-    .catch(error => {
-      console.error("Error loading CSV:", error);
-      setError("Error loading participant data.");
-    });
   }, []);
+  
 
   const handlePreview = async () => {
     if (!name.trim()) {
