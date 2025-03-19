@@ -67,8 +67,9 @@ const CertificateForm = () => {
     const pdf = new jsPDF("landscape");
     const img = new Image();
     img.src = "/Images/SATAA-certificate-2_page-0001.jpg";
-
+    console.log("✅ Image Loaded Successfully");
     img.onload = () => {
+      console.log("✅ Image Loaded Successfully");
       pdf.addImage(img, "JPEG", 0, 0, 297, 210);
       pdf.setFont("times", "bold");
       pdf.setFontSize(26);
@@ -85,6 +86,9 @@ const CertificateForm = () => {
       const pdfBlob = pdf.output("blob");
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(pdfUrl);
+    };
+    img.onerror = (e) => {
+      console.error("❗ Image failed to load. Check the path or server response:", e);
     };
   };
 
