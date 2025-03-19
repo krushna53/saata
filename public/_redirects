@@ -1,5 +1,1 @@
 /certificateName.csv /certificateName.csv 200
-
-/Images/*
-  Content-Type: image/jpeg
-  Access-Control-Allow-Origin: *
