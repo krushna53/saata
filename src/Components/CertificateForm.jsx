@@ -13,29 +13,22 @@ const CertificateForm = () => {
   // const recaptchaRef = useRef(null);
 
   useEffect(() => {
-    fetch("/mll-2025/certificateName.csv")
-      .then((response) => response.text())
-      .then((csvText) => {
-        Papa.parse(csvText, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (result) => {
-            try {
-              const participants = result.data
-                .map((row) => row.Name?.trim())
-                .filter(Boolean);
-              setRegisteredParticipants(participants);
-            } catch (error) {
-              console.error("Error processing CSV:", error);
-              setError("Failed to load participant data.");
-            }
-          },
-        });
-      })
-      .catch((error) => {
-        console.error("Error loading CSV:", error);
-        setError("Error loading participant data.");
+    fetch(`${window.location.origin}/certificateName.csv`)
+    .then(response => response.text())
+    .then(csvText => {
+      Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          const participants = result.data.map((row) => row.Name?.trim()).filter(Boolean);
+          setRegisteredParticipants(participants);
+        }
       });
+    })
+    .catch(error => {
+      console.error("Error loading CSV:", error);
+      setError("Error loading participant data.");
+    });
   }, []);
 
   const handlePreview = async () => {
