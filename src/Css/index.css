@@ -3209,6 +3209,26 @@ ul .menu_item:hover > a {
 .reach-text a{
   text-decoration: underline;
 }
+.page-payment .email a,
+.page-payment .phone a{
+  color:#a37bb6 ;
+}
+.page-payment .email a::before{
+  content: "\f003";
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  font-family: FontAwesome;
+  margin-right: 6px;
+}
+.page-payment .phone a::before{
+  content: "\f095";
+  font-size: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  font-family: FontAwesome;
+  margin-right: 6px;
+}
 @media (max-width: 768px) {
   .certificate input,
   .error{
@@ -3217,5 +3237,5 @@ ul .menu_item:hover > a {
 }
 
 .input-field {
-  @apply w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
 }

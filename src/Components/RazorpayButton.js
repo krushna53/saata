@@ -174,8 +174,35 @@ const RazorpayButton = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+    <div className="flex flex-col md:flex-row max-w-[85%]  mx-auto p-0 md:p-8 gap-8">
+        <div className="md:w-1/2 max-w-lg mx-auto p-6 bg-white">
+      <h1 className="text-2xl font-bold text-[#a37bb6]">SAJTA Workshop-Mark Widdowson’s Protocol</h1>
+      <div className="pt-8">
+        <h2 className="text-xl font-semibold">Introduction to Mark Widdowson’s Protocol for Case Study Research</h2>
+      </div>
+
+      <p className="font-bold mt-[3rem] mb-2">Facilitator: Aruna Gopakumar</p>
+      <p className="mt-1"><span className="font-semibold">April 7th, 6:30 to 8:00 PM via Zoom</span></p>
+      <p className="mt-1 font-semibold">Last date for registration 6th April</p>
+      <p className="mt-1 font-bold">Fee: Rs.500/-</p>
+
+      <p className="mt-[3rem] text-gray-700">
+        This 90-minute SAJTA workshop introduces Mark Widdowson’s protocol for case study research, a rigorous qualitative method for evaluating therapeutic effectiveness. Led by Aruna Gopakumar, the session covers key tools, ethical considerations, and the process of transforming case records into publishable studies. Join us to learn, reflect, and honor Mark’s legacy.
+      </p>
+
+      <div className="mt-[3rem]">
+        <h3 className="font-semibold contact-us">Contact Us:</h3>
+        <p className="flex items-center mt-1 email"> <a href="mailto:contact@saata.org" className="text-blue-600 ml-2">contact@saata.org</a></p>
+        <p className="flex items-center mt-1 phone"> <a href="tel:+919886229987" className="text-blue-600 ml-2">+91 9886229987</a></p>
+      </div>
+
+      <div className="mt-[4rem]">
+        <h3 className="font-semibold">Terms & Conditions:</h3>
+        <p className="text-gray-700">You agree to share information entered on this page with SAATA (owner of this page) and Razorpay, adhering to applicable laws.</p>
+      </div>
+    </div>
+    <div className="md:w-1/2 max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold text-[#a37bb6] mb-4">
         Conference Registration
       </h2>
 
@@ -257,7 +284,7 @@ const RazorpayButton = () => {
         />
 
         <div>
-          <p className="font-semibold">Delegate Type:</p>
+          <p className="font-semibold text-[#9ca3af]  opacity-100">Delegate Type:</p>
           <select
             name="delegateType"
             value={formData.delegateType}
@@ -272,7 +299,7 @@ const RazorpayButton = () => {
         </div>
 
         <div>
-          <p className="font-semibold">Pricing Category:</p>
+          <p className="font-semibold text-[#9ca3af]  opacity-100">Pricing Category:</p>
           <select
             name="pricingCategory"
             value={formData.pricingCategory}
@@ -286,7 +313,7 @@ const RazorpayButton = () => {
         </div>
 
         <div>
-          <p className="font-semibold">Dates of Participation:</p>
+          <p className="font-semibold text-[#9ca3af] opacity-100">Dates of Participation:</p>
           <select
             name="participation"
             value={formData.participation}
@@ -316,6 +343,7 @@ const RazorpayButton = () => {
           {isSubmitting ? "Processing..." : "Pay Now"}
         </button>
       </div>
+    </div>
     </div>
   );
 };
