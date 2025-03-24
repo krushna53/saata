@@ -41,19 +41,19 @@ const RazorpayButton = () => {
   const calculateAmount = () => {
     const pricingWithoutGST = {
       "Super Early Bird": {
-        "SAATA Member": { pre: 2500, conf: 7000, both: 8500 },
-        "Non-SAATA Member": { pre: 3500, conf: 8500, both: 11000 },
-        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "SAATA Member": { pre_conference: 2500, conference: 7000, both: 8500 },
+        "Non-SAATA Member": { pre_conference: 3500, conference: 8500, both: 11000 },
+        "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
       "Early Bird": {
-        "SAATA Member": { pre: 3000, conf: 7500, both: 10500 },
-        "Non-SAATA Member": { pre: 3500, conf: 8500, both: 12500 },
-        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "SAATA Member": { pre_conference: 3000, conference: 7500, both: 10500 },
+        "Non-SAATA Member": { pre_conference: 3500, conference: 8500, both: 12500 },
+        "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
       Regular: {
-        "SAATA Member": { pre: 4000, conf: 8300, both: 11300 },
-        "Non-SAATA Member": { pre: 5000, conf: 9500, both: 13500 },
-        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "SAATA Member": { pre_conference: 4000, conference: 8300, both: 11300 },
+        "Non-SAATA Member": { pre_conference: 5000, conference: 9500, both: 13500 },
+        "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
     };
 
@@ -109,7 +109,7 @@ const RazorpayButton = () => {
           const paymentData = {
             id: response.razorpay_payment_id,
             order_id: orderData.id,
-            amount: orderData.amount,
+            amount: orderData.amount / 100,
             currency: "INR",
             status: "success",
             email: formData.email,
@@ -283,8 +283,8 @@ const RazorpayButton = () => {
               <p className="font-semibold">Dates of Participation:</p>
               <select name="participation" value={formData.participation} onChange={handleChange} className="input-field">
                 <option value="">Select</option>
-                <option value="pre">Pre-Conference Institute (19 Sep)</option>
-                <option value="conf">Conference (20 & 21 Sep)</option>
+                <option value="pre_conference">Pre-Conference Institute (19 Sep)</option>
+                <option value="conference">Conference (20 & 21 Sep)</option>
                 <option value="both">Both (19 - 21 Sep)</option>
               </select>
             </div>
