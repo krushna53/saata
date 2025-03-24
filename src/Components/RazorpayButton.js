@@ -79,21 +79,23 @@ const RazorpayButton = () => {
     }
     return true;
   };
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const handlePayment = async () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
-
+    setPaymentSuccess(false);
+  
     try {
       const response = await fetch("/.netlify/functions/createOrder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount }),
       });
-
+  
       const orderData = await response.json();
       if (!orderData || !orderData.id) throw new Error("Failed to create order");
-
+  
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY,
         amount: orderData.amount,
@@ -102,6 +104,8 @@ const RazorpayButton = () => {
         order_id: orderData.id,
         handler: async function (response) {
           console.log("Payment Successful!");
+          setPaymentSuccess(true);
+  
           const paymentData = {
             id: response.razorpay_payment_id,
             order_id: orderData.id,
@@ -124,11 +128,11 @@ const RazorpayButton = () => {
               delegateType: formData.delegateType,
               participation: formData.participation,
               pricingCategory: formData.pricingCategory,
-              instituteOption: formData.instituteOption // Add institute option to payment data
+              instituteOption: formData.instituteOption, // Add institute option to payment data
             },
             created_at: new Date().toISOString(),
           };
-
+  
           try {
             const saveResponse = await fetch(
               "https://saataorg.netlify.app/.netlify/functions/storePayment",
@@ -138,7 +142,7 @@ const RazorpayButton = () => {
                 body: JSON.stringify(paymentData),
               }
             );
-
+  
             const saveResult = await saveResponse.json();
             if (saveResult.success) {
               resetForm();
@@ -151,9 +155,23 @@ const RazorpayButton = () => {
         },
         prefill: { ...formData },
         theme: { color: "#3399cc" },
+        modal: {
+          escape: true,
+          ondismiss: function () {
+            console.log("User canceled the transaction");
+            setIsSubmitting(false); // Reset the button state when user cancels the transaction
+          },
+        },
       };
-
+  
       const rzp1 = new window.Razorpay(options);
+  
+      rzp1.on("payment.failed", function (response) {
+        console.log("Payment Failed", response);
+        alert("Payment was not completed. Please try again.");
+        setIsSubmitting(false); // Reset the button state if payment fails
+      });
+  
       rzp1.open();
     } catch (error) {
       console.error("Payment failed", error);
@@ -218,7 +236,6 @@ const RazorpayButton = () => {
         </div>
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
-
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
             <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} required />
@@ -275,7 +292,6 @@ const RazorpayButton = () => {
               Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
             </span>
           </div>
-
           {showInstituteOptions && (
             <div className="mt-4">
               <p className="font-semibold">Select Institute Option:</p>
@@ -294,7 +310,6 @@ const RazorpayButton = () => {
               </select>
             </div>
           )}
-
           <button
             onClick={handlePayment}
             className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
@@ -302,11 +317,11 @@ const RazorpayButton = () => {
           >
             {isSubmitting ? "Processing..." : "Pay Now"}
           </button>
-          {isSubmitting === false && formData.name && (
-            <p className="text-green-600 font-semibold mt-2 text-center">
+          {paymentSuccess && (
+            <p className="text-[#9cca3b] font-semibold mt-2 text-center">
               Payment successful! Thank you for registering.
             </p>
-)}
+          )}
         </div>
       </div>
     </>
