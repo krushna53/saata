@@ -31,7 +31,7 @@ app.post("/create-order", async (req, res) => {
     }
 
     const options = {
-      amount: amount * 100,
+      amount: amount,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
@@ -67,7 +67,7 @@ app.post("/webhooks", async (req, res) => {
     await docRef.set({
       id: paymentData.id,
       order_id: paymentData.order_id || "",
-      amount: paymentData.amount || 0,
+      amount: paymentData.amount || "",
       currency: paymentData.currency || "",
       status: paymentData.status || "",
       email: paymentData.email || "",
@@ -103,7 +103,7 @@ app.post("/webhooks", async (req, res) => {
     csvStream.write([
       paymentData.id,
       paymentData.order_id || "",
-      paymentData.amount || 0,
+      paymentData.amount || "",
       paymentData.currency || "",
       paymentData.status || "",
       paymentData.email || "",
@@ -114,7 +114,7 @@ app.post("/webhooks", async (req, res) => {
     ]);
     csvStream.end();
 
-    res.status(200).json({ success: true, message: "Payment saved successfully" });
+    res.status(200).json({ success: true, message: "" });
   } catch (error) {
     console.error("❌ Webhook Processing Error:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
