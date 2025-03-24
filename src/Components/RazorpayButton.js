@@ -101,7 +101,7 @@ const RazorpayButton = () => {
         name: "Event Registration",
         order_id: orderData.id,
         handler: async function (response) {
-          alert("Payment Successful!");
+          console.log("Payment Successful!");
           const paymentData = {
             id: response.razorpay_payment_id,
             order_id: orderData.id,
@@ -302,6 +302,11 @@ const RazorpayButton = () => {
           >
             {isSubmitting ? "Processing..." : "Pay Now"}
           </button>
+          {isSubmitting === false && formData.name && (
+            <p className="text-green-600 font-semibold mt-2 text-center">
+              Payment successful! Thank you for registering.
+            </p>
+)}
         </div>
       </div>
     </>

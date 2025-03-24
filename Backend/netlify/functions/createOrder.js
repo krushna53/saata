@@ -40,7 +40,7 @@ exports.handler = async (event) => {
     }
 
     const options = {
-      amount: amount * 100, // Convert to paisa
+      amount: amount,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
