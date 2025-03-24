@@ -4,7 +4,7 @@ const fs = require("fs");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const Razorpay = require("razorpay");
-const db = require("../firebaseAdmin");
+const db = require("./firebaseAdmin");
 const { format } = require("fast-csv");
 require("dotenv").config();
 
