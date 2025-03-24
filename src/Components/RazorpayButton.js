@@ -41,19 +41,19 @@ const RazorpayButton = () => {
   const calculateAmount = () => {
     const pricingWithoutGST = {
       "Super Early Bird": {
-        "SAATA Member": { pre: 2500, conf: 7500, both: 8500 },
+        "SAATA Member": { pre: 2500, conf: 7000, both: 8500 },
         "Non-SAATA Member": { pre: 3500, conf: 8500, both: 11000 },
-        "Student(fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
       },
       "Early Bird": {
-        "SAATA Member": { pre: 3000, conf: 7500, both: 9500 },
-        "Non-SAATA Member": { pre: 4000, conf: 8500, both: 11210 },
-        "Student(fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "SAATA Member": { pre: 3000, conf: 7500, both: 10500 },
+        "Non-SAATA Member": { pre: 3500, conf: 8500, both: 12500 },
+        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
       },
       Regular: {
-        "SAATA Member": { pre: 4000, conf: 9500, both: 13500 },
-        "Non-SAATA Member": { pre: 5000, conf: 10500, both: 14500 },
-        "Student(fulltime)": { pre: 2500, conf: 6500, both: 8000 },
+        "SAATA Member": { pre: 4000, conf: 8300, both: 11300 },
+        "Non-SAATA Member": { pre: 5000, conf: 9500, both: 13500 },
+        "Student(Fulltime)": { pre: 2500, conf: 6500, both: 8000 },
       },
     };
 
@@ -74,7 +74,7 @@ const RazorpayButton = () => {
     }
     // Validate institute option if pre-conference or both is selected
     if ((formData.participation === 'pre' || formData.participation === 'both') && !formData.instituteOption) {
-      alert("Please select an institute option.");
+      // alert("Please select an institute option.");
       return false;
     }
     return true;
@@ -95,7 +95,7 @@ const RazorpayButton = () => {
       if (!orderData || !orderData.id) throw new Error("Failed to create order");
 
       const options = {
-        key: "rzp_test_eyzRpteMFBKUjv",
+        key: process.env.REACT_APP_RAZORPAY_KEY,
         amount: orderData.amount,
         currency: "INR",
         name: "Event Registration",
@@ -161,7 +161,9 @@ const RazorpayButton = () => {
       setIsSubmitting(false);
     }
   };
-
+  const currentDate = new Date();
+  const cutoffDate = new Date('2025-03-27T00:01:00'); // 27th March 1 AM
+  const showSAATAMemberOnly = currentDate < cutoffDate;
   const resetForm = () => {
     setFormData({
       name: "",
@@ -220,28 +222,44 @@ const RazorpayButton = () => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
             <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} required />
-            <input type="tel" name="phone" value={formData.phone} placeholder="Phone Number" className="input-field" onChange={handleChange} required />
-            <input type="text" name="address" value={formData.address} placeholder="Address" className="input-field" onChange={handleChange} required />
+            <input type="number" name="phone" value={formData.phone} placeholder="Phone Number" className="input-field" onChange={handleChange} pattern="[0-9]+" title="Only numbers allowed" required />
+            <input type="number" name="age" value={formData.age} placeholder="Age" className="input-field" onChange={handleChange} min="1" required />
+            <input type="text" name="gender" value={formData.gender} placeholder="Gender" className="input-field" onChange={handleChange} required />
+            <input type="text" name="qualification" value={formData.qualification} placeholder="Qualification" className="input-field" onChange={handleChange} required />
             <input type="text" name="occupation" value={formData.occupation} placeholder="Occupation" className="input-field" onChange={handleChange} required />
             <input type="text" name="organization" value={formData.organization} placeholder="Organization" className="input-field" onChange={handleChange} required />
           </div>
-
+          <div className="mt-4">
+            <textarea type="text" name="address" value={formData.address} placeholder="Address" className="input-field" onChange={handleChange} required />
+          </div>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <div className="mt-4">
               <p className="font-semibold">Delegate Type:</p>
-              <select name="delegateType" value={formData.delegateType} onChange={handleChange} className="input-field">
+              <select name="delegateType" value={formData.delegateType} onChange={handleChange} defaultValue="SAATA Member" className="input-field">
                 <option value="">Select</option>
-                <option value="SAATA Member">SAATA Member</option>
-                <option value="Non-SAATA Member">Non-SAATA Member</option>
-                <option value="Student(fulltime)">Student(fulltime)</option>
+                {showSAATAMemberOnly ? (
+                  <option value="SAATA Member">SAATA Member</option>
+                ) : (
+                  <>
+                    <option value="SAATA Member">SAATA Member</option>
+                    <option value="Non-SAATA Member">Non-SAATA Member</option>
+                    <option value="Student(Fulltime)">Student(Fulltime)</option>
+                  </>
+                )}
               </select>
             </div>
             <div className="mt-4">
               <p className="font-semibold">Pricing Category:</p>
               <select name="pricingCategory" value={formData.pricingCategory} onChange={handleChange} className="input-field">
-                <option value="Super Early Bird">Super Early Bird (Until March 24)</option>
-                <option value="Early Bird">Early Bird (Until April 10)</option>
-                <option value="Regular">Regular (Until July 10)</option>
+                {showSAATAMemberOnly ? (
+                  <option value="Super Early Bird">Super Early Bird (Until March 26)</option>
+                ) : (
+                  <>
+                    <option value="Super Early Bird">Super Early Bird (Until March 26)</option>
+                    <option value="Early Bird">Early Bird (Until April 10)</option>
+                    <option value="Regular">Regular (Until July 10)</option>
+                  </>
+                )}
               </select>
             </div>
             <div className="mt-4">
