@@ -210,6 +210,7 @@ const RazorpayButton = () => {
       <div className="block md:flex">
       <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-3xl font-bold text-purple-700">SAATA CONFERENCE 2025</h1>
+      <img className="mt-4" src="http://images.ctfassets.net/acxjtojz8lp2/3jhd043UMe18aedFDSoRjy/c2991e0479d1f063e13b0bf5d9ed7690/WhatsApp_Image_2024-12-23_at_19.45.10.jpeg"  alt="img"/>
       <h2 className="text-xl font-semibold mt-2">Exploring the Kaleidoscope of Life</h2>
       
       <p className="mt-4 text-gray-700">
@@ -330,7 +331,6 @@ const RazorpayButton = () => {
                 value={formData.instituteOption}
                 onChange={handleChange}
                 className="input-field w-full"
-                required
               >
                 <option value="">Select an Institute</option>
                 <option value="institute1">The Mythic Joureny:Myths and Paths to Selt | Aruna Gopakumar & Samhita Arni</option>
