@@ -104,7 +104,7 @@ const BasicPage = () => {
                   {/* Conditionally render the button above the content */}
                   {isSaataConference && (
                     <div className="ticket-button-container">
-                      <a href="/payment" className="disabled-link">
+                      <a href="/saata-conference-2025-registration" className="disabled-link">
                       Register Here
                       </a>
                     </div>
