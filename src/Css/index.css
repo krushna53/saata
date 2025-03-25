@@ -3166,7 +3166,7 @@ ul .menu_item:hover > a {
 }
 
 .disabled-link {
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
   text-decoration: none;
   padding: 10px 20px;
   color:#fff;

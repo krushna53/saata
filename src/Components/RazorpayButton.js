@@ -208,33 +208,63 @@ const RazorpayButton = () => {
   return (
     <>
       <div className="block md:flex">
-        <div className="md:w-1/2 max-w-lg mx-auto p-6 bg-white">
-          <h1 className="text-2xl font-bold text-[#a37bb6]">SAJTA Workshop-Mark Widdowson’s Protocol</h1>
-          <div className="pt-8">
-            <h2 className="text-xl font-semibold">Introduction to Mark Widdowson’s Protocol for Case Study Research</h2>
-          </div>
+      <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-3xl font-bold text-purple-700">SAATA CONFERENCE 2025</h1>
+      <h2 className="text-xl font-semibold mt-2">Exploring the Kaleidoscope of Life</h2>
+      
+      <p className="mt-4 text-gray-700">
+        Join us for an enriching experience at the SAATA Conference 2025, where professionals and individuals from diverse backgrounds come together to explore well-being and holistic living through the lens of Transactional Analysis and related fields.
+      </p>
 
-          <p className="font-bold mt-[3rem] mb-2">Facilitator: Aruna Gopakumar</p>
-          <p className="mt-1"><span className="font-semibold">April 7th, 6:30 to 8:00 PM via Zoom</span></p>
-          <p className="mt-1 font-semibold">Last date for registration 6th April</p>
-          <p className="mt-1 font-bold">Fee: Rs.500/-</p>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">Conference Details</h3>
+        <p className="mt-2"><strong>Pre-conference Institutes:</strong> September 19, 2025</p>
+        <p>Hotel Vestin Park, Chennai - <a href="https://www.vestinpark.com" className="text-blue-600 underline">Visit Website</a></p>
+        
+        <p className="mt-2"><strong>Conference:</strong> September 20-21, 2025</p>
+        <p>Hotel Savera, Chennai - <a href="https://www.saverahotel.com/contact-us/" className="text-blue-600 underline">Visit Website</a></p>
+      </div>
 
-          <p className="mt-[3rem] text-gray-700">
-            This 90-minute SAJTA workshop introduces Mark Widdowson’s protocol for case study research, a rigorous qualitative method for evaluating therapeutic effectiveness. Led by Aruna Gopakumar, the session covers key tools, ethical considerations, and the process of transforming case records into publishable studies. Join us to learn, reflect, and honor Mark’s legacy.
-          </p>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">THEME: KALEIDOSCOPE OF LIFE</h3>
+        <p className="mt-2 text-gray-700">
+          The kaleidoscope, where the dance of light and mirrors gives birth to enchanting, multicolored patterns, serves as a powerful symbol for the complexity of life, with its ever-changing interplay of emotions, relationships, environments, and diverse perspectives.
+        </p>
+      </div>
 
-          <div className="mt-[3rem]">
-            <h3 className="font-semibold contact-us">Contact Us:</h3>
-            <p className="flex items-center mt-1 email"> <a href="mailto:contact@saata.org" className="text-blue-600 ml-2">contact@saata.org</a></p>
-            <p className="flex items-center mt-1 phone"> <a href="tel:+919886229987" className="text-blue-600 ml-2">+91 9886229987</a></p>
-          </div>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">📌 Refund Policy:</h3>
+        <ul className="list-disc ml-6 mt-2 text-gray-700">
+          <li>Before June 16, 2025 – 90% refund</li>
+          <li>Before September 1, 2025 – 75% refund</li>
+          <li>After September 1, 2025 – No refunds</li>
+        </ul>
+      </div>
 
-          <div className="mt-[4rem]">
-            <h3 className="font-semibold">Terms & Conditions:</h3>
-            <p className="text-gray-700">You agree to share information entered on this page with SAATA (owner of this page) and Razorpay, adhering to applicable laws.</p>
-          </div>
-        </div>
-        <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">📌 Ticket Transfer Terms & Conditions:</h3>
+        <ul className="list-disc ml-6 mt-2 text-gray-700">
+          <li>Transfers must be requested via email to <a href="mailto:conference@saata.org" className="text-blue-600 underline">conference@saata.org</a> at least 7 days before the event.</li>
+          <li>The new participant must meet the eligibility criteria for the ticket category.</li>
+        </ul>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">Join Us!</h3>
+        <p className="mt-2 text-gray-700">
+          The conference is an invitation to learn, express, and experience the richness of Transactional Analysis and related fields in action!
+        </p>
+        <p className="mt-2 text-gray-700">
+          Don’t miss this opportunity to immerse yourself in the transformative power of Transactional Analysis. Whether you are a corporate leader, counselor, educator, therapist, or an individual seeking personal growth or supporting mental health of the society at large, SAATA Conference 2025 offers something valuable for everyone.
+        </p>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold">🔗 Visit <a href="https://saata.org" className="text-blue-600 underline">saata.org</a> for updates.</h3>
+        <h3 className="text-lg font-semibold mt-2">📧 For queries, write to <a href="mailto:conference@saata.org" className="text-blue-600 underline">conference@saata.org</a></h3>
+      </div>
+    </div>
+        <div className="max-w-3xl h-full mx-auto p-6 bg-white shadow-lg rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
