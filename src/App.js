@@ -52,7 +52,7 @@ function App() {
 
         <Route exact path='/mll-2025/generate-your-certificate' element={<CertificateForm />} />
         <Route exact path='/faq' element={<Faq />} />
-        <Route exact path='/Payment' element={<Payment />} />
+        <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
       </Routes>
       {/* <RazorpayButton/> */}
 

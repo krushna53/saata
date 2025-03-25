@@ -870,3 +870,15 @@ $background-color_1: rgb(232, 76, 61);
 //   display: block;
 //   background: red;
 // }
+
+.page-saata-conference .custom-rich-text-image img{
+  width: 100px;
+}
+.page-saata-conference h1 b,
+.page-saata-conference h2 b,
+.page-saata-conference h3 b
+{
+  font-size: 22px;
+  font-weight: 800;
+  margin: 5px 0;
+}
