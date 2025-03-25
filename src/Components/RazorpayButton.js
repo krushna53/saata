@@ -203,7 +203,7 @@ const RazorpayButton = () => {
   };
 
   // Show institute options only when pre-conference or both is selected
-  const showInstituteOptions = formData.participation === 'pre' || formData.participation === 'both';
+  const showInstituteOptions = formData.participation === 'pre_conference' || formData.participation === 'both';
 
   return (
     <>
@@ -333,10 +333,10 @@ const RazorpayButton = () => {
                 required
               >
                 <option value="">Select an Institute</option>
-                <option value="institute1">Working with Couples and Relationships - P K Saru</option>
-                <option value="institute2">Transactional Analysis and Trauma - Karen Minikin</option>
-                <option value="institute3">Transactional Analysis and Groups - C Suriyaprakash</option>
-                <option value="institute4">Transactional Analysis and Organizations - Sashi Chandran</option>
+                <option value="institute1">The Mythic Joureny:Myths and Paths to Selt | Aruna Gopakumar & Samhita Arni</option>
+                <option value="institute2">transitions,Transformations,and Evrything In-Between | Rosemary Kurian & Radhika layer</option>
+                <option value="institute3">Physis at the Core:AN Integrative Approach to Developmental Practice | C.Suriyaprakash</option>
+                <option value="institute4">Power,Authority,and Leadership(PAL)in Organizations | Gunjan Zutshi & Deepak Dhananjaya</option>
               </select>
             </div>
           )}
