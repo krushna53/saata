@@ -62,7 +62,7 @@ const InfoSection = () => {
       <h3 style={{marginBottom:"50px",marginTop:"20px", color:"#a37bb6", fontSize:"35px", textTransform:"uppercase"}}>
       {/* Tickets opening soon... */}
       <a href="/page/saata-conference">
-      Registration is open
+     REGISTRATIONS ARE OPEN
       </a>
       </h3>
       </div>
