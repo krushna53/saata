@@ -207,7 +207,7 @@ const RazorpayButton = () => {
 
   return (
     <>
-      <div className="block md:flex">
+      <div className="flex flex-col-reverse md:flex-row">
         <div className="h-full max-w-2xl p-6 mx-auto">
           <div className="">
             <h1 className="text-3xl font-bold text-purple-700">SAATA CONFERENCE 2025</h1>
@@ -267,7 +267,7 @@ const RazorpayButton = () => {
             </div>
           </div>
           <div className="h-full mt-14">
-            <h3 className="text-lg font-semibold">Facilitators</h3>
+            <h3 className="text-lg font-semibold">Pre Conference Institute Facilitators</h3>
             <div className="grid md:grid-cols-3">
               <div>
                 <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/33Ge5EcrQUUgzUBlP3DEUz/d9a45c977eb8aea1380df452c078324c/Aruna_Gopakumar.jpeg?h=250" alt="" />
@@ -342,10 +342,10 @@ const RazorpayButton = () => {
                 <p className="font-semibold">Pricing Category:</p>
                 <select name="pricingCategory" value={formData.pricingCategory} onChange={handleChange} className="input-field">
                   {showSAATAMemberOnly ? (
-                    <option value="Super Early Bird">Super Early Bird (Until March 26)</option>
+                    <option value="Super Early Bird">Super Early Bird</option>
                   ) : (
                     <>
-                      <option value="Super Early Bird">Super Early Bird (Until March 26)</option>
+                      <option value="Super Early Bird">Super Early Bird</option>
                       <option value="Early Bird">Early Bird (Until April 10)</option>
                       <option value="Regular">Regular (Until July 10)</option>
                     </>
