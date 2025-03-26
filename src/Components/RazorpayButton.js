@@ -180,7 +180,7 @@ const RazorpayButton = () => {
     }
   };
   const currentDate = new Date();
-  const cutoffDate = new Date('2025-03-27T00:01:00'); // 27th March 1 AM
+  const cutoffDate = new Date('2025-04-10T00:01:00'); // 10th april 1 AM
   const showSAATAMemberOnly = currentDate < cutoffDate;
   const resetForm = () => {
     setFormData({
