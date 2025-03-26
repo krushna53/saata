@@ -2001,7 +2001,7 @@ ul .menu_item:hover > a {
 
   .contact_form textarea {
     margin: 21px 0px;
-    width: 421px;
+    width: 100%;
   }
 
   .submit_btn button {
@@ -3232,6 +3232,16 @@ ul .menu_item:hover > a {
 @media (max-width: 768px) {
   .certificate input,
   .error{
+    width: 100%;
+  }
+  .contact_form{
+    width: 100%;
+  }
+  .contact_form .input_wrapper{
+    flex-direction: column;
+    gap: 20px;
+  }
+  .contact_form textarea{
     width: 100%;
   }
 }
