@@ -112,6 +112,7 @@ const RazorpayButton = () => {
             amount: orderData.amount / 100,
             currency: "INR",
             status: "success",
+            name: formData.name,
             email: formData.email,
             contact: formData.phone,
             method: "Razorpay",
