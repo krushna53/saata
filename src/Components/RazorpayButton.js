@@ -81,6 +81,12 @@ const RazorpayButton = () => {
   };
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
+  const institutes = [
+    "The Mythic Journey: Myths and Paths to Self | Aruna Gopakumar & Samhita Arni",
+    "Transitions, Transformations, and Everything In-Between | Rosemary Kurian & Radhika Layer",
+    "Physis at the Core: An Integrative Approach to Developmental Practice | C. Suriyaprakash",
+    "Power, Authority, and Leadership (PAL) in Organizations | Gunjan Zutshi & Deepak Dhananjaya"
+  ];
   const handlePayment = async () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
@@ -376,10 +382,11 @@ const RazorpayButton = () => {
                   className="input-field w-full"
                 >
                   <option value="">Select an Institute</option>
-                  <option value="institute1">The Mythic Joureny:Myths and Paths to Selt | Aruna Gopakumar & Samhita Arni</option>
-                  <option value="institute2">transitions,Transformations,and Evrything In-Between | Rosemary Kurian & Radhika layer</option>
-                  <option value="institute3">Physis at the Core:AN Integrative Approach to Developmental Practice | C.Suriyaprakash</option>
-                  <option value="institute4">Power,Authority,and Leadership(PAL)in Organizations | Gunjan Zutshi & Deepak Dhananjaya</option>
+                  {institutes.map((institute, index) => (
+                    <option key={index} value={institute}>
+                      {institute}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
