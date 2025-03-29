@@ -128,14 +128,15 @@ const RazorpayButton = () => {
               qualification: formData.qualification,
               occupation: formData.occupation,
               organization: formData.organization,
-              designation: formData.designation,
-              saataMembership: formData.saataMember,
-              saataStudent: formData.saataStudent,
-              typeOfMembership: formData.membershipType,
+              // designation: formData.designation,
+              // saataMembership: formData.saataMember,
+              // saataStudent: formData.saataStudent,
+              // typeOfMembership: formData.membershipType,
               delegateType: formData.delegateType,
               participation: formData.participation,
               pricingCategory: formData.pricingCategory,
               instituteOption: formData.instituteOption, // Add institute option to payment data
+              address: formData.address
             },
             created_at: new Date().toISOString(),
           };
