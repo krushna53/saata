@@ -19,7 +19,8 @@ const RazorpayButton = () => {
 
   const [amount, setAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [error, setError] = useState("");
+ 
   useEffect(() => {
     calculateAmount();
   }, [formData.delegateType, formData.participation, formData.pricingCategory]);
@@ -67,14 +68,21 @@ const RazorpayButton = () => {
     setAmount(totalWithGST);
   };
 
+  function valid(email) {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
+}
   const validateForm = () => {
     if (!formData.name || !formData.email || !formData.phone || amount === 0) {
-      alert("Please fill in all required fields.");
-      return false;
+      setError("Please fill in all fields.");
+      return;
     }
+      if (!valid(formData.email)) {
+        setError("Please enter a valid email address.");
+        return false;
+      }
     // Validate institute option if pre-conference or both is selected
     if ((formData.participation === 'pre' || formData.participation === 'both') && !formData.instituteOption) {
-      // alert("Please select an institute option.");
       return false;
     }
     return true;
@@ -315,11 +323,12 @@ const RazorpayButton = () => {
           </div>
         </div>
         <div className="relative max-w-3xl mx-auto  p-6 bg-white shadow-lg rounded-lg">
+        <form>
           <div className="sticky top-0 h-min">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
-              <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} required />
+              <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} pattern={valid} required/>  
               <input type="number" name="phone" value={formData.phone} placeholder="Phone Number" className="input-field" onChange={handleChange} pattern="[0-9]+" title="Only numbers allowed" required />
               <input type="number" name="age" value={formData.age} placeholder="Age" className="input-field" onChange={handleChange} min="1" required />
               <input type="text" name="gender" value={formData.gender} placeholder="Gender" className="input-field" onChange={handleChange} required />
@@ -391,6 +400,7 @@ const RazorpayButton = () => {
                 </select>
               </div>
             )}
+              {error && <div className="error w-full text-red-600 my-2.5 text-center">{error}</div>}
             <button
               onClick={handlePayment}
               className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
@@ -404,6 +414,7 @@ const RazorpayButton = () => {
               </p>
             )}
           </div>
+        </form>
         </div>
       </div>
     </>
