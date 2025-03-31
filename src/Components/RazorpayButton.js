@@ -400,7 +400,7 @@ const RazorpayButton = () => {
                 </select>
               </div>
             )}
-              {error && <div className="error tw-text-red-600 tw-mb-2.5 text-center">{error}</div>}
+              {error && <div className="error w-full text-red-600 my-2.5 text-center">{error}</div>}
             <button
               onClick={handlePayment}
               className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
