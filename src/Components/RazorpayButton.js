@@ -73,6 +73,27 @@ const RazorpayButton = () => {
     return pattern.test(email);
 }
   const validateForm = () => {
+    const requiredFields = [
+      "name",
+      "email",
+      "phone",
+      "address",
+      "age",
+      "gender",
+      "qualification",
+      "occupation",
+      "organization",
+      "delegateType",
+      "participation",
+      "pricingCategory"
+    ];
+    for (let field of requiredFields) {
+      if (!formData[field]) {
+        setError(`Please fill in the ${field} field.`);
+        return false;
+      }
+    }
+  
     if (!formData.name || !formData.email || !formData.phone || amount === 0) {
       setError("Please fill in all fields.");
       return;
@@ -136,10 +157,6 @@ const RazorpayButton = () => {
               qualification: formData.qualification,
               occupation: formData.occupation,
               organization: formData.organization,
-              // designation: formData.designation,
-              // saataMembership: formData.saataMember,
-              // saataStudent: formData.saataStudent,
-              // typeOfMembership: formData.membershipType,
               delegateType: formData.delegateType,
               participation: formData.participation,
               pricingCategory: formData.pricingCategory,
@@ -400,10 +417,10 @@ const RazorpayButton = () => {
                 </select>
               </div>
             )}
-              {error && <div className="error w-full text-red-600 my-4 text-center">{error}</div>}
+              {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
             <button
               onClick={handlePayment}
-              className={`w-full py-3 text-white font-bold rounded-lg transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+              className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
               disabled={isSubmitting || amount === 0}
             >
               {isSubmitting ? "Processing..." : "Pay Now"}
