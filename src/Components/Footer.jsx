@@ -60,6 +60,9 @@ const Footer = () => {
                   <li>
                     <Link to="/#contact">Contact Us</Link>
                   </li>
+                  <li>
+                    <Link to='/page/refund-policy'>Refund Policy</Link>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -97,7 +100,7 @@ const Footer = () => {
             </a>
           </div>
           <div className="copy_right">
-            <p>@2023 SAATA </p>
+            <p> © Copyright 2025 SAATA </p>
           </div>
         </div>
       </section>
