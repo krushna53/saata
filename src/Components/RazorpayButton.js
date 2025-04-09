@@ -299,45 +299,7 @@ const RazorpayButton = () => {
               <h3 className="text-lg font-semibold mt-2">📧 For queries, write to <a href="mailto:conference@saata.org" className="text-blue-600 underline">conference@saata.org</a></h3>
             </div>
           </div>
-          <div className="h-full mt-14">
-            <h3 className="text-lg font-semibold">Pre Conference Institute Facilitators</h3>
-            <div className="grid md:grid-cols-3">
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/33Ge5EcrQUUgzUBlP3DEUz/d9a45c977eb8aea1380df452c078324c/Aruna_Gopakumar.jpeg?h=250" alt="" />
-                <span>Aruna Gopakumar</span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/2rWqGeAEZh6yaLh4PMQ9rB/dfe59821ff6c16ff860024d48c1f3b31/Deepak_Dhananjaya.jpg?h=250" alt="" />
-                <span>Deepak Dhananjaya</span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/2mfUbPNmc6ERSH1d9UcuAm/96829c95f633297ff21d3476976869b1/Gunjan_Zutshi.jpg?h=250" alt="" />
-                <span>
-                  Gunjan Zutshi
-                </span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/473yS9ElEacdlRIRYeLFUD/7cb34a10c23389acc9755133ef681186/RadhikaIyer.jpg?h=250" alt="" />
-                <span>Radhika Iyer</span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/63SjWdYWsZX4wdR2iYsk3Q/2b43fb2cfaa081f91dcb5c72b12ef7dc/Rosemary_Kurian.jpeg?h=250" alt="" />
-                <span>
-                  Rosemary Kurian
-                </span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/2mKULMf0vqwDYCJED5AfLX/6fb247e857ae4450c8207a7128ecdb9e/Samhita_Arni.jpg?h=250" alt="" />
-                <span>
-                  Samhita Arni
-                </span>
-              </div>
-              <div>
-                <img className="w-4/5 h-4/5 object-cover object-left-top m-2" src="https://images.ctfassets.net/acxjtojz8lp2/4tJo4kPjW2HA4LEmlo7idm/b1779653d5b777e9ab260cfa157f1988/Suriyaprakash.jpg?h=250" alt="" />
-                <span>Suriyaprakash</span>
-              </div>
-            </div>
-          </div>
+         
         </div>
         <div className="relative max-w-3xl mx-auto  p-6 bg-white shadow-lg rounded-lg">
         <form className="sticky top-0 h-min">

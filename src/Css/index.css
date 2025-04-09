@@ -3229,6 +3229,13 @@ ul .menu_item:hover > a {
   font-family: FontAwesome;
   margin-right: 6px;
 }
+
+.page-saata-conference .custom-rich-text-image{
+  margin: 8px 0;
+}
+.page-saata-conference .custom-rich-text-image img{
+  height: 200px;
+}
 @media (max-width: 768px) {
   .certificate input,
   .error{
