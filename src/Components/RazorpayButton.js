@@ -13,14 +13,14 @@ const RazorpayButton = () => {
     organization: "",
     delegateType: "",
     participation: "",
-    pricingCategory: "Super Early Bird",
+    pricingCategory: "Early Bird", // Default to "Early Bird"
     instituteOption: "", // New field for institute selection
   });
 
   const [amount, setAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
- 
+
   useEffect(() => {
     calculateAmount();
   }, [formData.delegateType, formData.participation, formData.pricingCategory]);
@@ -71,7 +71,8 @@ const RazorpayButton = () => {
   function valid(email) {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return pattern.test(email);
-}
+  }
+
   const validateForm = () => {
     const requiredFields = [
       "name",
@@ -93,21 +94,22 @@ const RazorpayButton = () => {
         return false;
       }
     }
-  
+
     if (!formData.name || !formData.email || !formData.phone || amount === 0) {
       setError("Please fill in all fields.");
       return;
     }
-      if (!valid(formData.email)) {
-        setError("Please enter a valid email address.");
-        return false;
-      }
+    if (!valid(formData.email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
     // Validate institute option if pre-conference or both is selected
     if ((formData.participation === 'pre' || formData.participation === 'both') && !formData.instituteOption) {
       return false;
     }
     return true;
   };
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const institutes = [
@@ -116,21 +118,22 @@ const RazorpayButton = () => {
     "Physis at the Core: An Integrative Approach to Developmental Practice | C. Suriyaprakash",
     "Power, Authority, and Leadership (PAL) in Organizations | Gunjan Zutshi & Deepak Dhananjaya"
   ];
+
   const handlePayment = async () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
     setPaymentSuccess(false);
-  
+
     try {
       const response = await fetch("https://saataorg.netlify.app/.netlify/functions/createOrder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount }),
       });
-  
+
       const orderData = await response.json();
       if (!orderData || !orderData.id) throw new Error("Failed to create order");
-  
+
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY,
         amount: orderData.amount,
@@ -140,7 +143,7 @@ const RazorpayButton = () => {
         handler: async function (response) {
           console.log("Payment Successful!");
           setPaymentSuccess(true);
-  
+
           const paymentData = {
             id: response.razorpay_payment_id,
             order_id: orderData.id,
@@ -165,7 +168,7 @@ const RazorpayButton = () => {
             },
             created_at: new Date().toISOString(),
           };
-  
+
           try {
             const saveResponse = await fetch(
               "https://saataorg.netlify.app/.netlify/functions/storePayment",
@@ -175,7 +178,7 @@ const RazorpayButton = () => {
                 body: JSON.stringify(paymentData),
               }
             );
-  
+
             const saveResult = await saveResponse.json();
             if (saveResult.success) {
               resetForm();
@@ -196,15 +199,15 @@ const RazorpayButton = () => {
           },
         },
       };
-  
+
       const rzp1 = new window.Razorpay(options);
-  
+
       rzp1.on("payment.failed", function (response) {
         console.log("Payment Failed", response);
         alert("Payment was not completed. Please try again.");
         setIsSubmitting(false); // Reset the button state if payment fails
       });
-  
+
       rzp1.open();
     } catch (error) {
       console.error("Payment failed", error);
@@ -212,9 +215,11 @@ const RazorpayButton = () => {
       setIsSubmitting(false);
     }
   };
+
   const currentDate = new Date();
-  const cutoffDate = new Date('2025-04-10T00:01:00'); // 10th april 1 AM
-  const showSAATAMemberOnly = currentDate < cutoffDate;
+  const cutoffDate = new Date('2025-07-09T00:01:00'); // 9th July 1 AMto 
+  const showEarlyBird = currentDate < cutoffDate; // Adjusted to "Early Bird" pricing
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -228,7 +233,7 @@ const RazorpayButton = () => {
       organization: "",
       delegateType: "",
       participation: "",
-      pricingCategory: "Super Early Bird",
+      pricingCategory: "Early Bird", // Reset to "Early Bird"
       instituteOption: "", // Reset institute option
     });
     setAmount(0);
@@ -301,99 +306,96 @@ const RazorpayButton = () => {
           </div>
          
         </div>
-        <div className="relative max-w-3xl mx-auto  p-6 bg-white shadow-lg rounded-lg">
-        <form className="sticky top-0 h-min">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-              <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
-              <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} pattern={valid} required/>  
-              <input type="number" name="phone" value={formData.phone} placeholder="Phone Number" className="input-field" onChange={handleChange} pattern="[0-9]+" title="Only numbers allowed" required />
-              <input type="number" name="age" value={formData.age} placeholder="Age" className="input-field" onChange={handleChange} min="1" required />
-              <input type="text" name="gender" value={formData.gender} placeholder="Gender" className="input-field" onChange={handleChange} required />
-              <input type="text" name="qualification" value={formData.qualification} placeholder="Qualification" className="input-field" onChange={handleChange} required />
-              <input type="text" name="occupation" value={formData.occupation} placeholder="Occupation" className="input-field" onChange={handleChange} required />
-              <input type="text" name="organization" value={formData.organization} placeholder="Organization" className="input-field" onChange={handleChange} required />
-            </div>
-            <div className="mt-4">
-              <textarea type="text" name="address" value={formData.address} placeholder="Address" className="input-field" onChange={handleChange} required />
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+        <div className="relative max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+          <form className="sticky top-0 h-min">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <input type="text" name="name" value={formData.name} placeholder="First Name/ Last Name" className="input-field" onChange={handleChange} required />
+                <input type="email" name="email" value={formData.email} placeholder="Email" className="input-field" onChange={handleChange} pattern={valid} required />
+                <input type="number" name="phone" value={formData.phone} placeholder="Phone Number" className="input-field" onChange={handleChange} pattern="[0-9]+" title="Only numbers allowed" required />
+                <input type="number" name="age" value={formData.age} placeholder="Age" className="input-field" onChange={handleChange} min="1" required />
+                <input type="text" name="gender" value={formData.gender} placeholder="Gender" className="input-field" onChange={handleChange} required />
+                <input type="text" name="qualification" value={formData.qualification} placeholder="Qualification" className="input-field" onChange={handleChange} required />
+                <input type="text" name="occupation" value={formData.occupation} placeholder="Occupation" className="input-field" onChange={handleChange} required />
+                <input type="text" name="organization" value={formData.organization} placeholder="Organization" className="input-field" onChange={handleChange} required />
+              </div>
               <div className="mt-4">
-                <p className="font-semibold">Delegate Type:</p>
-                <select name="delegateType" value={formData.delegateType} onChange={handleChange} defaultValue="SAATA Member" className="input-field">
+                <textarea type="text" name="address" value={formData.address} placeholder="Address" className="input-field" onChange={handleChange} required />
+              </div>
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="mt-4">
+                  <p className="font-semibold">Delegate Type:</p>
+                  <select name="delegateType" value={formData.delegateType} onChange={handleChange} defaultValue="SAATA Member" className="input-field">
                   <option value="">Select</option>
-                  {showSAATAMemberOnly ? (
-                    <option value="SAATA Member">SAATA Member</option>
-                  ) : (
                     <>
                       <option value="SAATA Member">SAATA Member</option>
                       <option value="Non-SAATA Member">Non-SAATA Member</option>
                       <option value="Student(Fulltime)">Student(Fulltime)</option>
                     </>
-                  )}
+              
                 </select>
               </div>
               <div className="mt-4">
                 <p className="font-semibold">Pricing Category:</p>
                 <select name="pricingCategory" value={formData.pricingCategory} onChange={handleChange} className="input-field">
-                  {showSAATAMemberOnly ? (
-                    <option value="Super Early Bird">Super Early Bird</option>
+                  {showEarlyBird ? (
+                     <option value="Early Bird">Early Bird</option>
                   ) : (
                     <>
                       <option value="Super Early Bird">Super Early Bird</option>
-                      <option value="Early Bird">Early Bird (Until April 10)</option>
+                      <option value="Early Bird">Early Bird </option>
                       <option value="Regular">Regular (Until July 10)</option>
                     </>
                   )}
                 </select>
+                </div>
+                <div className="mt-4">
+                  <p className="font-semibold">Dates of Participation:</p>
+                  <select name="participation" value={formData.participation} onChange={handleChange} className="input-field">
+                    <option value="">Select</option>
+                    <option value="pre_conference">Pre-Conference Institute (19 Sep)</option>
+                    <option value="conference">Conference (20 & 21 Sep)</option>
+                    <option value="both">Both (19 - 21 Sep)</option>
+                  </select>
+                </div>
+                <span className="p-2 bg-slate-100 text-center flex items-center justify-center">
+                  Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
+                </span>
               </div>
-              <div className="mt-4">
-                <p className="font-semibold">Dates of Participation:</p>
-                <select name="participation" value={formData.participation} onChange={handleChange} className="input-field">
-                  <option value="">Select</option>
-                  <option value="pre_conference">Pre-Conference Institute (19 Sep)</option>
-                  <option value="conference">Conference (20 & 21 Sep)</option>
-                  <option value="both">Both (19 - 21 Sep)</option>
-                </select>
+              {showInstituteOptions && (
+                <div className="mt-4">
+                  <p className="font-semibold">Select Institute Option:</p>
+                  <select
+                    name="instituteOption"
+                    value={formData.instituteOption}
+                    onChange={handleChange}
+                    className="input-field w-full"
+                  >
+                    <option value="">Select an Institute</option>
+                    {institutes.map((institute, index) => (
+                      <option key={index} value={institute}>
+                        {institute}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+                {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
+              <button
+                onClick={handlePayment}
+                className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+                disabled={isSubmitting || amount === 0}
+              >
+                {isSubmitting ? "Processing..." : "Pay Now"}
+              </button>
+              {paymentSuccess && (
+                <p className="text-[#9cca3b] font-semibold mt-2 text-center">
+                  Payment successful! Thank you for registering.
+                </p>
+              )}            
               </div>
-              <span className="p-2 bg-slate-100 text-center flex items-center justify-center">
-                Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
-              </span>
-            </div>
-            {showInstituteOptions && (
-              <div className="mt-4">
-                <p className="font-semibold">Select Institute Option:</p>
-                <select
-                  name="instituteOption"
-                  value={formData.instituteOption}
-                  onChange={handleChange}
-                  className="input-field w-full"
-                >
-                  <option value="">Select an Institute</option>
-                  {institutes.map((institute, index) => (
-                    <option key={index} value={institute}>
-                      {institute}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-              {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
-            <button
-              onClick={handlePayment}
-              className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-              disabled={isSubmitting || amount === 0}
-            >
-              {isSubmitting ? "Processing..." : "Pay Now"}
-            </button>
-            {paymentSuccess && (
-              <p className="text-[#9cca3b] font-semibold mt-2 text-center">
-                Payment successful! Thank you for registering.
-              </p>
-            )}
-          </div>
-        </form>
+          </form>
         </div>
       </div>
     </>
