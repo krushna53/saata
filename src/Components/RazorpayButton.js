@@ -47,8 +47,8 @@ const RazorpayButton = () => {
         "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
       "Early Bird": {
-        "SAATA Member": { pre_conference: 3000, conference: 7500, both: 10500 },
-        "Non-SAATA Member": { pre_conference: 3500, conference: 8500, both: 12500 },
+        "SAATA Member": { pre_conference: 3000, conference: 7500, both: 9500 },
+        "Non-SAATA Member": { pre_conference: 3500, conference: 8500, both: 11000 },
         "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
       Regular: {
