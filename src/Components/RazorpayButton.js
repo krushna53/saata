@@ -303,6 +303,10 @@ const RazorpayButton = () => {
               <h3 className="text-lg font-semibold">🔗 Visit <a href="https://saata.org" className="text-blue-600 underline">saata.org</a> for updates.</h3>
               <h3 className="text-lg font-semibold mt-2">📧 For queries, write to <a href="mailto:conference@saata.org" className="text-blue-600 underline">conference@saata.org</a></h3>
             </div>
+            <p className="mt-3 text-gray-700 font-semibold">
+            Confirmation of registration will be emailed within a week .<br></br>
+            Thank you.
+              </p>
           </div>
          
         </div>
