@@ -1857,7 +1857,8 @@ ul .menu_item:hover > a {
   .page-truth-seeker .about_us,
   .page-ace-conceptualist .about_us,
   .page-gregarious-hugger .about_us,
-  .page-team-that-was .about_us {
+  .page-team-that-was .about_us,
+  .page-pathways-to-TA-credentialing .about_us {
     max-width: 784px !important;
   }
 }
@@ -2151,7 +2152,8 @@ ul .menu_item:hover > a {
   .page-ace-conceptualist .about_us,
   .page-gregarious-hugger .about_us,
   .page-team-that-was .about_us,
-  .page-saata-conferences .about_us.about_ta {
+  .page-saata-conferences .about_us.about_ta,
+  .page-pathways-to-TA-credentialing .about_us.about_ta{
     max-width: 740px !important;
   }
 
@@ -2495,7 +2497,8 @@ ul .menu_item:hover > a {
   .page-saata-bot .about_us.about_ta,
   .page-saata-conference .about_us.about_ta,
   .page-saata-conference-2025 .about_us.about_ta,
-  .page-sajta-event  .about_us.about_ta{
+  .page-sajta-event  .about_us.about_ta,
+  .page-pathways-to-TA-credentialing .about_us.about_ta{
     padding: 18px 0px;
     max-width: 318px !important;
   }
@@ -2604,7 +2607,8 @@ ul .menu_item:hover > a {
   .page-awards .about_us.about_ta .about_us_content img,
   .page-service-award .about_us.about_ta .about_us_content img,
   .page-eric-berne .about_us.about_ta .about_us_content img,
-  .page-crossword .newsletter-description img {
+  .page-crossword .newsletter-description img,
+.page-pathways-to-TA-credentialing img {
     width: 100% !important;
   }
 

@@ -57,6 +57,11 @@ const TopHeader = () => {
           <li className="Certifications menu_item">
             <NavLink to="/">Certifications</NavLink>
             <ul className="Certifications-folder">
+            <li>
+                <NavLink to="/page/pathways-to-TA-credentialing" onClick={toggleMenu}>
+                Pathways to TA Credentialing
+                </NavLink>
+              </li>
               <li>
                 <NavLink to="/page/examination-documents" onClick={toggleMenu}>
                   Examination Documents
