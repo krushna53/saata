@@ -2757,6 +2757,8 @@ ul .menu_item:hover > a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 5;
 }
 
 .logo img {
