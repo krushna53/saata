@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
 
 // 🔧 Your Razorpay Public Key (test or live)
-const RAZORPAY_KEY = "rzp_live_ABC123XYZ"; // Replace with your actual Razorpay key
+const RAZORPAY_KEY = "rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
 
 const AdvertiserRazorpay = () => {
   const [formData, setFormData] = useState({
