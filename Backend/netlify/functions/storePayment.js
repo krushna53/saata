@@ -9,12 +9,10 @@ exports.handler = async (event) => {
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
-  // ✅ Handle pre‑flight (CORS OPTIONS request)
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers: CORS_HEADERS, body: "" };
   }
 
-  // ✅ Ensure only POST requests are processed
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -24,56 +22,72 @@ exports.handler = async (event) => {
   }
 
   try {
-    const paymentData = JSON.parse(event.body);
+    const payment = JSON.parse(event.body);
 
-    if (!paymentData.id) {
+    if (!payment.id) {
       return {
         statusCode: 400,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ success: false, message: "Invalid data" }),
+        body: JSON.stringify({ success: false, message: "Missing payment ID" }),
       };
     }
 
-    // ✅ Save to Firebase Firestore (normal collection)
-    await db.collection("payments").doc(paymentData.id).set(paymentData);
+    // ✅ Save to Firestore
+    await db.collection("payments").doc(payment.id).set(payment);
+    await db.collection("sponsor-payment").doc(payment.id).set(payment);
 
-    // ✅ Append data to CSV  →  /tmp/payments.csv
-    const filePath = "/tmp/payments.csv";
-    const headers  = [
+    // ✅ Write payments.csv (generic)
+    const mainPath     = "/tmp/payments.csv";
+    const mainHeaders  = [
       "id", "order_id", "amount", "currency", "status",
       "email", "contact", "method", "notes", "created_at",
     ];
+    const mainWriteHeader = !fs.existsSync(mainPath);
+    const mainWs  = fs.createWriteStream(mainPath, { flags: "a" });
+    const mainCsv = format({ headers: mainWriteHeader, includeEndRowDelimiter: true });
 
-    const writeHeader = !fs.existsSync(filePath);
-    const ws         = fs.createWriteStream(filePath, { flags: "a" });
-    const csvStream  = format({ headers: writeHeader, includeEndRowDelimiter: true });
+    mainCsv.pipe(mainWs).on("finish", () => console.log("✅ Main CSV write done"));
+    mainCsv.write({
+      id        : payment.id,
+      order_id  : payment.order_id || "",
+      amount    : payment.amount || "",
+      currency  : payment.currency || "",
+      status    : payment.status || "",
+      email     : payment.advertiser?.email || "",
+      contact   : payment.advertiser?.phone || "",
+      method    : payment.method || "",
+      notes     : JSON.stringify(payment.notes || {}),
+      created_at: payment.created_at || new Date().toISOString(),
+    });
+    mainCsv.end();
 
-    csvStream.pipe(ws).on("finish", () => console.log("✅ CSV Write Complete"));
-    csvStream.write(Object.values(paymentData));
-    csvStream.end();
+    // ✅ Write advertiser_payments.csv
+    const advPath        = "/tmp/advertiser_payments.csv";
+    const advHeaders     = [
+      "id", "order_id", "amount", "currency", "status",
+      "email", "contact", "method",
+      "advertiserId", "plan",
+      "created_at",
+    ];
+    const advWriteHeader = !fs.existsSync(advPath);
+    const advWs  = fs.createWriteStream(advPath, { flags: "a" });
+    const advCsv = format({ headers: advWriteHeader, includeEndRowDelimiter: true });
 
-    
-      //  NEW: ALSO store Advertiser payments separately
-   
-   await db.collection("sponsor-payment").doc(paymentData.id).set(paymentData);
-
-    const advPath   = "/tmp/advertiser_payments.csv";
-      const advHeader = [
-        "id", "order_id", "amount", "currency", "status",
-        "email", "contact", "method",
-        "advertiserId", "plan",               // extra columns
-        "created_at",
-      ];
-
-      const advWriteHeader = !fs.existsSync(advPath);
-      const advWs  = fs.createWriteStream(advPath, { flags: "a" });
-      const advCsv = format({ headers: advWriteHeader, includeEndRowDelimiter: true });
-
-      advCsv.pipe(ws).on("finish", () => console.log("✅ CSV Write Complete"));
-    advCsv.write(Object.values(paymentData));
+    advCsv.pipe(advWs).on("finish", () => console.log("✅ Advertiser CSV write done"));
+    advCsv.write({
+      id           : payment.id,
+      order_id     : payment.order_id || "",
+      amount       : payment.amount || "",
+      currency     : payment.currency || "",
+      status       : payment.status || "",
+      email        : payment.advertiser?.email || "",
+      contact      : payment.advertiser?.phone || "",
+      method       : payment.method || "",
+      advertiserId : payment.notes?.advertiserId || "",
+      plan         : payment.notes?.plan || "",
+      created_at   : payment.created_at || new Date().toISOString(),
+    });
     advCsv.end();
-
-
 
     return {
       statusCode: 200,
