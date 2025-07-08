@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // 🔧 Direct API base for deploy-preview (Netlify Functions)
-const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
+// const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
 
 // 🔧 Your Razorpay Public Key (test or live)
 const RAZORPAY_KEY = "rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
@@ -85,7 +85,7 @@ const AdvertiserRazorpay = () => {
     setPaymentSuccess(false);
 
     try {
-      const orderRes = await fetch(`${API_BASE}/create-order`, {
+      const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -130,7 +130,7 @@ const AdvertiserRazorpay = () => {
             },
           };
 
-          await fetch(`${API_BASE}/storePayment`, {
+          await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/storePayment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(savePayload),
