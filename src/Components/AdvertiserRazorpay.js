@@ -85,7 +85,7 @@ const AdvertiserRazorpay = () => {
     setPaymentSuccess(false);
 
     try {
-      const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/create-order`, {
+      const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

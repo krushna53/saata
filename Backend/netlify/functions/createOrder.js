@@ -1,53 +1,57 @@
-// Load .env only when running locally
-if (!process.env.NETLIFY) {
-  require('dotenv').config();
-}
+require("dotenv").config();
+const Razorpay = require("razorpay");
 
-const Razorpay = require('razorpay');
-
-const rzp = new Razorpay({
+const razorpay = new Razorpay({
   key_id:     process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
 exports.handler = async (event) => {
-  // CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: CORS_HEADERS, body: '' };
+  const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
+  // ✅ CORS pre-flight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: "",
+    };
   }
 
-  if (event.httpMethod !== 'POST') {
+  // ✅ Allow only POST
+  if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ success: false, message: 'Method Not Allowed' }),
+      body: JSON.stringify({ success: false, message: "Method Not Allowed" }),
     };
   }
 
   try {
-    const { amount, advertiserId = null, plan = null } = JSON.parse(event.body || '{}');
-    const total = Number(amount);
+    const { amount, advertiserId = null, plan = null } = JSON.parse(event.body);
 
-    if (!Number.isFinite(total) || total <= 0) {
+    if (!amount || isNaN(amount)) {
       return {
         statusCode: 400,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ success: false, message: 'Valid amount is required' }),
+        body: JSON.stringify({ success: false, message: "Valid amount is required" }),
       };
     }
 
-    const order = await rzp.orders.create({
-      amount: Math.round(total * 100), // Convert ₹ to paise
-      currency: 'INR',
+    // ✅ Razorpay order options
+    const options = {
+      amount: amount * 100, // Razorpay needs paise
+      currency: "INR",
       receipt: advertiserId ? `adv_${advertiserId}_${Date.now()}` : `receipt_${Date.now()}`,
-      notes: advertiserId ? { advertiserId, plan } : undefined,
-    });
+      notes: advertiserId ? { advertiserId, plan } : {},
+    };
+
+    const order = await razorpay.orders.create(options);
+    console.log("✅ Order Created:", order);
 
     return {
       statusCode: 200,
@@ -55,11 +59,11 @@ exports.handler = async (event) => {
       body: JSON.stringify(order),
     };
   } catch (error) {
-    console.error('❌ Order Creation Failed:', error);
+    console.error("❌ Order Creation Failed:", error);
     return {
       statusCode: 500,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ success: false, message: 'Failed to create order' }),
+      body: JSON.stringify({ success: false, message: "Failed to create order" }),
     };
   }
 };
