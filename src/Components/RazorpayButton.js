@@ -217,8 +217,8 @@ const RazorpayButton = () => {
   };
 
   const currentDate = new Date();
-  const cutoffDate  = new Date('2025‑08‑09T00:01:00');  // 9th August 1 AMto 
-  const showRegular = currentDate >= cutoffDate;  // Adjusted to "Regular" pricing
+  const cutoffDate  = new Date('2025‑09‑19T00:01:00');  // 9th August 1 AMto 
+  const showRegular = true;//currentDate >= cutoffDate;  // Adjusted to "Regular" pricing
 
   const resetForm = () => {
     setFormData({
