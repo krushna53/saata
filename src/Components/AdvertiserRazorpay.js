@@ -113,29 +113,39 @@ const AdvertiserRazorpay = () => {
           email: formData.email,
           contact: formData.phone,
         },
-        handler: async (resp) => {
-          setPaymentSuccess(true);
+       handler: async (resp) => {
+  setPaymentSuccess(true);
 
-          const savePayload = {
-            id: resp.razorpay_payment_id,
-            order_id: order.id,
-            amount: order.amount / 100,
-            currency: "INR",
-            status: "success",
-            advertiser: formData,
-            created_at: new Date().toISOString(),
-            notes: {
-              advertiserId: "adv_001",
-              plan: formData.adType,
-            },
-          };
+  const savePayload = {
+    id: resp.razorpay_payment_id,
+    order_id: order.id,
+    amount: order.amount / 100,
+    currency: "INR",
+    status: "success",
+    advertiser: formData,
+    created_at: new Date().toISOString(),
+    notes: {
+      advertiserId: "adv_001",
+      plan: formData.adType,
+    },
+  };
 
-          await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/storePayment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(savePayload),
-          });
-        },
+  const saveResponse = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/storePayment`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(savePayload),
+  });
+
+  const saveResult = await saveResponse.json();
+
+  if (saveResult.success) {
+    reset(); // ✅ Only added this part
+  } else {
+    throw new Error("Payment succeeded but data save failed.");
+  }
+},
+
+        
         modal: {
           ondismiss: () => setIsSubmitting(false),
         },
@@ -153,6 +163,20 @@ const AdvertiserRazorpay = () => {
       alert("Payment could not be started. Try again.");
       setIsSubmitting(false);
     }
+  };
+   const reset = () => {
+    setFormData({
+      advertiserName: "",
+      contactPerson: "",
+      designation: "",
+      email: "",
+      phone: "",
+      adType: "",
+      artworkCommit: false,
+      termsAccepted: false,
+    });
+    setAmount(0);
+    setIsSubmitting(false);
   };
 
   return (
@@ -242,6 +266,11 @@ const AdvertiserRazorpay = () => {
             disabled={isSubmitting || amount === 0}
           >
             {isSubmitting ? "Processing…" : "Pay Now"}
+             {paymentSuccess && (
+                <p className="text-[#9cca3b] font-semibold mt-2 text-center">
+                  Payment successful! Thank you.
+                </p>
+              )}       
           </button>
         </form>
       </div>
