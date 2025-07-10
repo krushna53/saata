@@ -13,7 +13,7 @@ const RazorpayButton = () => {
     organization: "",
     delegateType: "",
     participation: "",
-    pricingCategory: "Early Bird", // Default to "Early Bird"
+    pricingCategory: "Regular", // Default to "Regular"
     instituteOption: "", // New field for institute selection
   });
 
@@ -51,7 +51,7 @@ const RazorpayButton = () => {
         "Non-SAATA Member": { pre_conference: 3500, conference: 8500, both: 11000 },
         "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
       },
-      Regular: {
+      "Regular": {
         "SAATA Member": { pre_conference: 4000, conference: 8300, both: 11300 },
         "Non-SAATA Member": { pre_conference: 5000, conference: 9500, both: 13500 },
         "Student(Fulltime)": { pre_conference: 2500, conference: 6500, both: 8000 },
@@ -217,8 +217,8 @@ const RazorpayButton = () => {
   };
 
   const currentDate = new Date();
-  const cutoffDate = new Date('2025-07-09T00:01:00'); // 9th July 1 AMto 
-  const showEarlyBird = currentDate < cutoffDate; // Adjusted to "Early Bird" pricing
+  const cutoffDate  = new Date('2025‑09‑19T00:01:00');  // 9th August 1 AMto 
+  const showRegular = true;//currentDate >= cutoffDate;  // Adjusted to "Regular" pricing
 
   const resetForm = () => {
     setFormData({
@@ -233,7 +233,7 @@ const RazorpayButton = () => {
       organization: "",
       delegateType: "",
       participation: "",
-      pricingCategory: "Early Bird", // Reset to "Early Bird"
+      pricingCategory: "Regular", 
       instituteOption: "", // Reset institute option
     });
     setAmount(0);
@@ -343,13 +343,13 @@ const RazorpayButton = () => {
               <div className="mt-4">
                 <p className="font-semibold">Pricing Category:</p>
                 <select name="pricingCategory" value={formData.pricingCategory} onChange={handleChange} className="input-field">
-                  {showEarlyBird ? (
-                     <option value="Early Bird">Early Bird</option>
+                  {showRegular ? (
+                     <option value="Regular">Regular</option>
                   ) : (
                     <>
                       <option value="Super Early Bird">Super Early Bird</option>
                       <option value="Early Bird">Early Bird </option>
-                      <option value="Regular">Regular (Until July 10)</option>
+                      <option value="Regular">Regular</option>
                     </>
                   )}
                 </select>
