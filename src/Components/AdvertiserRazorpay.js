@@ -114,7 +114,7 @@ const AdvertiserRazorpay = () => {
           contact: formData.phone,
         },
        handler: async (resp) => {
-  setPaymentSuccess(true);
+       setPaymentSuccess(true);
 
   const savePayload = {
     id: resp.razorpay_payment_id,
@@ -266,12 +266,12 @@ const AdvertiserRazorpay = () => {
             disabled={isSubmitting || amount === 0}
           >
             {isSubmitting ? "Processing…" : "Pay Now"}
-             {paymentSuccess && (
+          </button>
+           {paymentSuccess && (
                 <p className="text-[#9cca3b] font-semibold mt-2 text-center">
                   Payment successful! Thank you.
                 </p>
               )}       
-          </button>
         </form>
       </div>
     </div>
