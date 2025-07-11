@@ -44,8 +44,12 @@ const AdvertiserRazorpay = () => {
   }, []);
 
   useEffect(() => {
-    setAmount(basePrices[formData.adType] || 0);
-  }, [formData.adType]);
+  const base = basePrices[formData.adType] || 0;
+  const totalWithGST = Math.round(base * 1.18); // total in ₹
+  const amountInPaise = totalWithGST * 100;     // Razorpay needs paise
+  setAmount(amountInPaise);
+}, [formData.adType]);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -83,13 +87,13 @@ const AdvertiserRazorpay = () => {
     setError("");
     setIsSubmitting(true);
     setPaymentSuccess(false);
-     const gstIncludedAmount = Math.round(amount * 1.18 * 100);
+
     try {
       const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: gstIncludedAmount,
+          amount: amount,
           advertiserId: "adv_001",
           plan: formData.adType,
         }),
@@ -277,9 +281,10 @@ const AdvertiserRazorpay = () => {
             </label>
           </div>
 
-       <span className="p-2 bg-slate-100 text-center flex items-center justify-center mt-3 font-semibold">
-  Total (incl. 18% GST): ₹{Math.round(amount * 1.18).toLocaleString("en-IN")}
+      <span className="p-2 bg-slate-100 text-center flex items-center justify-center mt-3 font-semibold">
+  Total (incl. 18% GST): ₹{(amount / 100).toLocaleString("en-IN")}
 </span>
+
           {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
 
           <button
