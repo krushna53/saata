@@ -105,7 +105,7 @@ const AdvertiserRazorpay = () => {
 
       const rzp = new window.Razorpay({
         key: RAZORPAY_KEY,
-        name: "SAATA Conference 2025 – Advert",
+        name: "SAATA Conference 2025 – Advertiser",
         description: formData.adType,
         order_id: order.id,
         prefill: {
@@ -188,23 +188,42 @@ const AdvertiserRazorpay = () => {
         <p className="mt-4 text-gray-700">
           Conference Dates: <strong>19–21 September 2025</strong>
           <br />
-          Location: Hotel Savera, Chennai
+          Location: <strong> Hotel Savera, Chennai </strong>
         </p>
 
         <h3 className="mt-6 text-lg font-semibold">Artwork Guidelines</h3>
-        <p className="text-gray-700 mt-2">
-          • Full Page 8×10 in • Half Page 8×5 in • Quarter Page 3.5×4.8 in <br />
-          300 DPI • PDF / JPEG / PNG • Send by 15 Aug 2025 to{" "}
-          <a href="mailto:saata-ads@gmail.com" className="text-blue-600 underline">
-            saata-ads@gmail.com
-          </a>
-        </p>
+<p className="text-gray-700 mt-2">
+  Note: Ad Sizes for Reference (in inches)<br />
+  The Kaleidoscope Journal will be printed in <strong>8.5 x 11 inches</strong>.<br /><br />
+</p>
+<div className="text-gray-700 text-sm space-y-1">
+  <div className="flex justify-between max-w-sm">
+    <span>Ad Type</span>
+    <span>Artwork Size (W x H)</span>
+  </div>
+  <div className="flex justify-between max-w-sm">
+    <span>Full Page</span>
+    <span>8 x 10 in</span>
+  </div>
+  <div className="flex justify-between max-w-sm">
+    <span>Half Page</span>
+    <span>8 x 5 in</span>
+  </div>
+  <div className="flex justify-between max-w-sm">
+    <span>Quarter Page</span>
+    <span>3.5 x 4.8 in</span>
+  </div>
+</div>
+<p className="text-gray-700 mt-3">
+  Please ensure your artwork matches the selected dimensions and is <strong>300 DPI</strong>,
+  in <strong>PDF, JPEG, or PNG</strong> format.
+</p>
 
         <h3 className="mt-6 text-lg font-semibold">Terms & Conditions</h3>
         <p className="text-gray-700 mt-2">
-          • Payments are non-refundable. <br />
-          • Missing artwork after 15 Aug 2025 = cancellation without refund. <br />
-          • SAATA may decline artwork that fails technical/content specs.
+          • All payments are non-refundable. <br />
+          • Non-receipt of artwork by 15th August 2025 will be considered a cancellation without refund. <br />
+          • SAATA reserves the right to decline artwork that does not meet technical or content guidelines.
         </p>
       </div>
 
@@ -217,6 +236,11 @@ const AdvertiserRazorpay = () => {
           }}
         >
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Advertiser Details</h2>
+          <p className="text-gray-700 mt-2 mb-3">
+       Thank you for your interest in advertising in our official<strong> SAATA Conference 2025 Booklet. </strong>
+      Please fill in the following details to confirm your advertisement placement.
+      </p>
+
 
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <input name="advertiserName" value={formData.advertiserName} onChange={handleChange} className="input-field" placeholder="Advertiser / Company Name" required />
@@ -235,12 +259,13 @@ const AdvertiserRazorpay = () => {
           </div>
 
           <div className="mt-4 space-y-2">
+            <h3 className="mt-6 text-lg font-semibold">Artwork Commitment</h3>
             <label className="flex items-start gap-2">
               <input type="checkbox" name="artworkCommit" checked={formData.artworkCommit} onChange={handleChange} className="mt-1" />
               <span>
-                I will email the artwork to{" "}
-                <a href="mailto:saata-ads@gmail.com" className="text-blue-600 underline">
-                  saata-ads@gmail.com
+                I confirm that I will email the artwork for the advertisement{" "}
+                <a href="mailto:saata.advertise@gmail.com" className="text-blue-600 underline">
+                  saata.advertise@gmail.com
                 </a>{" "}
                 on or before 15 Aug 2025.
               </span>
@@ -252,10 +277,9 @@ const AdvertiserRazorpay = () => {
             </label>
           </div>
 
-          <span className="p-2 bg-slate-100 flex justify-center items-center mt-4">
-            Total to Pay: ₹{amount.toLocaleString("en-IN")}
-          </span>
-
+       <span className="p-2 bg-slate-100 text-center flex items-center justify-center mt-3 font-semibold">
+  Total (incl. 18% GST): ₹{Math.round(amount * 1.18).toLocaleString("en-IN")}
+</span>
           {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
 
           <button
