@@ -44,12 +44,11 @@ const AdvertiserRazorpay = () => {
   }, []);
 
   useEffect(() => {
-  const base = basePrices[formData.adType] || 0;
-  const totalWithGST = Math.round(base * 1.18); // total in ₹
-  const amountInPaise = totalWithGST * 100;     // Razorpay needs paise
-  setAmount(amountInPaise);
+  const baseTotal = basePrices[formData.adType] || 0;
+  const gstAmount = Math.round(baseTotal * 0.18); // 18% GST
+  const totalWithGST = baseTotal + gstAmount;
+  setAmount(totalWithGST); // Total = base + GST
 }, [formData.adType]);
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -281,10 +280,9 @@ const AdvertiserRazorpay = () => {
             </label>
           </div>
 
-      <span className="p-2 bg-slate-100 text-center flex items-center justify-center mt-3 font-semibold">
-  Total (incl. 18% GST): ₹{(amount / 100).toLocaleString("en-IN")}
-</span>
-
+        <span className="p-2 bg-slate-100 text-center flex items-center justify-center">
+                  Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
+                </span>
           {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
 
           <button
