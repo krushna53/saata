@@ -83,13 +83,13 @@ const AdvertiserRazorpay = () => {
     setError("");
     setIsSubmitting(true);
     setPaymentSuccess(false);
-
+     const gstIncludedAmount = Math.round(amount * 1.18 * 100);
     try {
       const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: amount,
+          amount: gstIncludedAmount,
           advertiserId: "adv_001",
           plan: formData.adType,
         }),
