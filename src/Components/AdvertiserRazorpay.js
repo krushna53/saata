@@ -35,9 +35,9 @@ const AdvertiserRazorpay = () => {
     "Quarter Page – Black & White": 2000,
   };
   const adLimits = {
-  "Back Cover – Colour": 7,
-  "Front Inside Cover – Colour": 5,
-  "Back Inside Cover – Colour": 7,
+  "Back Cover – Colour": 8,
+  "Front Inside Cover – Colour": 6,
+  "Back Inside Cover – Colour": 8,
 };
 
 const [adBookings, setAdBookings] = useState({});
