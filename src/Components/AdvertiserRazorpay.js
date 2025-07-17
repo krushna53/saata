@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 // 🔧 Direct API base for deploy-preview (Netlify Functions)
 // const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
-
 // 🔧 Your Razorpay Public Key (test or live)
 const RAZORPAY_KEY = "rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
 
@@ -24,6 +23,7 @@ const AdvertiserRazorpay = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const basePrices = {
+    "Standee": 25000,
     "Back Cover – Colour": 20000,
     "Front Inside Cover – Colour": 15000,
     "Back Inside Cover – Colour": 12000,
@@ -34,6 +34,13 @@ const AdvertiserRazorpay = () => {
     "Quarter Page – Colour": 4000,
     "Quarter Page – Black & White": 2000,
   };
+  const adLimits = {
+  "Back Cover – Colour": 7,
+  "Front Inside Cover – Colour": 5,
+  "Back Inside Cover – Colour": 7,
+};
+
+const [adBookings, setAdBookings] = useState({});
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -49,6 +56,19 @@ const AdvertiserRazorpay = () => {
   const totalWithGST = baseTotal + gstAmount;
   setAmount(totalWithGST); // Total = base + GST
 }, [formData.adType]);
+
+useEffect(() => {
+  const fetchAdBookings = async () => {
+    try {
+      const res = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/ad-bookings`);
+      const data = await res.json();
+      setAdBookings(data);
+    } catch (err) {
+      console.error("Failed to fetch ad bookings", err);
+    }
+  };
+  fetchAdBookings();
+}, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -88,7 +108,7 @@ const AdvertiserRazorpay = () => {
     setPaymentSuccess(false);
 
     try {
-      const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/createOrder`, {
+    const orderRes = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -133,7 +153,7 @@ const AdvertiserRazorpay = () => {
     },
   };
 
-  const saveResponse = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/storePayment`, {
+ const saveResponse = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/storePayment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(savePayload),
@@ -142,6 +162,11 @@ const AdvertiserRazorpay = () => {
   const saveResult = await saveResponse.json();
 
   if (saveResult.success) {
+    setAdBookings(prev => ({
+      ...prev,
+      [formData.adType]: (prev[formData.adType] || 0) + 1
+    }));
+
     reset(); // ✅ Only added this part
   } else {
     throw new Error("Payment succeeded but data save failed.");
@@ -221,6 +246,12 @@ const AdvertiserRazorpay = () => {
   Please ensure your artwork matches the selected dimensions and is <strong>300 DPI</strong>,
   in <strong>PDF, JPEG, or PNG</strong> format.
 </p>
+<h3 className="mt-6 text-lg font-semibold">Standee Guidelines</h3>
+<p className="text-gray-700 mt-2">
+  • Size: <strong>5ft x 2ft</strong><br />
+  • Standee to be provided by the sponsor by <strong>15th September 2025</strong><br />
+  • Standee will be placed at prominent locations during the event to maximise visibility.
+</p>
 
         <h3 className="mt-6 text-lg font-semibold">Terms & Conditions</h3>
         <p className="text-gray-700 mt-2">
@@ -251,14 +282,24 @@ const AdvertiserRazorpay = () => {
             <input name="designation" value={formData.designation} onChange={handleChange} className="input-field" placeholder="Designation / Role" required />
             <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="Email" required />
             <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input-field" placeholder="Phone Number" pattern="[0-9]+" title="Numbers only" required />
-            <select name="adType" value={formData.adType} onChange={handleChange} className="input-field" required>
-              <option value="">Select Advertisement Type</option>
-              {Object.entries(basePrices).map(([label, price]) => (
-                <option key={label} value={label}>
-                  {label} – ₹{price.toLocaleString("en-IN")}
-                </option>
-              ))}
-            </select>
+      <select
+  name="adType"
+  value={formData.adType}
+  onChange={handleChange}
+  className="input-field"
+  required
+>
+  <option value="">Select Advertisement Type</option>
+  {Object.entries(basePrices).map(([label, price]) => {
+    const booked = adBookings[label] >= (adLimits[label] || Infinity);
+    return (
+      <option key={label} value={label} disabled={booked}>
+        {label} – ₹{price.toLocaleString("en-IN")} {booked ? "(Booked)" : ""}
+      </option>
+    );
+  })}
+</select>
+
           </div>
 
           <div className="mt-4 space-y-2">

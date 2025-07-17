@@ -80,6 +80,18 @@ router.post("/storePayment", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+// 🔹 Get current ad bookings (NEW)
+router.get("/ad-bookings", async (req, res) => {
+  const snapshot = await db.collection("sponsor-payment").get();
+  const counts = {};
+  snapshot.forEach(doc => {
+    const plan = doc.data()?.notes?.plan;
+    if (plan) {
+      counts[plan] = (counts[plan] || 0) + 1;
+    }
+  });
+  res.status(200).json(counts);
+});
 
 // 🔹 Razorpay webhook
 router.post("/webhooks", async (req, res) => {
