@@ -80,19 +80,27 @@ router.post("/storePayment", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
-// 🔹 Get current ad bookings (NEW)
-router.get("/ad-bookings", async (req, res) => {
-  const snapshot = await db.collection("sponsor-payment").get();
-  const counts = {};
-  snapshot.forEach(doc => {
-    const plan = doc.data()?.notes?.plan;
-    if (plan) {
-      counts[plan] = (counts[plan] || 0) + 1;
-    }
-  });
-  res.status(200).json(counts);
-});
+// ✅ Route to get ad bookings count
+app.get("/adBookings", async (req, res) => {
+  try {
+    const snapshot = await db.collection("sponsor-payment").get();
+    const counts = {};
+    snapshot.forEach(doc => {
+      const plan = doc.data()?.notes?.plan;
+      if (plan) {
+        counts[plan] = (counts[plan] || 0) + 1;
+      }
+    });
 
+    console.log("Plan A Count:", counts.PlanA || 0);
+    console.log("Plan B Count:", counts.PlanB || 0);
+
+    res.status(200).json(counts);
+  } catch (err) {
+    console.error("Error fetching ad bookings:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 // 🔹 Razorpay webhook
 router.post("/webhooks", async (req, res) => {
   try {
@@ -149,6 +157,5 @@ app.use("/.netlify/functions/api", router);
 // 🔹 For local dev server
 const PORT = process.env.PORT || 5041;
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
-
 // 🔹 Export for Netlify
 module.exports.handler = serverless(app);

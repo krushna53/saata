@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 // 🔧 Direct API base for deploy-preview (Netlify Functions)
 // const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
-const API_BASE = process.env.REACT_APP_API || "http://localhost:5041";
 // 🔧 Your Razorpay Public Key (test or live)
 const RAZORPAY_KEY = "rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
 
@@ -61,9 +60,9 @@ const [adBookings, setAdBookings] = useState({});
 useEffect(() => {
   const fetchAdBookings = async () => {
     try {
-      const res = await fetch('/.netlify/functions/api/ad-bookings'); // ✅ correct relative path
+      const res = await fetch(`https://deploy-preview-77--saataorg.netlify.app/.netlify/functions/adBookings`);
       const data = await res.json();
-       console.log("Plan A Count:", data.PlanA || 0);
+      console.log("Plan A Count:", data.PlanA || 0);
       console.log("Plan B Count:", data.PlanB || 0);
       setAdBookings(data);
     } catch (err) {
@@ -71,7 +70,8 @@ useEffect(() => {
     }
   };
   fetchAdBookings();
-}, []); 
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
