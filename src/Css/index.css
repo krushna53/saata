@@ -3262,3 +3262,6 @@ ul .menu_item:hover > a {
 .input-field {
   @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
+.page-advertise option{
+  font-size: 14px;
+}
