@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 // 🔧 Direct API base for deploy-preview (Netlify Functions)
 // const API_BASE = "https://deploy-preview-77--saataorg.netlify.app/.netlify/functions";
 // 🔧 Your Razorpay Public Key (test or live)
-const RAZORPAY_KEY = "rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
+const RAZORPAY_KEY = process.env.REACT_APP_RAZORPAY_KEY;//"rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
 
 const AdvertiserRazorpay = () => {
   const [formData, setFormData] = useState({
