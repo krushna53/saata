@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // 🔧 Direct API base for deploy-preview (Netlify Functions)
-// const API_BASE = "https://saataorg.netlify.app/.netlify/functions";
+// const API_BASE = "https://saata.org/.netlify/functions";
 // 🔧 Your Razorpay Public Key (test or live)
 const RAZORPAY_KEY = process.env.REACT_APP_RAZORPAY_KEY;//"rzp_test_eyzRpteMFBKUjv"; // Replace with your actual Razorpay key
 
@@ -60,7 +60,7 @@ const [adBookings, setAdBookings] = useState({});
 useEffect(() => {
   const fetchAdBookings = async () => {
     try {
-      const res = await fetch(`https://saataorg.netlify.app/.netlify/functions/adBookings`);
+      const res = await fetch(`https://saata.org/.netlify/functions/adBookings`);
       const data = await res.json();
       console.log("Plan A Count:", data.PlanA || 0);
       console.log("Plan B Count:", data.PlanB || 0);
@@ -111,7 +111,7 @@ useEffect(() => {
     setPaymentSuccess(false);
 
     try {
-    const orderRes = await fetch(`https://saataorg.netlify.app/.netlify/functions/createOrder`, {
+    const orderRes = await fetch(`https://saata.org/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -156,7 +156,7 @@ useEffect(() => {
     },
   };
 
- const saveResponse = await fetch(`https://saataorg.netlify.app/.netlify/functions/storePayment`, {
+ const saveResponse = await fetch(`https://saata.org/.netlify/functions/storePayment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(savePayload),
