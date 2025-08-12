@@ -259,7 +259,7 @@ useEffect(() => {
         <h3 className="mt-6 text-lg font-semibold">Terms & Conditions</h3>
         <p className="text-gray-700 mt-2">
           • All payments are non-refundable. <br />
-          • Non-receipt of artwork by 15th August 2025 will be considered a cancellation without refund. <br />
+          • Non-receipt of artwork will be considered a cancellation without refund. <br />
           • SAATA reserves the right to decline artwork that does not meet technical or content guidelines.
         </p>
       </div>
@@ -314,7 +314,7 @@ useEffect(() => {
                 <a href="mailto:saata.advertise@gmail.com" className="text-blue-600 underline">
                   saata.advertise@gmail.com
                 </a>{" "}
-                on or before 15 Aug 2025.
+                at the earliest.
               </span>
             </label>
 
