@@ -63,7 +63,7 @@ function CertifiedMembers() {
   return {
     specialization,
     role: getValue("Role"),
-    city: getValue("Geographical Location") // ✅ Use Geographical Location here
+    city: getValue("Geographical Location") 
   };
 };
 
@@ -86,7 +86,7 @@ function CertifiedMembers() {
          const processed = certifiedMembers.map(item => {
   const fields = {
     ...extractFieldsFromQualification(item.fields.qualification),
-    role: item.fields.currentRoleStatus || "", // ✅ FIXED
+    role: item.fields.currentRoleStatus || "", 
   };
 
   const certLevels = item.fields.certificationLevels || [];
@@ -176,35 +176,80 @@ function CertifiedMembers() {
   Certified Members Summary
 </h2>
 <p className="text-base text-gray-800 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 mb-2 border border-purple-100 flex items-center gap-2">
-  <span className="font-semibold ">Total Certified Members:</span>{" "}
-  <CountUp className="text-2xl font-bold text-purple-700" end={stats.total || 0} duration={1.5} />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-6 h-6 text-purple-600"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 14c-3.314 0-6 2.239-6 5v1h12v-1c0-2.761-2.686-5-6-5zm0-2a4 4 0 100-8 4 4 0 000 8z"
+    />
+  </svg>
+
+  <span className="font-semibold">Total Certified Members:</span>
+  <CountUp
+    className="text-2xl font-bold text-purple-700"
+    end={stats.total || 0}
+    duration={1.5}
+  />
 </p>
 
 <div className=" gap-4 mb-6">
   <div>
-    <h3 className="text-base font-semibold text-gray-800 mb-2">
-      By Certification Level
-    </h3>
+   <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+    <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5 text-[#a37bb6]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15a5 5 0 100-10 5 5 0 000 10z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.21 15.89l-1.42 4.11a.75.75 0 001.08.86L12 18.5l4.13 2.36a.75.75 0 001.08-.86l-1.42-4.11" />
+  </svg>
+  By Certification Level
+</h3>
     <ul className=" flex flex-col sm:flex-row gap-2 mb-2 space-y-1 text-gray-700 text-sm">
       {["CTA", "PTSTA", "TSTA", "Diploma", "Advanced Diploma"].map((lvl) => (
-        <li key={lvl} className="bg-[#a37bb6] bg-gradient-to-r  text-white px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 min-w-[120px] text-center mt-0">
-          <span className="font-medium">{lvl}:</span>{" "}
-          <CountUp end={stats.certificationLevel?.[lvl] || 0} duration={1.5} />
+        <li key={lvl} className="bg-[#a37bb6] bg-gradient-to-r  text-white px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 min-w-[120px] text-center mt-0 flex flex-col-reverse items-center gap-2">
+          <span className="font-medium">{lvl}</span>{" "}
+          <CountUp className="text-[18px] font-bold " end={stats.certificationLevel?.[lvl] || 0} duration={1.5} />
         </li>
       ))}
     </ul>
   </div>
 
   <div>
-    <h3 className="text-base font-semibold text-gray-800 mb-2">
-      By Specialization
-    </h3>
+    <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5 text-[#a37bb6]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M2 9l10-5 10 5-10 5-10-5z" />
+    <path d="M12 4v10" />
+    <path d="M20 9v4a2 2 0 01-4 0v-2" />
+    <path d="M6 12v4a6 3 0 0012 0v-4" />
+  </svg>
+  By Specialization
+</h3>
     <ul className="flex flex-col sm:flex-row gap-2 space-y-1 text-gray-700 text-sm">
       {["Psychotherapy", "Education", "Counselling", "Organisation"].map(
         (spec) => (
-          <li key={spec} className="bg-[#a37bb6] bg-gradient-to-r  text-white px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 min-w-[120px] text-center mt-0">
-            <span className="font-medium">{spec}:</span>{" "}
-            <CountUp
+          <li key={spec} className="bg-[#a37bb6] bg-gradient-to-r  text-white px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 min-w-[120px] text-center mt-0 flex flex-col-reverse items-center gap-2">
+            <span className="font-medium">{spec}</span>{" "}
+            <CountUp className="text-[18px] font-bold "
               end={stats.specialization?.[spec] || 0}
               duration={1.5}
             />

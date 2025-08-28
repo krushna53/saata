@@ -6,7 +6,6 @@ const REFRESH_TOKEN = process.env.ZOHO_REFRESH_TOKEN;
 const TOKEN_URL = "https://accounts.zoho.in/oauth/v2/token";
 const API_URL = "https://www.zohoapis.in/subscriptions/v1/subscriptions";
 
-// 🔹 Get a new access token using refresh token
 async function getAccessToken() {
   const params = new URLSearchParams({
     refresh_token: REFRESH_TOKEN,
@@ -16,7 +15,7 @@ async function getAccessToken() {
   });
 
   const res = await fetch(`${TOKEN_URL}?${params}`, { method: "POST" });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
 
   if (data.access_token) {
     return data.access_token;
@@ -26,7 +25,6 @@ async function getAccessToken() {
   }
 }
 
-// 🔹 Main function
 exports.handler = async () => {
   try {
     const accessToken = await getAccessToken();
@@ -40,14 +38,11 @@ exports.handler = async () => {
         },
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       console.log(`Page ${page} - Subscriptions found: ${data.subscriptions?.length || 0}`);
-      if (page === 1) console.dir(data, { depth: null });
 
-      if (!data.subscriptions || data.subscriptions.length === 0) {
-        break;
-      }
+      if (!data.subscriptions || data.subscriptions.length === 0) break;
 
       const liveSubs = data.subscriptions.filter(
         (sub) => sub.status?.toLowerCase() === "live"
@@ -61,24 +56,26 @@ exports.handler = async () => {
       }));
 
       activeMembers.push(...members);
-      page += 1;
+      page++;
     }
-
-    // console.log(`✅ Total active members: ${activeMembers.length}`);
 
     return {
       statusCode: 200,
       headers: {
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
       },
-      body: JSON.stringify({ members: activeMembers }),
+      body: JSON.stringify({ success: true, members: activeMembers }),
     };
   } catch (err) {
     console.error("Failed to fetch members:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to fetch members" }),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ success: false, members: [], error: err.message }),
     };
   }
 };
