@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CountUp from "react-countup";
+
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8888/.netlify/functions"
@@ -9,8 +10,8 @@ const Directory = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState("");
-  const [activeTab, setActiveTab] = useState("");
-  const [pageByGroup, setPageByGroup] = useState({}); // Stores current page per group
+  const [activeTab, setActiveTab] = useState("All");
+  const [pageByGroup, setPageByGroup] = useState({});
   const itemsPerPage = 150;
 
   useEffect(() => {
@@ -37,9 +38,7 @@ const Directory = () => {
     const groups = {};
     membersList.forEach((member) => {
       const type = member.membership || "Unknown";
-      if (!groups[type]) {
-        groups[type] = [];
-      }
+      if (!groups[type]) groups[type] = [];
       groups[type].push(member);
     });
     return groups;
@@ -51,46 +50,47 @@ const Directory = () => {
 
   const groupedMembers = groupMembers(filteredMembers);
   const groupEntries = Object.entries(groupedMembers);
+  const allTab = ["All", filteredMembers];
+  const finalGroupEntries = [allTab, ...groupEntries];
+
   useEffect(() => {
-    if (groupEntries.length && !activeTab) {
-      setActiveTab(groupEntries[0][0]);
+    if (finalGroupEntries.length && !activeTab) {
+      setActiveTab("All");
     }
-  }, [groupEntries, activeTab]);
+  }, [finalGroupEntries, activeTab]);
 
   const handlePageChange = (groupType, newPage) => {
     setPageByGroup((prev) => ({ ...prev, [groupType]: newPage }));
   };
 
-  if (loading) return <div className="p-4 text-lg">Loading members...</div>;
-  if (!groupEntries.length) return <div className="p-4">No members found.</div>;
-
   return (
     <div className="p-4 about_us about_ta">
       <h2 className="text-2xl font-bold mb-6">Member Directory</h2>
       <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        {groupEntries.map(([type, group]) => (
-         <button
-  key={type}
-  onClick={() => setActiveTab(type)}
-  className={`text-sm px-4 py-2 rounded-md border transition ${
-    activeTab === type
-      ? "bg-[#a37bb6] text-white border-[#a37bb6]"
-      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-  }`}
->
-  {type} (
-  <CountUp className=" font-bold "
-    start={0}
-    end={group.length}
-    duration={1.5}
-    separator=","
-  />
-  )
-</button>
+        {finalGroupEntries.map(([type, group]) => (
+          <button
+            key={type}
+            onClick={() => setActiveTab(type)}
+            className={`text-sm px-4 py-2 rounded-md border transition ${
+              activeTab === type
+                ? "bg-[#a37bb6] text-white border-[#a37bb6]"
+                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+            }`}
+          >
+            {type} (
+            <CountUp
+              className="font-bold"
+              start={0}
+              end={group.length}
+              duration={1.5}
+              separator=","
+            />
+            )
+          </button>
         ))}
       </div>
       <div className="w-full max-w-2xl mb-6">
-        <div className="flex flex-col sm:flex-row  w-full">
+        <div className="flex flex-col sm:flex-row w-full">
           <input
             type="text"
             placeholder="Search by name..."
@@ -100,7 +100,7 @@ const Directory = () => {
           />
           <button
             onClick={() => console.log("Search:", searchName)}
-            className="bg-[#a37bb6] text-white px-4 py-2 rounded-md sm:rounded-l-none sm:rounded-r-md w-full sm:w-auto"
+            className="bg-[#a37bb6] text-white px-4 py-2 rounded-md sm:rounded-l-none sm:rounded-r-md w-full sm:w-auto mt-3 sm:!mt-auto"
           >
             Search
           </button>
@@ -108,7 +108,7 @@ const Directory = () => {
       </div>
       {activeTab && (
         <div>
-          {groupEntries
+          {finalGroupEntries
             .filter(([type]) => type === activeTab)
             .map(([type, group]) => {
               const currentPage = pageByGroup[type] || 1;
@@ -127,34 +127,57 @@ const Directory = () => {
                         <th className="border px-4 py-3">Full Name</th>
                         <th className="border px-4 py-3">Email Address</th>
                         <th className="border px-4 py-3">Membership Type</th>
-                        <th className="border px-4 py-3">Validity Date</th>
+                        <th className="border px-4 py-3">Valid Upto</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {paginatedMembers.map((member, i) => (
-                        <tr key={i} className="hover:bg-gray-50">
-                          <td className="border px-4 py-2 font-medium">
-                            {startIndex + i + 1}
-                          </td>
-                          <td className="border px-4 py-2">{member.name}</td>
-                          <td className="border px-4 py-2">{member.email}</td>
-                          <td className="border px-4 py-2">
-                            {member.membership}
-                          </td>
-                          <td className="border px-4 py-2">
-                            {member.validity
-                              ? new Date(
-                                  member.validity
-                                ).toLocaleDateString("en-GB")
-                              : "N/A"}
+                      {loading ? (
+                        <tr>
+                          <td
+                            colSpan="5"
+                            className="text-center py-6 text-lg"
+                          >
+                            <div className="flex justify-center items-center">
+                              <div className="w-6 h-6 border-4 border-[#a37bb6] border-t-transparent rounded-full animate-spin"></div>
+                              <span className="ml-2">Loading...</span>
+                            </div>
                           </td>
                         </tr>
-                      ))}
+                      ) : paginatedMembers.length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan="5"
+                            className="text-center py-6 text-gray-500"
+                          >
+                            No members found.
+                          </td>
+                        </tr>
+                      ) : (
+                        paginatedMembers.map((member, i) => (
+                          <tr key={i} className="hover:bg-gray-50">
+                            <td className="border px-4 py-2 font-medium">
+                              {startIndex + i + 1}
+                            </td>
+                            <td className="border px-4 py-2">{member.name}</td>
+                            <td className="border px-4 py-2">{member.email}</td>
+                            <td className="border px-4 py-2">
+                              {member.membership}
+                            </td>
+                            <td className="border px-4 py-2">
+                              {member.validity
+                                ? new Date(
+                                    member.validity
+                                  ).toLocaleDateString("en-GB")
+                                : "N/A"}
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
 
-                  {/* Pagination Controls */}
-                  {totalPages > 1 && (
+                  {/* Pagination */}
+                  {!loading && totalPages > 1 && (
                     <div className="flex justify-center mt-4 space-x-2">
                       <button
                         onClick={() =>
