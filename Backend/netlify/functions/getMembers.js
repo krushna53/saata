@@ -1,81 +1,89 @@
 const fetch = require("node-fetch");
 
-const CLIENT_ID = process.env.ZOHO_CLIENT_ID;
-const CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET;
-const REFRESH_TOKEN = process.env.ZOHO_REFRESH_TOKEN;
-const TOKEN_URL = "https://accounts.zoho.in/oauth/v2/token";
-const API_URL = "https://www.zohoapis.in/subscriptions/v1/subscriptions";
+const corsHeaders = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 
 async function getAccessToken() {
+  const { ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN } = process.env;
+
   const params = new URLSearchParams({
-    refresh_token: REFRESH_TOKEN,
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET,
+    refresh_token: ZOHO_REFRESH_TOKEN,
+    client_id: ZOHO_CLIENT_ID,
+    client_secret: ZOHO_CLIENT_SECRET,
     grant_type: "refresh_token",
   });
 
-  const res = await fetch(`${TOKEN_URL}?${params}`, { method: "POST" });
-  const data = await res.json().catch(() => ({}));
+  const res = await fetch(`https://accounts.zoho.in/oauth/v2/token?${params}`, {
+    method: "POST",
+  });
 
-  if (data.access_token) {
-    return data.access_token;
-  } else {
-    console.error("Failed to refresh token:", data);
-    throw new Error("Token refresh failed");
+  const data = await res.json();
+  if (!res.ok || !data.access_token) {
+    throw new Error(`Failed to refresh token: ${data.error || "Unknown error"}`);
   }
+
+  return data.access_token;
 }
 
 exports.handler = async () => {
   try {
     const accessToken = await getAccessToken();
+
     let page = 1;
-    const activeMembers = [];
+    let allMembers = [];
 
     while (true) {
-      const res = await fetch(`${API_URL}?page=${page}`, {
-        headers: {
-          Authorization: `Zoho-oauthtoken ${accessToken}`,
-        },
-      });
+      const subsRes = await fetch(
+        `https://www.zohoapis.in/subscriptions/v1/subscriptions?page=${page}`,
+        {
+          headers: {
+            Authorization: `Zoho-oauthtoken ${accessToken}`,
+          },
+        }
+      );
 
-      const data = await res.json().catch(() => ({}));
+      const subsData = await subsRes.json();
+      if (!subsRes.ok || !subsData.subscriptions) break;
 
-      console.log(`Page ${page} - Subscriptions found: ${data.subscriptions?.length || 0}`);
-
-      if (!data.subscriptions || data.subscriptions.length === 0) break;
-
-      const liveSubs = data.subscriptions.filter(
+      const liveSubs = subsData.subscriptions.filter(
         (sub) => sub.status?.toLowerCase() === "live"
       );
 
-      const members = liveSubs.map((sub) => ({
-        name: sub?.customer_name || "Unknown",
-        email: sub?.email || "N/A",
-        membership: sub?.plan_name || "N/A",
-        validity: sub?.current_term_ends_at || "",
-      }));
+      const membersWithCity = liveSubs.map((sub) => {
+        const city =
+          sub?.billing_address?.city ||
+          sub?.shipping_address?.city ||
+          "N/A";
 
-      activeMembers.push(...members);
+        return {
+          name: sub?.customer_name || "Unknown",
+          email: sub?.email || "N/A",
+          membership: sub?.plan_name || "N/A",
+          validity: sub?.current_term_ends_at || "",
+          city,
+        };
+      });
+
+      allMembers.push(...membersWithCity);
       page++;
+      if (page > 10) break;
     }
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({ success: true, members: activeMembers }),
+      headers: corsHeaders,
+      body: JSON.stringify({ success: true, members: allMembers }),
     };
   } catch (err) {
-    console.error("Failed to fetch members:", err);
+    console.error("💥 getMembers failed:", err);
+
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({ success: false, members: [], error: err.message }),
+      headers: corsHeaders,
+      body: JSON.stringify({ success: false, error: err.message }),
     };
   }
 };

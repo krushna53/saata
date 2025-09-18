@@ -30,62 +30,34 @@ function SatjaTeam() {
 
   return (
     <>
-      <div className="Certified-Members-section" id="SAJTA_team">
-        <div className="Certified-Members-wrapper">
-          <h2 className="Certified-Members-text">SAJTA Team </h2>
-          <div className="Certified-Members-folder">
-            {entry.map((item) => {
-              const { qualification, name, title } = item.fields;
-              const id = item.sys.id;
-              console.log(id);
+ <div className="Certified-Members-section" id="SAJTA_team">
+  <div className="Certified-Members-wrapper">
+    <h2 className="Certified-Members-text">SAJTA Team</h2>
+    <div className="Certified-Members-folder">
+      {entry.map((item) => {
+        const { qualification, name, title } = item.fields;
+        const id = item.sys.id;
 
-              const richTextContent = documentToReactComponents(qualification, {
-                renderNode: {
-                  [INLINES.ASSET_HYPERLINK]: (node) => (
-                    <a href={`https://${node.data.target.fields.file.url}`} target="_blank" rel="noopener noreferrer">
-                      {node.data.target.fields.title}
-                    </a>
-                  ),
-                  [BLOCKS.EMBEDDED_ASSET]: (node) => (
-                    <img
-                      src={`https:${node.data.target.fields.file.url}`}
-                      alt={node.data.target.fields.description}
-                    />
-                  ),
-                },
-              });
+        const richTextContent = documentToReactComponents(qualification, { renderNode: {/* your renderNode config */} });
+        const richTextName = documentToReactComponents(name, { renderNode: {/* your renderNode config */} });
 
-              const richTextName = documentToReactComponents(name, {
-                renderNode: {
-                  [INLINES.ASSET_HYPERLINK]: (node) => (
-                    <a href={`https://${node.data.target.fields.file.url}`} target="_blank" rel="noopener noreferrer">
-                      {node.data.target.fields.title}
-                    </a>
-                  ),
-                  [BLOCKS.EMBEDDED_ASSET]: (node) => (
-                    <img
-                      src={`https:${node.data.target.fields.file.url}`}
-                      alt={node.data.target.fields.description}
-                    />
-                  ),
-                },
-              });
-
-              return (
-                <React.Fragment key={id}>
-                  <div>
-                    <div>{richTextContent}</div>
-                    <div className="certified-members-image-folder">
-                      <h2>{title}</h2>
-                      {richTextName}
-                    </div>
-                  </div>
-                </React.Fragment>
-              );
-            })}
+        return (
+          <div className="member-card" key={id}>
+            <div className="member-image">
+              <img src={`https:${item.fields.image?.fields?.file?.url}`} alt={name} />
+            </div>
+            <div className="member-details">
+              <h2>{title}</h2>
+              {richTextContent}
+              {richTextName}
+            </div>
           </div>
-        </div>
-      </div>
+        );
+      })}
+    </div>
+  </div>
+</div>
+
     </>
   );
 }

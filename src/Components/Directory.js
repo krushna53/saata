@@ -125,7 +125,7 @@ const Directory = () => {
                       <tr className="bg-gray-200 text-left">
                         <th className="border px-4 py-3">#</th>
                         <th className="border px-4 py-3">Full Name</th>
-                        <th className="border px-4 py-3">Email Address</th>
+                        <th className="border px-4 py-3">City</th>
                         <th className="border px-4 py-3">Membership Type</th>
                         <th className="border px-4 py-3">Valid Upto</th>
                       </tr>
@@ -159,7 +159,7 @@ const Directory = () => {
                               {startIndex + i + 1}
                             </td>
                             <td className="border px-4 py-2">{member.name}</td>
-                            <td className="border px-4 py-2">{member.email}</td>
+                            <td className="border px-4 py-2">{member.city || "N/A"}</td>
                             <td className="border px-4 py-2">
                               {member.membership}
                             </td>
