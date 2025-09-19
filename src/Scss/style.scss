@@ -553,15 +553,16 @@ $background-color_1: rgb(232, 76, 61);
 
     /* overlay text box */
     div:nth-child(1) {
-          width: 100%;
-            background: rgba(163, 123, 182, 0.85);
-            color: white;
-            padding: 16px;
-            opacity: 1;
-            display: block;
-            min-height: 350px;
-            height: auto;
-            margin: 26px 0px;
+        width: 100%;
+          background: rgba(163, 123, 182, 0.85);
+          color: white;
+          padding: 16px;
+          opacity: 1;
+          /* display: block; */
+          min-height: 368px;
+          height: auto;
+          margin: 26px 0px;
+          margin-top: 0;
 
       ul {
         margin: 0;

@@ -31,6 +31,7 @@
     "htmlparser2": "^8.0.1",
     "jspdf": "^2.5.2",
     "mongoose": "^8.12.1",
+    "netlify-cli": "^23.6.0",
     "node-fetch": "^2.7.0",
     "papaparse": "^5.5.2",
     "razorpay": "^2.9.6",
