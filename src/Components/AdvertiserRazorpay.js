@@ -21,7 +21,7 @@ const AdvertiserRazorpay = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const submissionsClosed = false; // toggle this to enable/disable form
+  const submissionsClosed = true; // toggle this to enable/disable form
 
 
   const basePrices = {
