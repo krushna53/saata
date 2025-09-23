@@ -42,17 +42,22 @@ h2.main_title {
 }
 
 .page-membership-details .about_us .about_us_content table,
-.page-ta-101-program-details .about_us .about_us_content table {
+.page-ta-101-program-details .about_us .about_us_content table ,
+.page-saata-directory table{
   border: 1px solid;
   width: 100%;
   border-collapse: collapse;
 }
 
 .page-membership-details .about_us .about_us_content table tr th,
-.page-ta-101-program-details .about_us .about_us_content table tr th {
+.page-ta-101-program-details .about_us .about_us_content table tr th,
+.page-saata-directory table tr th {
   border-bottom: 1px solid black;
   background-color: #a37bb6;
   color: white;
+}
+.page-saata-directory  table tr:nth-child(even) {
+  background-color: rgba(163, 123, 182, 0.3019607843);
 }
 
 .page-membership-details .about_us .about_us_content table tr th p,
@@ -3257,6 +3262,10 @@ ul .menu_item:hover > a {
   .contact_form textarea{
     width: 100%;
   }
+  .page-saata-directory .about_us {
+    width: 100%;
+    margin: auto;
+}
 }
 
 .input-field {
