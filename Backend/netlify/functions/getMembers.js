@@ -9,8 +9,16 @@ const corsHeaders = {
 };
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-const CACHE_FILE_PATH = path.join(__dirname, "membersCache.json");
-const FAILED_LOG_PATH = path.join(__dirname, "failedSubscriptions.log");
+
+// Dynamic pathing: use /tmp in Netlify, use project root locally
+const isNetlify = process.env.NETLIFY || process.env.LAMBDA_TASK_ROOT;
+const CACHE_FILE_PATH = isNetlify
+  ? path.join("/tmp", "membersCache.json")
+  : path.join(__dirname, "../../membersCache.json");
+
+const FAILED_LOG_PATH = isNetlify
+  ? path.join("/tmp", "failedSubscriptions.log")
+  : path.join(__dirname, "../../failedSubscriptions.log");
 
 // Load cache JSON into memory
 function loadCache() {
@@ -26,7 +34,11 @@ function loadCache() {
 
 // Save cache back to file
 function saveCache(cache) {
-  fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cache, null, 2));
+  try {
+    fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cache, null, 2));
+  } catch (err) {
+    console.error("Error writing cache file:", err);
+  }
 }
 
 async function getAccessToken() {
@@ -38,21 +50,35 @@ async function getAccessToken() {
     grant_type: "refresh_token",
   });
 
-  const res = await fetch(`https://accounts.zoho.in/oauth/v2/token?${params}`, { method: "POST" });
+  const res = await fetch(`https://accounts.zoho.in/oauth/v2/token?${params}`, {
+    method: "POST",
+  });
   const data = await res.json();
-  if (!res.ok || !data.access_token) throw new Error(`Failed to refresh token: ${data.error || "Unknown error"}`);
+  if (!res.ok || !data.access_token)
+    throw new Error(`Failed to refresh token: ${data.error || "Unknown error"}`);
   return data.access_token;
 }
 
 async function getAllSubscriptions(accessToken) {
-  let page = 1, allSubscriptions = [];
+  let page = 1,
+    allSubscriptions = [];
   while (true) {
-    const res = await fetch(`https://www.zohoapis.in/billing/v1/subscriptions?page=${page}`, {
-      headers: { Authorization: `Zoho-oauthtoken ${accessToken}`, "Content-Type": "application/json" },
-    });
+    const res = await fetch(
+      `https://www.zohoapis.in/billing/v1/subscriptions?page=${page}`,
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await res.json();
     if (!res.ok || !data.subscriptions || data.subscriptions.length === 0) break;
-    allSubscriptions.push(...data.subscriptions.filter(sub => sub.status?.toLowerCase() === "live"));
+    allSubscriptions.push(
+      ...data.subscriptions.filter(
+        (sub) => sub.status?.toLowerCase() === "live"
+      )
+    );
     page++;
     if (page > 50) break;
   }
@@ -60,11 +86,18 @@ async function getAllSubscriptions(accessToken) {
 }
 
 async function getFullSubscription(subscriptionId, accessToken) {
-  const res = await fetch(`https://www.zohoapis.in/billing/v1/subscriptions/${subscriptionId}`, {
-    headers: { Authorization: `Zoho-oauthtoken ${accessToken}`, "Content-Type": "application/json" },
-  });
+  const res = await fetch(
+    `https://www.zohoapis.in/billing/v1/subscriptions/${subscriptionId}`,
+    {
+      headers: {
+        Authorization: `Zoho-oauthtoken ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const data = await res.json();
-  if (!res.ok || !data.subscription) throw new Error(`Failed to fetch subscription ${subscriptionId}`);
+  if (!res.ok || !data.subscription)
+    throw new Error(`Failed to fetch subscription ${subscriptionId}`);
   return data.subscription;
 }
 
@@ -97,7 +130,10 @@ async function getCityForUser(subscription, accessToken) {
   try {
     const fullSub = await getFullSubscription(cacheKey, accessToken);
     const customer = fullSub.customer || {};
-    const city = customer.billing_address?.city || customer.shipping_address?.city || "N/A";
+    const city =
+      customer.billing_address?.city ||
+      customer.shipping_address?.city ||
+      "N/A";
 
     const memberData = {
       name: customer.display_name || subscription.customer_name || "Unknown",
@@ -132,9 +168,11 @@ exports.handler = async () => {
 
     for (let i = 0; i < allSubscriptions.length; i += batchSize) {
       const batch = allSubscriptions.slice(i, i + batchSize);
-      const batchResults = await Promise.all(batch.map(sub => getCityForUser(sub, accessToken)));
+      const batchResults = await Promise.all(
+        batch.map((sub) => getCityForUser(sub, accessToken))
+      );
       allMembers.push(...batchResults.filter(Boolean));
-      await new Promise(res => setTimeout(res, 100));
+      await new Promise((res) => setTimeout(res, 100));
     }
 
     console.log(`Processed ${allMembers.length} members`);
