@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "contentful": "^9.3.7",
     "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",

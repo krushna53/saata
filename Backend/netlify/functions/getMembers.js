@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
-const db = require("../../firebase"); // adjust relative path if needed
+const fs = require("fs");
+const path = require("path");
 
 const corsHeaders = {
   "Content-Type": "application/json",
@@ -8,6 +9,25 @@ const corsHeaders = {
 };
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_FILE_PATH = path.join(__dirname, "membersCache.json");
+const FAILED_LOG_PATH = path.join(__dirname, "failedSubscriptions.log");
+
+// Load cache JSON into memory
+function loadCache() {
+  if (!fs.existsSync(CACHE_FILE_PATH)) return {};
+  try {
+    const rawData = fs.readFileSync(CACHE_FILE_PATH, "utf8");
+    return JSON.parse(rawData);
+  } catch (err) {
+    console.error("Error reading cache file:", err);
+    return {};
+  }
+}
+
+// Save cache back to file
+function saveCache(cache) {
+  fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cache, null, 2));
+}
 
 async function getAccessToken() {
   const { ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN } = process.env;
@@ -48,21 +68,25 @@ async function getFullSubscription(subscriptionId, accessToken) {
   return data.subscription;
 }
 
-// Firestore cache functions
+// JSON cache functions
 async function getCachedMember(subscriptionId) {
-  const doc = await db.collection("membersCache").doc(subscriptionId).get();
-  if (!doc.exists) return null;
-  const data = doc.data();
-  const updatedAt = data.updatedAt.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt);
+  const cache = loadCache();
+  const entry = cache[subscriptionId];
+  if (!entry) return null;
+
+  const updatedAt = new Date(entry.updatedAt);
   if (Date.now() - updatedAt.getTime() > CACHE_DURATION) return null;
-  return data.memberData;
+
+  return entry.memberData;
 }
 
 async function setCachedMember(subscriptionId, memberData) {
-  await db.collection("membersCache").doc(subscriptionId).set({
+  const cache = loadCache();
+  cache[subscriptionId] = {
     memberData,
-    updatedAt: new Date(),
-  });
+    updatedAt: new Date().toISOString(),
+  };
+  saveCache(cache);
 }
 
 async function getCityForUser(subscription, accessToken) {
@@ -88,13 +112,10 @@ async function getCityForUser(subscription, accessToken) {
     return memberData;
   } catch (err) {
     console.warn(`Failed subscription ${cacheKey}:`, err.message);
-    await db.collection("failedSubscriptions").doc(cacheKey).set({
-      subscriptionId: cacheKey,
-      customer_name: subscription.customer_name || "Unknown",
-      plan_name: subscription.plan_name || "Unknown",
-      error: err.message,
-      timestamp: new Date(),
-    });
+    fs.appendFileSync(
+      FAILED_LOG_PATH,
+      `${new Date().toISOString()} - Failed subscription ${cacheKey}: ${err.message}\n`
+    );
     return null;
   }
 }
