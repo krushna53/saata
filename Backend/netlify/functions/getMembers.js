@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const db = require("../../firebase"); // adjust relative path if needed
 
 const corsHeaders = {
   "Content-Type": "application/json",
@@ -6,10 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
-// In-memory cache for city data (consider using Redis/DynamoDB for production)
-let cityCache = new Map();
-let lastCacheUpdate = null;
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 async function getAccessToken() {
   const { ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN } = process.env;
@@ -19,110 +17,84 @@ async function getAccessToken() {
     client_secret: ZOHO_CLIENT_SECRET,
     grant_type: "refresh_token",
   });
-  
-  const res = await fetch(`https://accounts.zoho.in/oauth/v2/token?${params}`, {
-    method: "POST",
-  });
-  
+
+  const res = await fetch(`https://accounts.zoho.in/oauth/v2/token?${params}`, { method: "POST" });
   const data = await res.json();
-  if (!res.ok || !data.access_token) {
-    throw new Error(`Failed to refresh token: ${data.error || "Unknown error"}`);
-  }
+  if (!res.ok || !data.access_token) throw new Error(`Failed to refresh token: ${data.error || "Unknown error"}`);
   return data.access_token;
 }
 
 async function getAllSubscriptions(accessToken) {
-  let page = 1;
-  let allSubscriptions = [];
-  
+  let page = 1, allSubscriptions = [];
   while (true) {
-    const subsRes = await fetch(
-      `https://www.zohoapis.in/billing/v1/subscriptions?page=${page}`,
-      {
-        headers: {
-          Authorization: `Zoho-oauthtoken ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    
-    const subsData = await subsRes.json();
-    if (!subsRes.ok || !subsData.subscriptions || subsData.subscriptions.length === 0) {
-      break;
-    }
-    
-    // Filter for live subscriptions only
-    const liveSubs = subsData.subscriptions.filter(
-      (sub) => sub.status?.toLowerCase() === "live"
-    );
-    
-    allSubscriptions.push(...liveSubs);
+    const res = await fetch(`https://www.zohoapis.in/billing/v1/subscriptions?page=${page}`, {
+      headers: { Authorization: `Zoho-oauthtoken ${accessToken}`, "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+    if (!res.ok || !data.subscriptions || data.subscriptions.length === 0) break;
+    allSubscriptions.push(...data.subscriptions.filter(sub => sub.status?.toLowerCase() === "live"));
     page++;
-    
-    // Safety break to prevent infinite loop
     if (page > 50) break;
   }
-  
   return allSubscriptions;
 }
 
 async function getFullSubscription(subscriptionId, accessToken) {
-  const res = await fetch(
-    `https://www.zohoapis.in/billing/v1/subscriptions/${subscriptionId}`,
-    {
-      headers: {
-        Authorization: `Zoho-oauthtoken ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  
+  const res = await fetch(`https://www.zohoapis.in/billing/v1/subscriptions/${subscriptionId}`, {
+    headers: { Authorization: `Zoho-oauthtoken ${accessToken}`, "Content-Type": "application/json" },
+  });
   const data = await res.json();
-  if (!res.ok || !data.subscription) {
-    throw new Error(
-      `Failed to fetch full subscription ${subscriptionId}: ${data.message || "Unknown error"}`
-    );
-  }
+  if (!res.ok || !data.subscription) throw new Error(`Failed to fetch subscription ${subscriptionId}`);
   return data.subscription;
 }
 
-function isCacheValid() {
-  if (!lastCacheUpdate) return false;
-  return Date.now() - lastCacheUpdate < CACHE_DURATION;
+// Firestore cache functions
+async function getCachedMember(subscriptionId) {
+  const doc = await db.collection("membersCache").doc(subscriptionId).get();
+  if (!doc.exists) return null;
+  const data = doc.data();
+  const updatedAt = data.updatedAt.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt);
+  if (Date.now() - updatedAt.getTime() > CACHE_DURATION) return null;
+  return data.memberData;
+}
+
+async function setCachedMember(subscriptionId, memberData) {
+  await db.collection("membersCache").doc(subscriptionId).set({
+    memberData,
+    updatedAt: new Date(),
+  });
 }
 
 async function getCityForUser(subscription, accessToken) {
   const cacheKey = subscription.subscription_id;
-  
-  // Check if we have cached city data for this subscription
-  if (cityCache.has(cacheKey) && isCacheValid()) {
-    console.log(`Using cached city for subscription ${cacheKey}`);
-    return cityCache.get(cacheKey);
-  }
-  
+  const cached = await getCachedMember(cacheKey);
+  if (cached) return cached;
+
   try {
-    console.log(`Fetching city for new/updated subscription ${cacheKey}`);
-    const fullSub = await getFullSubscription(subscription.subscription_id, accessToken);
+    const fullSub = await getFullSubscription(cacheKey, accessToken);
     const customer = fullSub.customer || {};
-    const city = customer.billing_address?.city || 
-                 customer.shipping_address?.city || 
-                 "N/A";
-    
+    const city = customer.billing_address?.city || customer.shipping_address?.city || "N/A";
+
     const memberData = {
       name: customer.display_name || subscription.customer_name || "Unknown",
-      email: customer.email || subscription.email || "N/A", 
+      email: customer.email || subscription.email || "N/A",
       membership: fullSub.plan?.name || subscription.plan_name || "N/A",
       validity: fullSub.current_term_ends_at || "",
       city,
-      subscriptionId: subscription.subscription_id
+      subscriptionId: cacheKey,
     };
-    
-    // Cache the result
-    cityCache.set(cacheKey, memberData);
+
+    await setCachedMember(cacheKey, memberData);
     return memberData;
-    
   } catch (err) {
-    console.warn(`Failed to fetch details for subscription ${subscription.subscription_id}:`, err.message);
+    console.warn(`Failed subscription ${cacheKey}:`, err.message);
+    await db.collection("failedSubscriptions").doc(cacheKey).set({
+      subscriptionId: cacheKey,
+      customer_name: subscription.customer_name || "Unknown",
+      plan_name: subscription.plan_name || "Unknown",
+      error: err.message,
+      timestamp: new Date(),
+    });
     return null;
   }
 }
@@ -130,64 +102,29 @@ async function getCityForUser(subscription, accessToken) {
 exports.handler = async () => {
   try {
     const accessToken = await getAccessToken();
-    
-    // Step 1: Get all subscriptions first
     console.log("Fetching all subscriptions...");
     const allSubscriptions = await getAllSubscriptions(accessToken);
     console.log(`Found ${allSubscriptions.length} live subscriptions`);
-    
-    // Step 2: Process subscriptions and get city data (with caching)
+
     const allMembers = [];
-    const currentSubscriptionIds = new Set(allSubscriptions.map(sub => sub.subscription_id));
-    
-    // Remove cached entries for subscriptions that no longer exist
-    for (const [cacheKey] of cityCache) {
-      if (!currentSubscriptionIds.has(cacheKey)) {
-        console.log(`Removing cached data for inactive subscription ${cacheKey}`);
-        cityCache.delete(cacheKey);
-      }
-    }
-    
-    // Process subscriptions in batches to avoid overwhelming the API
-    const batchSize = 5;
+    const batchSize = 20;
+
     for (let i = 0; i < allSubscriptions.length; i += batchSize) {
       const batch = allSubscriptions.slice(i, i + batchSize);
-      
-      const batchPromises = batch.map(subscription => 
-        getCityForUser(subscription, accessToken)
-      );
-      
-      const batchResults = await Promise.all(batchPromises);
-      const validResults = batchResults.filter(Boolean);
-      allMembers.push(...validResults);
-      
-      // Small delay between batches to be respectful to the API
-      if (i + batchSize < allSubscriptions.length) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      const batchResults = await Promise.all(batch.map(sub => getCityForUser(sub, accessToken)));
+      allMembers.push(...batchResults.filter(Boolean));
+      await new Promise(res => setTimeout(res, 100));
     }
-    
-    // Update cache timestamp
-    lastCacheUpdate = Date.now();
-    
+
     console.log(`Processed ${allMembers.length} members`);
-    console.log(`Cache now contains ${cityCache.size} entries`);
-    
+
     return {
       statusCode: 200,
       headers: corsHeaders,
-      body: JSON.stringify({ 
-        success: true, 
-        members: allMembers,
-        cacheInfo: {
-          cachedEntries: cityCache.size,
-          lastUpdate: new Date(lastCacheUpdate).toISOString()
-        }
-      }),
+      body: JSON.stringify({ success: true, members: allMembers }),
     };
-    
   } catch (err) {
-    console.error("💥 getMembers failed:", err);
+    console.error("getMembers failed:", err);
     return {
       statusCode: 500,
       headers: corsHeaders,
