@@ -102,13 +102,13 @@ const BasicPage = () => {
                     <h3>{subTitle}</h3>
                   </div>
                   {/* Conditionally render the button above the content */}
-                  {isSaataConference && (
+                  {/* {isSaataConference && (
                     <div className="ticket-button-container">
                       <a href="/saata-conference-2025-registration" className="disabled-link">
                       Register Here
                       </a>
                     </div>
-                  )}
+                  )} */}
                   <div className="about_us_content">
                     {richTextContent}
                   </div>

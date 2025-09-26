@@ -132,11 +132,11 @@ const TopHeader = () => {
                   
                 </ul>
               </li>
-              <li>
+              {/* <li>
                 <NavLink to="/page/saata-conference" onClick={toggleMenu}>
                 SAATA Conference
                 </NavLink>
-              </li>
+              </li> */}
               {/* <li>
                 <NavLink to="/page/call-for-proposals" onClick={toggleMenu}>
                   Call for Proposals
