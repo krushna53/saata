@@ -21,7 +21,7 @@
 [[redirects]]
   from = "/volume:vol/:file"
   to = "/journals/volume:vol/:file"
-  status = 200
+  status = 301
 
 [[redirects]]
   from = "/*"
