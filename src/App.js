@@ -56,7 +56,7 @@ function App() {
         <Route exact path='/faq' element={<Faq />} />
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
-        <Route path="/certificates/saata-conference-2025" element={<CertificateDownloader />} />
+        <Route path="/certificates-saata-conference-2025" element={<CertificateDownloader />} />
       </Routes>
       {/* <RazorpayButton/> */}
 
