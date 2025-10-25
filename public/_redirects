@@ -1,1 +1,6 @@
 /certificateName.csv /certificateName.csv 200
+/create-order    /.netlify/functions/createOrder   200
+/store-payment   /.netlify/functions/storePayment  200
+/static/*        /static/:splat                    200
+/:volume/:filename.pdf   /volume:volume/:filename.pdf 200
+/*               /index.html                        200
