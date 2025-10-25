@@ -3,4 +3,5 @@
 /store-payment   /.netlify/functions/storePayment  200
 /static/*        /static/:splat                    200
 /:volume/:filename.pdf   /volume:volume/:filename.pdf 200
+/page/*          /index.html                        200
 /*               /index.html                        200
