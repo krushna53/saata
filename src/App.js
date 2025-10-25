@@ -39,7 +39,7 @@ function App() {
       <TopHeader activeSlug={activeSlug} />
       <Routes>
         <Route exact path='/' element={<Home />} />
-        <Route exact path='page/:slug' element={<BasicPage />} />
+        <Route path='page/:slug' element={<BasicPage />} />
         <Route exact path='/newsletterlist/' element={<CurrentandPreviousIssues />} />
         <Route exact path='/newsletterTeam/:slug' element={<NewsletterTeam />} />
         <Route exact path='/gallery' element={<Gallery />} />
