@@ -28,9 +28,16 @@ status = 200
   to = "/index.html"
   status = 200
   force = true
-  
+
+[[redirects]]
+  from = "/sajta-journals"
+  to = "/index.html"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = true
+  
