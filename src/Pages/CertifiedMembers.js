@@ -105,27 +105,30 @@ function CertifiedMembers() {
           };
 
           const processed = certifiedMembers.map((item) => {
-            const fields = extractFieldsFromQualification(
-              item.fields.qualification
-            );
+  const fields = extractFieldsFromQualification(item.fields.qualification);
+  const name = extractName(item.fields.title); // ✅ extract name here
+  const certLevels = item.fields.certificationLevels || [];
 
-            const certLevels = item.fields.certificationLevels || [];
+  certLevels.forEach((level) => {
+    summary.certificationLevel[level] =
+      (summary.certificationLevel[level] || 0) + 1;
+  });
 
-            certLevels.forEach((level) => {
-              summary.certificationLevel[level] =
-                (summary.certificationLevel[level] || 0) + 1;
-            });
+  fields.specialization.forEach((spec) => {
+    summary.specialization[spec] =
+      (summary.specialization[spec] || 0) + 1;
+  });
 
-            fields.specialization.forEach((spec) => {
-              summary.specialization[spec] =
-                (summary.specialization[spec] || 0) + 1;
-            });
+  return {
+    ...item,
+    parsedFields: { 
+      title: item.fields.title,
+      ...fields, 
+      certificationLevels: certLevels 
+    },
+  };
+});
 
-            return {
-              ...item,
-              parsedFields: { ...fields, certificationLevels: certLevels },
-            };
-          });
 
           setEntry(processed);
           setFiltered(processed);
@@ -196,7 +199,6 @@ function CertifiedMembers() {
           Certified Members
         </h2>
 
-        {/* ✅ Members Table */}
         <div className="Certified-Members-folder mt-8">
           <div className="overflow-x-auto">
             <table className="min-w-full border border-gray-200 rounded-xl overflow-hidden">
@@ -224,7 +226,7 @@ function CertifiedMembers() {
                       className="hover:bg-purple-50 transition-colors duration-150"
                     >
                       <td className="px-4 py-3 text-sm text-gray-800 font-medium">
-                         {parsedFields.name || "—"}
+                         {fields.title || "—"}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">
                         {parsedFields.qualification || "—"}
