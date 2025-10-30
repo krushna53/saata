@@ -1003,12 +1003,12 @@ object-fit: cover;
   border-radius: 10px;
 }
 
-.Certified-Members-folder {
+/* .Certified-Members-folder {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 25px;
-}
+} */
 
 .Certified-Members-details-folder {
   text-align: left;
