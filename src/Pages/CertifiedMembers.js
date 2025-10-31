@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import client from "../client";
-
+// import * as XLSX from "xlsx";
+// import { saveAs } from "file-saver";
 function CertifiedMembers() {
   const [entry, setEntry] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -50,24 +51,44 @@ function CertifiedMembers() {
 
     const extractText = (nodes) =>
       nodes
-        .flatMap((node) =>
-          node.content
-            ? extractText(node.content)
-            : node.value
-              ? [node.value]
-              : []
+        .flatMap((n) =>
+          n.content ? extractText(n.content) : n.value ? [n.value] : []
         )
-        .join("\n");
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
 
     const raw = extractText(node.content);
 
-    const getValue = (label) => {
-      const match = raw.match(new RegExp(`${label}:\\s*(.+)`, "i"));
-      return match ? match[1].trim() : "";
+    const getValue = (...labels) => {
+      const labelPattern = labels.join("|");
+      // Improved regex handles newlines and stops cleanly at next label
+      const regex = new RegExp(
+        `(?:${labelPattern})\\s*[:|-]?\\s*([\\s\\S]*?)(?=\\s*(?:Qualification|Role|Position|Field of Training|Field|Specialization|Geographical Location|City|Location|Place|Address|Email|E-mail|Contact|Phone|Mobile|Website|Institute Name|Name of the Institute|$))`,
+        "i"
+      );
+      const match = raw.match(regex);
+      return match ? match[1].replace(/\s+/g, " ").trim() : "";
     };
 
-    const specializationRaw = getValue("Field of Training").toLowerCase();
-    const specializationList = specializationRaw
+    const qualification = getValue("Qualification");
+    const role = getValue("Role", "Position");
+    const fieldOfTraining = getValue("Field of Training", "Field", "Specialization");
+    const city = getValue(
+      "Geographical Location",
+      "City",
+      "Location",
+      "Place",
+      "Address"
+    );
+    const emailMatch = raw.match(/(?:Email|E-mail|Contact)\s*[:|-]?\s*([\w._%+-]+\s*@\s*[a-zA-Z0-9.-]+\s*\.\s*[a-zA-Z]{2,})/i);
+    const email = emailMatch ? emailMatch[1].replace(/\s+/g, "").trim() : "";
+
+    const phone = getValue("Phone", "Mobile", "Tel", "Contact Number", "Contact No", "Contact #", "Ph", "Number");
+
+    const website = getValue("Website", "Web", "Site");
+
+    const specializationList = fieldOfTraining
       .replace(/ and /gi, ",")
       .replace(/\//g, ",")
       .split(",")
@@ -88,12 +109,14 @@ function CertifiedMembers() {
       .filter(Boolean);
 
     return {
-      qualification: getValue("Qualification"),
+      qualification,
       specialization,
-      role: getValue("Role"),
-      city: getValue("Geographical Location"),
-      fieldOfTraining: getValue("Field of Training"),
-      contact: getValue("Email"),
+      role,
+      city,
+      fieldOfTraining,
+      email,
+      phone,
+      website,
     };
   };
 
@@ -203,6 +226,42 @@ function CertifiedMembers() {
 
     setFiltered(results);
   };
+  // ✅ Export data to Excel
+  // const exportToExcel = () => {
+  //   if (!filtered.length) {
+  //     alert("No data to export!");
+  //     return;
+  //   }
+
+  //   // Prepare only the required columns
+  //   const exportData = filtered.map(({ parsedFields }) => ({
+  //     Name: parsedFields.title || "—",
+  //     Certifications: parsedFields.qualification || "—",
+  //     City: parsedFields.city || "—",
+  //     "Field of Training": parsedFields.fieldOfTraining || "—",
+  //     Contact:
+  //       parsedFields.email ||
+  //       parsedFields.phone ||
+  //       parsedFields.website ||
+  //       "—",
+  //   }));
+
+  //   // Create worksheet + workbook
+  //   const ws = XLSX.utils.json_to_sheet(exportData);
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "Certified Members");
+
+  //   // Generate and trigger file download
+  //   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  //   const blob = new Blob([excelBuffer], {
+  //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  //   });
+  //   saveAs(
+  //     blob,
+  //     `Certified_Members_${new Date().toISOString().split("T")[0]}.xlsx`
+  //   );
+  // };
+
 
   // ✅ Render
   return (
@@ -278,18 +337,18 @@ function CertifiedMembers() {
 
             {/* If you want to re-enable City filter, just uncomment */}
             {/* <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        By City
-      </label>
-      <input
-        type="text"
-        name="city"
-        value={filters.city}
-        onChange={handleFilterChange}
-        placeholder="Enter city"
-        className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:ring-purple-500 focus:border-purple-500"
-      />
-    </div> */}
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                By City
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={filters.city}
+                onChange={handleFilterChange}
+                placeholder="Enter city"
+                className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -361,6 +420,9 @@ function CertifiedMembers() {
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700 border-b">
                     Certifications
                   </th>
+                  {/* <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700 border-b">
+                    City
+                  </th> */}
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700 border-b">
                     Field of Training
                   </th>
@@ -382,16 +444,35 @@ function CertifiedMembers() {
                       <td className="px-4 py-3 text-sm text-gray-700">
                         {parsedFields.qualification || "—"}
                       </td>
+                      {/* <td className="px-4 py-3 text-sm text-gray-700">
+                        {parsedFields.city || "—"}
+                      </td> */}
                       <td className="px-4 py-3 text-sm text-gray-700">
                         {parsedFields.fieldOfTraining || "—"}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">
-                        {parsedFields.contact ? (
+                        {parsedFields.email ? (
                           <a
-                            href={`mailto:${parsedFields.contact}`}
+                            href={`mailto:${parsedFields.email}`}
                             className="text-purple-600 hover:text-purple-800 underline"
                           >
-                            {parsedFields.contact}
+                            {parsedFields.email}
+                          </a>
+                        ) : parsedFields.phone ? (
+                          <a
+                            href={`tel:${parsedFields.phone}`}
+                            className="text-purple-600 hover:text-purple-800 underline"
+                          >
+                            {parsedFields.phone}
+                          </a>
+                        ) : parsedFields.website ? (
+                          <a
+                            href={parsedFields.website.startsWith("http") ? parsedFields.website : `https://${parsedFields.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-purple-600 hover:text-purple-800 underline"
+                          >
+                            {parsedFields.website}
                           </a>
                         ) : (
                           "—"
@@ -419,8 +500,8 @@ function CertifiedMembers() {
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 className={`px-3 py-1 rounded-lg border text-sm font-medium ${currentPage === 1
-                    ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                    : "text-purple-700 border-purple-300 hover:bg-purple-50"
+                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "text-purple-700 border-purple-300 hover:bg-purple-50"
                   }`}
               >
                 Prev
@@ -433,8 +514,8 @@ function CertifiedMembers() {
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-3 py-1 rounded-lg text-sm font-semibold ${currentPage === page
-                        ? "bg-purple-600 text-white"
-                        : "bg-white text-purple-700 border border-purple-300 hover:bg-purple-50"
+                      ? "bg-purple-600 text-white"
+                      : "bg-white text-purple-700 border border-purple-300 hover:bg-purple-50"
                       }`}
                   >
                     {page}
@@ -446,8 +527,8 @@ function CertifiedMembers() {
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1 rounded-lg border text-sm font-medium ${currentPage === totalPages
-                    ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                    : "text-purple-700 border-purple-300 hover:bg-purple-50"
+                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "text-purple-700 border-purple-300 hover:bg-purple-50"
                   }`}
               >
                 Next
@@ -455,6 +536,15 @@ function CertifiedMembers() {
             </div>
           )}
         </div>
+        {/* <div className="flex justify-end mb-4">
+          <button
+            onClick={exportToExcel}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition"
+          >
+            Export to Excel
+          </button>
+        </div> */}
+
       </div>
     </div>
   );
