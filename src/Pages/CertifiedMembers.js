@@ -359,7 +359,7 @@ function CertifiedMembers() {
                     Name
                   </th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700 border-b">
-                    Qualification
+                    Certifications
                   </th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700 border-b">
                     Field of Training
