@@ -22,6 +22,7 @@ import CertificateForm from './Components/CertificateForm';
 import Payment from './Pages/Payment'
 import AdvertiserRazorpay from "./Components/AdvertiserRazorpay";
 import CertificateDownloader from "./Components/CertificateDownloader";
+import Newsletter from "./Components/NewLetterNov";
 function App() {
   const location = useLocation();
   const activeSlug = location.pathname.split('/').pop(); // Get the last part of the URL path
@@ -57,6 +58,7 @@ function App() {
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
         <Route path="/certificates-saata-conference-2025" element={<CertificateDownloader />} />
+        <Route path="/saata-newsletter-nov-2025" element={<Newsletter/>} />
       </Routes>
       {/* <RazorpayButton/> */}
 
