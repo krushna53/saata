@@ -21,6 +21,8 @@ const AdvertiserRazorpay = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const submissionsClosed = true; // toggle this to enable/disable form
+
 
   const basePrices = {
     "Standee": 25000,
@@ -35,12 +37,12 @@ const AdvertiserRazorpay = () => {
     "Quarter Page – Black & White": 2000,
   };
   const adLimits = {
-  "Back Cover – Colour": 1,
-  "Front Inside Cover – Colour": 1,
-  "Back Inside Cover – Colour": 5,
-};
+    "Back Cover – Colour": 1,
+    "Front Inside Cover – Colour": 1,
+    "Back Inside Cover – Colour": 5,
+  };
 
-const [adBookings, setAdBookings] = useState({});
+  const [adBookings, setAdBookings] = useState({});
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -51,26 +53,26 @@ const [adBookings, setAdBookings] = useState({});
   }, []);
 
   useEffect(() => {
-  const baseTotal = basePrices[formData.adType] || 0;
-  const gstAmount = Math.round(baseTotal * 0.18); // 18% GST
-  const totalWithGST = baseTotal + gstAmount;
-  setAmount(totalWithGST); // Total = base + GST
-}, [formData.adType]);
+    const baseTotal = basePrices[formData.adType] || 0;
+    const gstAmount = Math.round(baseTotal * 0.18); // 18% GST
+    const totalWithGST = baseTotal + gstAmount;
+    setAmount(totalWithGST); // Total = base + GST
+  }, [formData.adType]);
 
-useEffect(() => {
-  const fetchAdBookings = async () => {
-    try {
-      const res = await fetch(`https://saata.org/.netlify/functions/adBookings`);
-      const data = await res.json();
-      console.log("Plan A Count:", data.PlanA || 0);
-      console.log("Plan B Count:", data.PlanB || 0);
-      setAdBookings(data);
-    } catch (err) {
-      console.error("Failed to fetch ad bookings", err);
-    }
-  };
-  fetchAdBookings();
-}, []);
+  useEffect(() => {
+    const fetchAdBookings = async () => {
+      try {
+        const res = await fetch(`https://saata.org/.netlify/functions/adBookings`);
+        const data = await res.json();
+        console.log("Plan A Count:", data.PlanA || 0);
+        console.log("Plan B Count:", data.PlanB || 0);
+        setAdBookings(data);
+      } catch (err) {
+        console.error("Failed to fetch ad bookings", err);
+      }
+    };
+    fetchAdBookings();
+  }, []);
 
 
   const handleChange = (e) => {
@@ -111,7 +113,7 @@ useEffect(() => {
     setPaymentSuccess(false);
 
     try {
-    const orderRes = await fetch(`https://saata.org/.netlify/functions/createOrder`, {
+      const orderRes = await fetch(`https://saata.org/.netlify/functions/createOrder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -139,44 +141,44 @@ useEffect(() => {
           email: formData.email,
           contact: formData.phone,
         },
-       handler: async (resp) => {
-       setPaymentSuccess(true);
+        handler: async (resp) => {
+          setPaymentSuccess(true);
 
-  const savePayload = {
-    id: resp.razorpay_payment_id,
-    order_id: order.id,
-    amount: order.amount / 100,
-    currency: "INR",
-    status: "success",
-    advertiser: formData,
-    created_at: new Date().toISOString(),
-    notes: {
-      advertiserId: "adv_001",
-      plan: formData.adType,
-    },
-  };
+          const savePayload = {
+            id: resp.razorpay_payment_id,
+            order_id: order.id,
+            amount: order.amount / 100,
+            currency: "INR",
+            status: "success",
+            advertiser: formData,
+            created_at: new Date().toISOString(),
+            notes: {
+              advertiserId: "adv_001",
+              plan: formData.adType,
+            },
+          };
 
- const saveResponse = await fetch(`https://saata.org/.netlify/functions/storePayment`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(savePayload),
-  });
+          const saveResponse = await fetch(`https://saata.org/.netlify/functions/storePayment`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(savePayload),
+          });
 
-  const saveResult = await saveResponse.json();
+          const saveResult = await saveResponse.json();
 
-  if (saveResult.success) {
-    setAdBookings(prev => ({
-      ...prev,
-      [formData.adType]: (prev[formData.adType] || 0) + 1
-    }));
+          if (saveResult.success) {
+            setAdBookings(prev => ({
+              ...prev,
+              [formData.adType]: (prev[formData.adType] || 0) + 1
+            }));
 
-    reset(); // ✅ Only added this part
-  } else {
-    throw new Error("Payment succeeded but data save failed.");
-  }
-},
+            reset(); // ✅ Only added this part
+          } else {
+            throw new Error("Payment succeeded but data save failed.");
+          }
+        },
 
-        
+
         modal: {
           ondismiss: () => setIsSubmitting(false),
         },
@@ -195,7 +197,7 @@ useEffect(() => {
       setIsSubmitting(false);
     }
   };
-   const reset = () => {
+  const reset = () => {
     setFormData({
       advertiserName: "",
       contactPerson: "",
@@ -223,127 +225,142 @@ useEffect(() => {
         </p>
 
         <h3 className="mt-6 text-lg font-semibold">Artwork Guidelines</h3>
-<p className="text-gray-700 mt-2">
-  Note: Ad Sizes for Reference (in inches)<br />
-  The Kaleidoscope Journal will be printed in <strong>8.5 x 11 inches</strong>.<br /><br />
-</p>
-<div className="text-gray-700 text-sm space-y-1">
-  <div className="flex justify-between max-w-sm">
-    <span>Ad Type</span>
-    <span>Artwork Size (W x H)</span>
-  </div>
-  <div className="flex justify-between max-w-sm">
-    <span>Full Page</span>
-    <span>8 x 10 in</span>
-  </div>
-  <div className="flex justify-between max-w-sm">
-    <span>Half Page</span>
-    <span>8 x 5 in</span>
-  </div>
-  <div className="flex justify-between max-w-sm">
-    <span>Quarter Page</span>
-    <span>3.5 x 4.8 in</span>
-  </div>
-</div>
-<p className="text-gray-700 mt-3">
-  Please ensure your artwork matches the selected dimensions and is <strong>300 DPI</strong>,
-  in <strong>PDF, JPEG, or PNG</strong> format.
-</p>
-<h3 className="mt-6 text-lg font-semibold">Standee Guidelines</h3>
-<p className="text-gray-700 mt-2">
-  • Size: <strong>5ft x 2ft</strong><br />
-  • Standee to be provided by the sponsor by <strong>15th September 2025</strong><br />
-  • Standee will be placed at prominent locations during the event to maximise visibility.
-</p>
+        <p className="text-gray-700 mt-2">
+          Note: Ad Sizes for Reference (in inches)<br />
+          The Kaleidoscope Journal will be printed in <strong>8.5 x 11 inches</strong>.<br /><br />
+        </p>
+        <div className="text-gray-700 text-sm space-y-1">
+          <div className="flex justify-between max-w-sm">
+            <span>Ad Type</span>
+            <span>Artwork Size (W x H)</span>
+          </div>
+          <div className="flex justify-between max-w-sm">
+            <span>Full Page</span>
+            <span>8 x 10 in</span>
+          </div>
+          <div className="flex justify-between max-w-sm">
+            <span>Half Page</span>
+            <span>8 x 5 in</span>
+          </div>
+          <div className="flex justify-between max-w-sm">
+            <span>Quarter Page</span>
+            <span>3.5 x 4.8 in</span>
+          </div>
+        </div>
+        <p className="text-gray-700 mt-3">
+          Please ensure your artwork matches the selected dimensions and is <strong>300 DPI</strong>,
+          in <strong>PDF, JPEG, or PNG</strong> format.
+        </p>
+        <h3 className="mt-6 text-lg font-semibold">Standee Guidelines</h3>
+        <p className="text-gray-700 mt-2">
+          • Size: <strong>5ft x 2ft</strong><br />
+          • Standee to be provided by the sponsor by <strong>15th September 2025</strong><br />
+          • Standee will be placed at prominent locations during the event to maximise visibility.
+        </p>
 
         <h3 className="mt-6 text-lg font-semibold">Terms & Conditions</h3>
         <p className="text-gray-700 mt-2">
           • All payments are non-refundable. <br />
-          • Non-receipt of artwork by 15th August 2025 will be considered a cancellation without refund. <br />
+          • Non-receipt of artwork will be considered a cancellation without refund. <br />
           • SAATA reserves the right to decline artwork that does not meet technical or content guidelines.
         </p>
       </div>
 
-      <div className="relative max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-        <form
-          className="sticky top-0 h-min"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePayment();
-          }}
-        >
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Advertiser Details</h2>
-          <p className="text-gray-700 mt-2 mb-3">
-       Thank you for your interest in advertising in our official<strong> SAATA Conference 2025 Booklet. </strong>
-      Please fill in the following details to confirm your advertisement placement.
-      </p>
-
-
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-            <input name="advertiserName" value={formData.advertiserName} onChange={handleChange} className="input-field" placeholder="Advertiser / Company Name" required />
-            <input name="contactPerson" value={formData.contactPerson} onChange={handleChange} className="input-field" placeholder="Contact Person" required />
-            <input name="designation" value={formData.designation} onChange={handleChange} className="input-field" placeholder="Designation / Role" required />
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="Email" required />
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input-field" placeholder="Phone Number" pattern="[0-9]+" title="Numbers only" required />
-      <select
-  name="adType"
-  value={formData.adType}
-  onChange={handleChange}
-  className="input-field"
-  required
->
-  <option value="">Select Advertisement Type</option>
-  {Object.entries(basePrices).map(([label, price]) => {
-    const booked = adBookings[label] >= (adLimits[label] || Infinity);
-    return (
-      <option key={label} value={label} disabled={booked}>
-        {label} – ₹{price.toLocaleString("en-IN")} {booked ? "(Booked)" : ""}
-      </option>
-    );
-  })}
-</select>
-
+      <div
+        className={`relative max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg ${submissionsClosed ? "flex justify-center items-center m-auto" : ""
+          }`}
+      >
+        {submissionsClosed ? (
+          <div className="text-center py-10">
+            {!submissionsClosed && (
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Advertiser Submissions
+              </h2>
+            )}
+            <p className="text-gray-700">
+              Advertiser submissions are <span className="font-bold text-red-600">closed</span>.
+            </p>
           </div>
-
-          <div className="mt-4 space-y-2">
-            <h3 className="mt-6 text-lg font-semibold">Artwork Commitment</h3>
-            <label className="flex items-start gap-2">
-              <input type="checkbox" name="artworkCommit" checked={formData.artworkCommit} onChange={handleChange} className="mt-1" />
-              <span>
-                I confirm that I will email the artwork for the advertisement{" "}
-                <a href="mailto:saata.advertise@gmail.com" className="text-blue-600 underline">
-                  saata.advertise@gmail.com
-                </a>{" "}
-                on or before 15 Aug 2025.
-              </span>
-            </label>
-
-            <label className="flex items-start gap-2">
-              <input type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleChange} className="mt-1" />
-              <span>I have read and agree to the terms & conditions.</span>
-            </label>
-          </div>
-
-        <span className="p-2 bg-slate-100 text-center flex items-center justify-center">
-                  Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
-                </span>
-          {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
-
-          <button
-            type="submit"
-            className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${
-              isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-            disabled={isSubmitting || amount === 0}
+        ) : (
+          <form
+            className="sticky top-0 h-min"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handlePayment();
+            }}
           >
-            {isSubmitting ? "Processing…" : "Pay Now"}
-          </button>
-           {paymentSuccess && (
-                <p className="text-[#9cca3b] font-semibold mt-2 text-center">
-                  Payment successful! Thank you.
-                </p>
-              )}       
-        </form>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Advertiser Details</h2>
+            <p className="text-gray-700 mt-2 mb-3">
+              Thank you for your interest in advertising in our official<strong> SAATA Conference 2025 Booklet. </strong>
+              Please fill in the following details to confirm your advertisement placement.
+            </p>
+
+
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+              <input name="advertiserName" value={formData.advertiserName} onChange={handleChange} className="input-field" placeholder="Advertiser / Company Name" required />
+              <input name="contactPerson" value={formData.contactPerson} onChange={handleChange} className="input-field" placeholder="Contact Person" required />
+              <input name="designation" value={formData.designation} onChange={handleChange} className="input-field" placeholder="Designation / Role" required />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="Email" required />
+              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input-field" placeholder="Phone Number" pattern="[0-9]+" title="Numbers only" required />
+              <select
+                name="adType"
+                value={formData.adType}
+                onChange={handleChange}
+                className="input-field"
+                required
+              >
+                <option value="">Select Advertisement Type</option>
+                {Object.entries(basePrices).map(([label, price]) => {
+                  const booked = adBookings[label] >= (adLimits[label] || Infinity);
+                  return (
+                    <option key={label} value={label} disabled={booked}>
+                      {label} – ₹{price.toLocaleString("en-IN")} {booked ? "(Booked)" : ""}
+                    </option>
+                  );
+                })}
+              </select>
+
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <h3 className="mt-6 text-lg font-semibold">Artwork Commitment</h3>
+              <label className="flex items-start gap-2">
+                <input type="checkbox" name="artworkCommit" checked={formData.artworkCommit} onChange={handleChange} className="mt-1" />
+                <span>
+                  I confirm that I will email the artwork for the advertisement{" "}
+                  <a href="mailto:saata.advertise@gmail.com" className="text-blue-600 underline">
+                    saata.advertise@gmail.com
+                  </a>{" "}
+                  at the earliest.
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2">
+                <input type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleChange} className="mt-1" />
+                <span>I have read and agree to the terms & conditions.</span>
+              </label>
+            </div>
+
+            <span className="p-2 bg-slate-100 text-center flex items-center justify-center">
+              Total (incl. 18% GST): ₹{amount.toLocaleString("en-IN")}
+            </span>
+            {error && <div className="error w-full text-red-600 mt-4 text-center">{error}</div>}
+
+            <button
+              type="submit"
+              className={`w-full py-3 text-white font-bold rounded-lg mt-4 transition ${isSubmitting || amount === 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              disabled={isSubmitting || amount === 0}
+            >
+              {isSubmitting ? "Processing…" : "Pay Now"}
+            </button>
+            {paymentSuccess && (
+              <p className="text-[#9cca3b] font-semibold mt-2 text-center">
+                Payment successful! Thank you.
+              </p>
+            )}
+          </form>
+        )}
       </div>
     </div>
   );

@@ -22,6 +22,9 @@ import CertificateForm from './Components/CertificateForm';
 import Payment from './Pages/Payment'
 import AdvertiserRazorpay from "./Components/AdvertiserRazorpay";
 import Directory from "./Components/Directory";
+import CertificateDownloader from "./Components/CertificateDownloader";
+import Newsletter from "./Components/NewLetterNov";
+import PreConferenceCertificates from './Components/PreConferenceCertificates';
 function App() {
   const location = useLocation();
   const activeSlug = location.pathname.split('/').pop(); // Get the last part of the URL path
@@ -39,7 +42,7 @@ function App() {
       <TopHeader activeSlug={activeSlug} />
       <Routes>
         <Route exact path='/' element={<Home />} />
-        <Route exact path='page/:slug' element={<BasicPage />} />
+        <Route path='page/:slug' element={<BasicPage />} />
         <Route exact path='/newsletterlist/' element={<CurrentandPreviousIssues />} />
         <Route exact path='/newsletterTeam/:slug' element={<NewsletterTeam />} />
         <Route exact path='/gallery' element={<Gallery />} />
@@ -57,6 +60,9 @@ function App() {
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
          <Route path="/saata-directory" element={<Directory />} />
+        <Route path="/certificates-saata-conference-2025" element={<CertificateDownloader />} />
+        <Route path="/saata-newsletter-nov-2025" element={<Newsletter/>} />
+        <Route path="/certificates-saata-pre-conference-2025" element={<PreConferenceCertificates />} />
       </Routes>
       {/* <RazorpayButton/> */}
 

@@ -20,6 +20,7 @@ const RazorpayButton = () => {
   const [amount, setAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const registrationsClosed = true; //
 
   useEffect(() => {
     calculateAmount();
@@ -310,7 +311,15 @@ const RazorpayButton = () => {
           </div>
          
         </div>
-        <div className="relative max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <div className="sticky !top-[20px] h-min !mt-[17rem] max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg flex justify-center items-center m-auto">
+          {registrationsClosed ? (
+    <div className=" text-center py-10">
+      <p className="text-gray-700 text-lg">
+        The event has concluded and the registrations have{" "}
+        <span className="font-bold text-red-600">closed</span>.
+      </p>
+    </div>
+  ) : (
           <form className="sticky top-0 h-min">
             <div>
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Conference Registration</h2>
@@ -400,6 +409,7 @@ const RazorpayButton = () => {
               )}            
               </div>
           </form>
+           )}
         </div>
       </div>
     </>

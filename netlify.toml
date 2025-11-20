@@ -3,6 +3,7 @@
   command = "npm install --legacy-peer-deps && npm run build"
   functions = "Backend/netlify/functions"
 
+# API Function redirects
 [[redirects]]
   from = "/create-order"
   to = "/.netlify/functions/createOrder"
@@ -13,13 +14,103 @@
   to = "/.netlify/functions/storePayment"
   status = 200
 
+# Static assets
 [[redirects]]
   from = "/static/*"
   to = "/static/:splat"
   status = 200
 
+# PDF files
+[[redirects]]
+  from = "/:volume/:filename.pdf"
+  to = "/volume:volume/:filename.pdf"
+  status = 200
+
+# Newsletter routes
+[[redirects]]
+  from = "/newsletterlist/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/newsletterTeam/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Page routes
+[[redirects]]
+  from = "/page/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Specific routes
+[[redirects]]
+  from = "/sajta-journals"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/gallery"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/membershipregistration"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/Certifiedmembers"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/video"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/faq"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/mll-2025/generate-your-certificate"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/saata-conference-2025-registration"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/saata-conference-2025-advertise"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/certificates-saata-conference-2025"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Final fallback for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = true
+  

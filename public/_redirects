@@ -1,1 +1,32 @@
-/certificateName.csv /certificateName.csv 200
+# Redirect rule for examination forms and similar pages
+/page/*    /index.html   200
+
+# API Function redirects
+/create-order    /.netlify/functions/createOrder   200
+/store-payment   /.netlify/functions/storePayment  200
+
+# Static assets
+/static/*    /static/:splat    200
+
+# PDF files
+/:volume/:filename.pdf    /volume:volume/:filename.pdf    200
+
+# Newsletter routes
+/newsletterlist/*    /index.html   200
+/newsletterTeam/*    /index.html   200
+
+# Specific routes
+/gallery    /index.html   200
+/membershipregistration    /index.html   200
+/Certifiedmembers    /index.html   200
+/SAJTATeam    /index.html   200
+/video    /index.html   200
+/sajta-journals    /index.html   200
+/faq    /index.html   200
+/mll-2025/generate-your-certificate    /index.html   200
+/saata-conference-2025-registration    /index.html   200
+/saata-conference-2025-advertise    /index.html   200
+/certificates-saata-conference-2025    /index.html   200
+
+# Final fallback for SPA
+/*    /index.html   200
