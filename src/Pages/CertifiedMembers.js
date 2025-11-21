@@ -45,42 +45,40 @@ function CertifiedMembers() {
             roles: {},
           };
 
-          const processed = response.items.map((item) => {
-            const certLevels = item.fields.certifications
-              ? item.fields.certifications.split(";").map((c) => c.trim())
-              : [];
+          const splitMulti = (value) =>
+  value
+    ? value.split(/[,;]+/).map((v) => v.trim()).filter(Boolean)
+    : [];
 
-            const roles = item.fields.roleThatDescribesYourCurrentProfessionalPrac
-              ? item.fields.roleThatDescribesYourCurrentProfessionalPrac.split(";").map((r) => r.trim())
-              : [];
+const processed = response.items.map((item) => {
+  const certLevels = splitMulti(item.fields.certifications);
+  const roles = splitMulti(item.fields.roleThatDescribesYourCurrentProfessionalPrac);
+  const specialization = splitMulti(item.fields.fieldOfTraining);
 
-            const specialization = item.fields.fieldOfTraining
-              ? item.fields.fieldOfTraining.split(";").map((s) => s.trim())
-              : [];
+  // Update summary counts
+  certLevels.forEach((level) => {
+    summary.certificationLevel[level] = (summary.certificationLevel[level] || 0) + 1;
+  });
+  specialization.forEach((spec) => {
+    summary.specialization[spec] = (summary.specialization[spec] || 0) + 1;
+  });
+  roles.forEach((r) => {
+    summary.roles[r] = (summary.roles[r] || 0) + 1;
+  });
 
-            // Update summary counts
-            certLevels.forEach((level) => {
-              summary.certificationLevel[level] = (summary.certificationLevel[level] || 0) + 1;
-            });
-            specialization.forEach((spec) => {
-              summary.specialization[spec] = (summary.specialization[spec] || 0) + 1;
-            });
-            roles.forEach((r) => {
-              summary.roles[r] = (summary.roles[r] || 0) + 1;
-            });
+  return {
+    ...item,
+    parsedFields: {
+      name: item.fields.name || "",
+      certifications: certLevels,
+      fieldOfTraining: specialization,
+      city: item.fields.city || "",
+      contact: item.fields.contact || "",
+      roles: roles,
+    },
+  };
+});
 
-            return {
-              ...item,
-              parsedFields: {
-                name: item.fields.name || "",
-                certifications: certLevels,
-                fieldOfTraining: specialization,
-                city: item.fields.city || "",
-                contact: item.fields.contact || "",
-                roles: roles,
-              },
-            };
-          });
 
           setEntry(processed);
           setFiltered(processed);
@@ -95,28 +93,59 @@ function CertifiedMembers() {
   }, []);
 
   // Filters
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    const updatedFilters = { ...filters, [name]: value };
-    setFilters(updatedFilters);
+const handleFilterChange = (e) => {
+  const { name, value } = e.target;
 
-    const results = entry.filter((item) => {
-      const nameMatch = item.parsedFields.name.toLowerCase().includes(updatedFilters.name.toLowerCase());
-      const cityMatch =
-        updatedFilters.city === "" || item.parsedFields.city.toLowerCase().includes(updatedFilters.city.toLowerCase());
-      const roleMatch =
-        updatedFilters.role === "All" || item.parsedFields.roles.includes(updatedFilters.role);
-      const specMatch =
-        updatedFilters.specialization === "All" || item.parsedFields.fieldOfTraining.includes(updatedFilters.specialization);
-      const certMatch =
-        updatedFilters.certificationLevel === "All" || item.parsedFields.certifications.includes(updatedFilters.certificationLevel);
+  // update filters
+  const updatedFilters = { ...filters, [name]: value };
+  setFilters(updatedFilters);
 
-      return nameMatch && cityMatch && roleMatch && specMatch && certMatch;
-    });
+  // filter logic
+  const results = entry.filter((item) => {
+    const itemName = item.parsedFields.name?.toLowerCase() || "";
+    const itemCity = item.parsedFields.city?.toLowerCase() || "";
 
-    setFiltered(results);
-    setCurrentPage(1);
-  };
+    // filter checks
+    const nameMatch =
+      itemName.includes(updatedFilters.name.toLowerCase());
+
+    const cityMatch =
+      updatedFilters.city === "" ||
+      itemCity.includes(updatedFilters.city.toLowerCase());
+
+    const roleMatch =
+      updatedFilters.role === "All" ||
+      item.parsedFields.roles?.includes(updatedFilters.role);
+
+    const specMatch =
+      updatedFilters.specialization === "All" ||
+      item.parsedFields.fieldOfTraining?.includes(updatedFilters.specialization);
+
+    const certMatch =
+      updatedFilters.certificationLevel === "All" ||
+      item.parsedFields.certifications?.includes(updatedFilters.certificationLevel);
+
+    return (
+      nameMatch &&
+      cityMatch &&
+      roleMatch &&
+      specMatch &&
+      certMatch
+    );
+  });
+
+  // update results + reset pagination
+  setFiltered(results);
+  setCurrentPage(1);
+};
+const uniqueCertLevels = [...new Set(
+  entry.flatMap(item => item.parsedFields.certifications)
+)];
+
+const uniqueSpecialisations = [...new Set(
+  entry.flatMap(item => item.parsedFields.fieldOfTraining)
+)];
+
 
   return (
     <div className="Certified-Members-section">
@@ -194,26 +223,28 @@ function CertifiedMembers() {
       className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
     />
   </div>
+{/* Certification Level */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Certification Level
+  </label>
 
-  {/* Certification Level */}
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Certification Level
-    </label>
-    <select
-      name="certificationLevel"
-      value={filters.certificationLevel}
-      onChange={handleFilterChange}
-      className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-    >
-      <option value="All">All</option>
-      {Object.keys(stats.certificationLevel || {}).map((c) => (
-        <option key={c} value={c}>
-          {c}
-        </option>
-      ))}
-    </select>
-  </div>
+  <select
+    name="certificationLevel"
+    value={filters.certificationLevel}
+    onChange={handleFilterChange}
+    className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
+  >
+    <option value="All">All</option>
+
+    {[...new Set(entry.flatMap(e => e.parsedFields.certifications))].map(level => (
+      <option key={level} value={level}>
+        {level}
+      </option>
+    ))}
+  </select>
+</div>
+
 
   {/* Role */}
   <div>
@@ -235,27 +266,28 @@ function CertifiedMembers() {
     </select>
   </div>
 
-  {/* Field of Training / Specialization */}
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Specialization
-    </label>
-    <select
-      name="specialization"
-      value={filters.specialization}
-      onChange={handleFilterChange}
-      className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-    >
-      <option value="All">All</option>
-      {[...new Set(entry.flatMap((e) => e.parsedFields.fieldOfTraining))].map(
-        (s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        )
-      )}
-    </select>
-  </div>
+{/* Field of Training / Specialization */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Specialization
+  </label>
+
+  <select
+    name="specialization"
+    value={filters.specialization}
+    onChange={handleFilterChange}
+    className="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
+  >
+    <option value="All">All</option>
+
+    {[...new Set(entry.flatMap(e => e.parsedFields.fieldOfTraining))].map(spec => (
+      <option key={spec} value={spec}>
+        {spec}
+      </option>
+    ))}
+  </select>
+</div>
+
 
 </div>
 
