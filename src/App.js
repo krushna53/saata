@@ -21,6 +21,7 @@ import CertificateForm from './Components/CertificateForm';
 // import RazorpayButton from './Components/RazorpayButton';
 import Payment from './Pages/Payment'
 import AdvertiserRazorpay from "./Components/AdvertiserRazorpay";
+import Directory from "./Components/Directory";
 import CertificateDownloader from "./Components/CertificateDownloader";
 import Newsletter from "./Components/NewLetterNov";
 import PreConferenceCertificates from './Components/PreConferenceCertificates';
@@ -58,6 +59,7 @@ function App() {
         <Route exact path='/faq' element={<Faq />} />
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
+         <Route path="/saata-directory" element={<Directory />} />
         <Route path="/certificates-saata-conference-2025" element={<CertificateDownloader />} />
         <Route path="/saata-newsletter-nov-2025" element={<Newsletter/>} />
         <Route path="/certificates-saata-pre-conference-2025" element={<PreConferenceCertificates />} />

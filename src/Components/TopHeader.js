@@ -93,8 +93,18 @@ const TopHeader = () => {
                 </NavLink>
               </li>
               <li className="directory menu_item Newsletter">
-                <NavLink to="/CertifiedMembers">Directory</NavLink>
                
+                <NavLink to="/saata-directory">Directory</NavLink>
+                <ul className="hover">
+                <li>
+                    <NavLink to="/CertifiedMembers" onClick={toggleMenu}>
+                   Certified Members
+                    </NavLink>
+                  </li>
+                  
+                  
+                </ul>
+              
               </li>
             </ul>
           </li>
