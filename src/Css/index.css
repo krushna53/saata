@@ -3274,3 +3274,7 @@ ul .menu_item:hover > a {
 .page-advertise option{
   font-size: 14px;
 }
+.page-mll-2026 .about_us_content p a{
+color: #a37bb6;
+text-decoration: underline;
+}
