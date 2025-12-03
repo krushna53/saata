@@ -24,9 +24,11 @@ const TopHeader = () => {
             {" "}
             <i className="fa-brands fa-facebook"></i>
           </a>
-          <a href="https://www.instagram.com/saata_org/?igshid=MzRlODBiNWFlZA%3D%3D"
+          <a
+            href="https://www.instagram.com/saata_org/?igshid=MzRlODBiNWFlZA%3D%3D"
             target="_blank"
-            rel="noreferrer">
+            rel="noreferrer"
+          >
             {""}
             <i className="fa-brands fa-instagram"></i>
           </a>
@@ -52,14 +54,19 @@ const TopHeader = () => {
           <div className="menu-toggle-bar"></div>
           <div className="menu-toggle-bar"></div>
         </button>
-        <ul className={`menu-folder ${menuOpen ? 'menu-open' : ''}`}>
-          <li className="menu_item"><NavLink to='/'>Home</NavLink></li>
+        <ul className={`menu-folder ${menuOpen ? "menu-open" : ""}`}>
+          <li className="menu_item">
+            <NavLink to="/">Home</NavLink>
+          </li>
           <li className="Certifications menu_item">
             <NavLink to="/">Certifications</NavLink>
             <ul className="Certifications-folder">
-            <li>
-                <NavLink to="/page/pathways-to-TA-credentialing" onClick={toggleMenu}>
-                Pathways to TA Credentialing
+              <li>
+                <NavLink
+                  to="/page/pathways-to-TA-credentialing"
+                  onClick={toggleMenu}
+                >
+                  Pathways to TA Credentialing
                 </NavLink>
               </li>
               <li>
@@ -93,18 +100,13 @@ const TopHeader = () => {
                 </NavLink>
               </li>
               <li className="directory menu_item Newsletter">
-               
                 <NavLink to="/saata-directory">Directory</NavLink>
-                <ul className="hover">
-                <li>
-                    <NavLink to="/CertifiedMembers" onClick={toggleMenu}>
-                   Certified Members
-                    </NavLink>
-                  </li>
-                  
-                  
-                </ul>
-              
+              </li>
+
+              <li>
+                <NavLink to="/CertifiedMembers" onClick={toggleMenu}>
+                  Certified Members
+                </NavLink>
               </li>
             </ul>
           </li>
@@ -113,7 +115,7 @@ const TopHeader = () => {
             <ul className="Programs-folder">
               <li>
                 <NavLink to="/page/saata-calendar" onClick={toggleMenu}>
-                Saata Calendar
+                  Saata Calendar
                 </NavLink>
               </li>
               <li>
@@ -123,7 +125,7 @@ const TopHeader = () => {
               </li>
               <li>
                 <NavLink to="/page/sajta-event" onClick={toggleMenu}>
-                SAJTA Event
+                  SAJTA Event
                 </NavLink>
               </li>
               <li>
@@ -132,19 +134,18 @@ const TopHeader = () => {
                 </NavLink>
               </li>
               <li className="News_hover">
-              <NavLink to="/">Past Events</NavLink>
+                <NavLink to="/">Past Events</NavLink>
                 <ul className="hover">
-                   <li>
-                <NavLink to="/page/mll-2025" onClick={toggleMenu}>
-                  MLL 2025
-                </NavLink>
-              </li>
-                <li>
-                <NavLink to="/page/mll-2024" onClick={toggleMenu}>
-                  MLL 2024
-                </NavLink>
-              </li>
-                  
+                  <li>
+                    <NavLink to="/page/mll-2025" onClick={toggleMenu}>
+                      MLL 2025
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/page/mll-2024" onClick={toggleMenu}>
+                      MLL 2024
+                    </NavLink>
+                  </li>
                 </ul>
               </li>
               {/* <li>
@@ -201,7 +202,10 @@ const TopHeader = () => {
                 <NavLink to="/">Newsletter</NavLink>
                 <ul className="hover">
                   <li>
-                    <NavLink to="/newsletterTeam/truth-seeker" onClick={toggleMenu}>
+                    <NavLink
+                      to="/newsletterTeam/truth-seeker"
+                      onClick={toggleMenu}
+                    >
                       Newsletter Team
                     </NavLink>
                   </li>
@@ -211,12 +215,18 @@ const TopHeader = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/page/guidelines-for-content-contributors" onClick={toggleMenu}>
+                    <NavLink
+                      to="/page/guidelines-for-content-contributors"
+                      onClick={toggleMenu}
+                    >
                       Guidelines
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/page/newsletter-advertisement-policy" onClick={toggleMenu}>
+                    <NavLink
+                      to="/page/newsletter-advertisement-policy"
+                      onClick={toggleMenu}
+                    >
                       Advertisement Policy
                     </NavLink>
                   </li>
@@ -232,9 +242,9 @@ const TopHeader = () => {
                   SAJTA Journals
                 </NavLink>
                 <ul className="hover">
-                <li>
+                  <li>
                     <NavLink to="/sajta-journals" onClick={toggleMenu}>
-                    Current and Previous Issues
+                      Current and Previous Issues
                     </NavLink>
                   </li>
                   <li>
@@ -243,14 +253,15 @@ const TopHeader = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/page/sajta-submission-guidelines" onClick={toggleMenu}>
-                    SAJTA Guidelines
+                    <NavLink
+                      to="/page/sajta-submission-guidelines"
+                      onClick={toggleMenu}
+                    >
+                      SAJTA Guidelines
                     </NavLink>
                   </li>
-                  
                 </ul>
               </li>
-
             </ul>
           </li>
           <li className="Newsletter menu_item">
