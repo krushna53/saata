@@ -13,7 +13,9 @@ const TopHeader = () => {
     <div className="Top-header-section-folder">
       <div className="Top-Header-wrapper-folder">
         <div className="logo">
-          <Link to='/'><img src={logo} alt="Logo" /></Link>
+          <Link to="/">
+            <img src={logo} alt="Logo" />
+          </Link>
         </div>
         <div className="social_icon">
           <a
@@ -261,6 +263,11 @@ const TopHeader = () => {
                     </NavLink>
                   </li>
                 </ul>
+              </li>
+              <li>
+                <NavLink to="/page/ai-disclosure-policy" onClick={toggleMenu}>
+                  AI Disclosure Policy
+                </NavLink>
               </li>
             </ul>
           </li>
