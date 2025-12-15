@@ -19,6 +19,7 @@ function SatjaTeam() {
         if (response.items.length) {
           // Filter the items where fields.label is "CertifiedMembers"
           const SAJTATeam = response.items.filter(item => item.fields.lable === "SAJTATeam");
+          
           setEntry(SAJTATeam);
         }
       } catch (error) {
@@ -27,6 +28,7 @@ function SatjaTeam() {
     };
     fetchPage();
   }, []);
+ 
 
   return (
     <>
@@ -37,14 +39,16 @@ function SatjaTeam() {
       {entry.map((item) => {
         const { qualification, name, title } = item.fields;
         const id = item.sys.id;
-
         const richTextContent = documentToReactComponents(qualification, { renderNode: {/* your renderNode config */} });
         const richTextName = documentToReactComponents(name, { renderNode: {/* your renderNode config */} });
 
         return (
           <div className="member-card" key={id}>
             <div className="member-image">
-              <img src={`https:${item.fields.image?.fields?.file?.url}`} alt={name} />
+              <img
+                src={`https:${name?.content?.[0]?.data?.target?.fields?.file?.url}`}
+                alt={name}
+              />
             </div>
             <div className="member-details">
               <h2>{title}</h2>

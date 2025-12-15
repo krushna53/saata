@@ -924,3 +924,18 @@ $background-color_1: rgb(232, 76, 61);
   list-style: disc !important;
   display: list-item !important;
 }
+.page-SAJTATeam .Certified-Members-folder{
+ gap: 25px;
+grid-template-columns: repeat(4, 1fr);
+ justify-content: center;
+   display: grid;
+}
+.page-SAJTATeam .Certified-Members-folder{
+ gap: 25px;
+grid-template-columns: repeat(4, 1fr);
+ justify-content: center;
+   display: grid;
+}
+.page-SAJTATeam .member-card {
+    display: block;
+}
