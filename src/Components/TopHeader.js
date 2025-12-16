@@ -262,6 +262,14 @@ const TopHeader = () => {
                       SAJTA Guidelines
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/page/book-review-guidelines"
+                      onClick={toggleMenu}
+                    >
+                      Book Review Guidelines
+                    </NavLink>
+                  </li>
                 </ul>
               </li>
               <li>
