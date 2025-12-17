@@ -954,6 +954,10 @@ grid-template-columns: repeat(3, 1fr);
   .page-SAJTATeam .Certified-Members-folder div{
 margin: auto;
 }
+  div#SAJTA_team {
+    max-width: 90%;
+    margin: auto;
+}
 }
 /* Mobile */
 @media (max-width: 600px) {
