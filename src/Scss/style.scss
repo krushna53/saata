@@ -357,6 +357,7 @@ $background-color_1: rgb(232, 76, 61);
 
 .page-SAJTATeam .Certified-Members-text {
   max-width: 260px;
+  text-align: left;
 }
 
 .page-examination-forms {
@@ -939,10 +940,32 @@ grid-template-columns: repeat(4, 1fr);
 }
 .page-SAJTATeam .Certified-Members-folder{
  gap: 25px;
-grid-template-columns: repeat(4, 1fr);
+grid-template-columns: repeat(3, 1fr);
  justify-content: center;
    display: grid;
 }
 .page-SAJTATeam .member-card {
     display: block;
+}
+@media (max-width: 1024px) {
+    .page-SAJTATeam .Certified-Members-folder {
+        grid-template-columns: repeat(2, 1fr);
+    }
+  .page-SAJTATeam .Certified-Members-folder div{
+margin: auto;
+}
+  div#SAJTA_team {
+    max-width: 90%;
+    margin: auto;
+}
+}
+/* Mobile */
+@media (max-width: 600px) {
+    .page-SAJTATeam .Certified-Members-folder {
+        grid-template-columns: repeat(1, 1fr);
+        padding-bottom: 50px;
+    }
+  .page-SAJTATeam .Certified-Members-folder div{
+margin: auto;
+}
 }
