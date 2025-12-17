@@ -951,10 +951,16 @@ grid-template-columns: repeat(3, 1fr);
     .page-SAJTATeam .Certified-Members-folder {
         grid-template-columns: repeat(2, 1fr);
     }
+  .page-SAJTATeam .Certified-Members-folder div{
+margin: auto;
+}
 }
 /* Mobile */
 @media (max-width: 600px) {
     .page-SAJTATeam .Certified-Members-folder {
         grid-template-columns: repeat(1, 1fr);
     }
+  .page-SAJTATeam .Certified-Members-folder div{
+margin: auto;
+}
 }
