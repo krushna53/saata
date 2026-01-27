@@ -25,6 +25,8 @@ import Directory from "./Components/Directory";
 import CertificateDownloader from "./Components/CertificateDownloader";
 import Newsletter from "./Components/NewLetterNov";
 import PreConferenceCertificates from './Components/PreConferenceCertificates';
+import MLL2025 from './Components/MLL2025'
+import MLL2026 from './Components/MLL2026'
 function App() {
   const location = useLocation();
   const activeSlug = location.pathname.split('/').pop(); // Get the last part of the URL path
@@ -55,7 +57,8 @@ function App() {
         {/* <Route exact path='/article' element={<Articles />} /> */}
         <Route exact path='/faq' element={<Faq />} />
 
-        <Route exact path='/mll-2025/generate-your-certificate' element={<CertificateForm />} />
+        <Route path="/mll-2025/generate-your-certificate" element={<MLL2025 />} />
+        <Route path="/mll-2026/generate-your-certificate" element={<MLL2026 />} />
         <Route exact path='/faq' element={<Faq />} />
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
