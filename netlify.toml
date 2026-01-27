@@ -90,6 +90,12 @@
   force = true
 
 [[redirects]]
+  from = "/mll-2026/generate-your-certificate"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/saata-conference-2025-registration"
   to = "/index.html"
   status = 200
