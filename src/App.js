@@ -55,7 +55,7 @@ function App() {
         {/* <Route exact path='/article' element={<Articles />} /> */}
         <Route exact path='/faq' element={<Faq />} />
 
-        <Route exact path='/mll-2025/generate-your-certificate' element={<CertificateForm />} />
+        <Route exact path='/mll-2025-generate-your-certificate' element={<CertificateForm />} />
         <Route exact path='/faq' element={<Faq />} />
         <Route exact path='/saata-conference-2025-registration' element={<Payment />} />
         <Route path="/saata-conference-2025-advertise" element={<AdvertiserRazorpay />} />
