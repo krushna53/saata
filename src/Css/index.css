@@ -3207,8 +3207,9 @@ ul .menu_item:hover > a {
 .page-generate-your-certificate .certificate input{
   width: 74.8%;
 }
-.error{
-   width: 50%;
+.error {
+  width: auto;
+  padding: 20px 0px;
 }
 .button-wrapper{
   display: flex;

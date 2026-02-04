@@ -125,11 +125,11 @@ const TopHeader = () => {
                   TA 101 - Program Details
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink to="/page/sajta-event" onClick={toggleMenu}>
                   SAJTA Event
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink to="/page/mll-2026" onClick={toggleMenu}>
                   MLL 2026
