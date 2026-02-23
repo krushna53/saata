@@ -1,72 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { createClient } from 'contentful';
-import * as XLSX from 'xlsx';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import React, { useEffect, useState } from "react";
+import { createClient } from "contentful";
+import * as XLSX from "xlsx";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import "bootstrap/dist/css/bootstrap.min.css";
+import client from "../client";
 const ExcelDisplay = () => {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [headers, setHeaders] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchTriggered, setSearchTriggered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState(null);
   const [additionalInfo, setAdditionalInfo] = useState(null);
-  const client = createClient({
-    space: 'p2utm544n4sq',
-    accessToken: 'cQTkJfWn15RinC2scjPL89MreIbwQY31ODrPqDlc3RM',
-  });
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchData = async () => {
       try {
-        const response = await client.getEntries({
-          content_type: 'article',
-          select: 'fields.articleFile,fields.description,fields.linkWithDis',
-        });
+        const res = await fetch("/data/sajta.json");
+        const data = await res.json();
 
-        if (response.items.length > 0) {
-          const fileUrl = response.items[0].fields.articleFile.fields.file.url;
-          const fileResponse = await fetch(fileUrl);
-
-          if (!fileResponse.ok) {
-            throw new Error('File not found');
-          }
-          const arrayBuffer = await fileResponse.arrayBuffer();
-          const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-          const filteredData = jsonData.filter(item =>
-            Object.values(item).some(value => value !== null && value !== '')
-          );
-          setAdditionalInfo(response.items[0].fields.linkWithDis);
-          setArticles(filteredData);
-          if (filteredData.length > 0) {
-            setHeaders(Object.keys(filteredData[0]));
-          }
-
-          setDescription(response.items[0].fields.description);
-        }
-      } catch (error) {
-        console.error('Error fetching the Excel file:', error);
+        setArticles(data);
+        setHeaders(Object.keys(data[0] || {}));
+      } catch (err) {
+        console.error(err);
       }
     };
 
-    fetchArticles();
-  }, [client]);
+    fetchData();
+  }, []);
 
+  useEffect(() => {
+    const fetchContent = async () => {
+      const cacheKey = "sajta_content_v1";
+      const cached = localStorage.getItem(cacheKey);
+
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setDescription(parsed.description);
+        setAdditionalInfo(parsed.additionalInfo);
+        return; // 🚀 STOP API CALL
+      }
+
+      try {
+        const response = await client.getEntries({
+          content_type: "article",
+          select: "fields.description,fields.linkWithDec",
+          limit: 1,
+        });
+
+        if (response.items.length > 0) {
+          const data = {
+            description: response.items[0].fields.description,
+            additionalInfo: response.items[0].fields.linkWithDec,
+          };
+
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+
+          setDescription(data.description);
+          setAdditionalInfo(data.additionalInfo);
+        }
+      } catch (error) {
+        console.error("Contentful error:", error);
+      }
+    };
+
+    fetchContent();
+  }, []);
   const handleSearchInput = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const filterArticles = () => {
-    const filtered = articles.filter(article =>
-      Object.values(article).some(cell =>
-        typeof cell === 'string' && cell.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    const filtered = articles.filter((article) =>
+      Object.values(article).some(
+        (cell) =>
+          typeof cell === "string" &&
+          cell.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
     );
     setFilteredArticles(filtered);
   };
@@ -99,7 +110,8 @@ const ExcelDisplay = () => {
   const shortenUrl = (url) => {
     try {
       const { hostname, pathname } = new URL(url);
-      const shortPath = pathname.length > 30 ? `${pathname.slice(0, 30)}...` : pathname;
+      const shortPath =
+        pathname.length > 30 ? `${pathname.slice(0, 30)}...` : pathname;
       return `${hostname}${shortPath}`;
     } catch (error) {
       return url;
@@ -109,30 +121,39 @@ const ExcelDisplay = () => {
   const displayData = searchTerm ? filteredArticles : [];
   const options = {
     renderNode: {
-      'embedded-asset-block': (node) => {
+      "embedded-asset-block": (node) => {
         return null;
       },
-      'hyperlink': (node) => {
+      hyperlink: (node) => {
         const { uri } = node.data;
         return (
-          <a href={uri} target="_blank" rel="noopener noreferrer" className="text-primary">
+          <a
+            href={uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary"
+          >
             {node.content[0].value}
           </a>
         );
       },
-      'asset-hyperlink': (node) => {
+      "asset-hyperlink": (node) => {
         const assetTitle = node.content[0].value;
         const assetUrl = node.data.target.fields.file.url;
-        
+
         return (
-          <a href={assetUrl} target="_blank" rel="noopener noreferrer" className="text-primary">
+          <a
+            href={assetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary"
+          >
             {assetTitle}
           </a>
         );
-      }
-    }
+      },
+    },
   };
-
 
   return (
     <div className="container excel-display my-5">
@@ -166,18 +187,28 @@ const ExcelDisplay = () => {
                   {headers.map((header) => {
                     const cellData = item[header];
 
-                    if (header === 'articleFile' && cellData && cellData.fields && cellData.fields.file && cellData.fields.file.url) {
+                    if (
+                      header === "articleFile" &&
+                      cellData &&
+                      cellData.fields &&
+                      cellData.fields.file &&
+                      cellData.fields.file.url
+                    ) {
                       return (
                         <div key={header} className="mb-2">
                           <strong>Access these Articles Here: </strong>
-                          <a href={cellData.fields.file.url} target="_blank" rel="noopener noreferrer">
+                          <a
+                            href={cellData.fields.file.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             View File
                           </a>
                         </div>
                       );
                     }
 
-                    if (typeof cellData === 'string' && isValidUrl(cellData)) {
+                    if (typeof cellData === "string" && isValidUrl(cellData)) {
                       return (
                         <div key={header} className="mb-2">
                           <a
@@ -209,12 +240,17 @@ const ExcelDisplay = () => {
             </div>
           ))}
         </div>
-      ) : !loading && searchTerm && displayData.length === 0 && (
-        <p className="text-center">No matching articles found.</p>
+      ) : (
+        !loading &&
+        searchTerm &&
+        displayData.length === 0 && (
+          <p className="text-center">No matching articles found.</p>
+        )
       )}
       <br />
       <div className="about_us_content">
-        {description && documentToReactComponents(description, options)} {/* Ensure this is rendering correctly */}
+        {description && documentToReactComponents(description, options)}{" "}
+        {/* Ensure this is rendering correctly */}
       </div>
     </div>
   );
