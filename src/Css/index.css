@@ -3385,13 +3385,13 @@ li.title {
     margin-left: 0 !important;
     transition: all 0.1s ease-in;
 }
-.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder ul {
+ .news-letter-team-wrapper .newsletterTeam-folder ul {
     flex-direction: row !important;
 }
-.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder {
+ .news-letter-team-wrapper .newsletterTeam-folder {
     width: 100% !important;
 }
-.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder ul li {
+ .news-letter-team-wrapper .newsletterTeam-folder ul li {
     list-style: none;
     padding: 0px !important;
     border-bottom: none !important;
