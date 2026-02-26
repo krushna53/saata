@@ -33,11 +33,6 @@
   status = 200
   force = true
 
-[[redirects]]
-  from = "/newsletterTeam/*"
-  to = "/index.html"
-  status = 200
-  force = true
 
 # Page routes
 [[redirects]]
