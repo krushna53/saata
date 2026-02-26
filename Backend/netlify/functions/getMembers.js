@@ -134,9 +134,10 @@ async function getCityForUser(subscription, accessToken) {
       customer.billing_address?.city ||
       customer.shipping_address?.city ||
       "N/A";
+    const fullName = `${customer.first_name || ""} ${customer.last_name || ""}`.trim();
 
     const memberData = {
-      name: customer.display_name || subscription.customer_name || "Unknown",
+      name: fullName || customer.display_name || subscription.customer_name || "Unknown",
       email: customer.email || subscription.email || "N/A",
       membership: fullSub.plan?.name || subscription.plan_name || "N/A",
       validity: fullSub.current_term_ends_at || "",
