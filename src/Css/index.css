@@ -3282,3 +3282,122 @@ ul .menu_item:hover > a {
 color: #a37bb6;
 text-decoration: underline;
 }
+li.title {
+  color: #a37bb6;
+  font-weight: 600;
+}
+
+/* Desktop - no change */
+.newsletterTeam-folder ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mobile only tab design */
+@media (max-width: 768px) {
+  .newsletterTeam-folder {
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .newsletterTeam-folder ul {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 20px;
+  }
+
+  .newsletterTeam-folder ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .newsletterTeam-folder .title {
+    display: block;
+    width: 100%;
+    font-size: 22px;
+  }
+
+  .newsletterTeam-folder li {
+    flex: 0 0 auto;
+  }
+
+  .newsletterTeam-folder a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f1f1f1;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .newsletterTeam-folder a.active {
+    background: #a37bb6;
+    color: #fff !important;
+  }
+  .page-infectious-workaholic
+    .news-letter-team-wrapper
+    .newsletterTeam-folder
+    ul
+    li,
+  .page-enthusiastic-explorer
+    .news-letter-team-wrapper
+    .newsletterTeam-folder
+    ul
+    li,
+  .page-exuberant-organiser
+    .news-letter-team-wrapper
+    .newsletterTeam-folder
+    ul
+    li,
+  .page-story-teller .news-letter-team-wrapper .newsletterTeam-folder ul li,
+  .page-truth-seeker .news-letter-team-wrapper .newsletterTeam-folder ul li,
+  .page-ace-conceptualist
+    .news-letter-team-wrapper
+    .newsletterTeam-folder
+    ul
+    li,
+  .page-gregarious-hugger
+    .news-letter-team-wrapper
+    .newsletterTeam-folder
+    ul
+    li {
+    list-style: none;
+    padding: 0;
+    border-bottom: none;
+  }
+  .newsletterTeam-folder ul li a {
+    font-size: 16px;
+  }
+  .newsletterTeam-folder ul li {
+    width: auto;
+  }
+  .newsletterTeam-folder ul li:hover {
+  border-left: none !important;
+  transition: none !important;
+}
+.news-letter-team-wrapper .newsletterTeam-folder ul li:hover a {
+    margin-left: 0 !important;
+    transition: all 0.1s ease-in;
+}
+.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder ul {
+    flex-direction: row !important;
+}
+.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder {
+    width: 100% !important;
+}
+.page-gregarious-hugger .news-letter-team-wrapper .newsletterTeam-folder ul li {
+    list-style: none;
+    padding: 0px !important;
+    border-bottom: none !important;
+}
+}
+.newsletterTeam-folder ul li.title:hover {
+  border-left: none !important;
+  transition: none !important;
+}

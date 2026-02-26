@@ -25,8 +25,8 @@ const NewsLetterTeamSidebar = () => {
         <>
             <div className="newsletterTeam-folder">
                 <ul>
-                    <li>
-                        <NavLink to={`/basicPage/editors-collage`}  onClick={(e) => e.preventDefault()}>Meet the Newsletter Team </NavLink>
+                    <li className="title">
+                        Meet the Newsletter Team 
                     </li>
                     {
                         entry.map((item) => {
