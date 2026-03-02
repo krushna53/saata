@@ -14,7 +14,10 @@ const Footer = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <img src="https://images.ctfassets.net/acxjtojz8lp2/6LUbiWFgIrHWIEp2HhBbgK/51141c84018a913c798ac2f79836025d/itaa2.png" alt="logo" />
+                  <img
+                    src="https://images.ctfassets.net/acxjtojz8lp2/6LUbiWFgIrHWIEp2HhBbgK/51141c84018a913c798ac2f79836025d/itaa2.png"
+                    alt="logo"
+                  />
                 </a>
               </div>
             </div>
@@ -55,13 +58,13 @@ const Footer = () => {
                     </Link>
                   </li> */}
                   <li>
-                    <Link to='/page/governance'>Governance</Link>
+                    <Link to="/page/governance">Governance</Link>
                   </li>
                   <li>
                     <Link to="/#contact">Contact Us</Link>
                   </li>
                   <li>
-                    <Link to='/page/refund-policy'>Refund Policy</Link>
+                    <Link to="/page/refund-policy">Refund Policy</Link>
                   </li>
                 </ul>
               </div>
@@ -76,9 +79,11 @@ const Footer = () => {
               {" "}
               <i className="fa-brands fa-facebook"></i>
             </a>
-            <a href="https://www.instagram.com/saata_org/?igshid=MzRlODBiNWFlZA%3D%3D"
-            target="_blank"
-            rel="noreferrer">
+            <a
+              href="https://www.instagram.com/saata_org/?igshid=MzRlODBiNWFlZA%3D%3D"
+              target="_blank"
+              rel="noreferrer"
+            >
               {""}
               <i className="fa-brands fa-instagram"></i>
             </a>
@@ -88,7 +93,8 @@ const Footer = () => {
               rel="noreferrer"
             >
               {" "}
-              <i className="fa-brands fa-twitter"></i>
+              {/* <i className="fa-brands fa-twitter"></i> */}
+              <i class="fa-solid fa-x"></i>
             </a>
             <a
               href="https://www.youtube.com/channel/UCGTMW3BmOElfJNNoUH2x9JA/videos"
@@ -100,7 +106,7 @@ const Footer = () => {
             </a>
           </div>
           <div className="copy_right">
-            <p> © Copyright 2025 SAATA </p>
+            <p> © Copyright {new Date().getFullYear()} SAATA </p>
           </div>
         </div>
       </section>
