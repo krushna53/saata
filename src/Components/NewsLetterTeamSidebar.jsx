@@ -1,49 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import client from "../client";
+import React from "react";
 
-const NewsLetterTeamSidebar = () => {
-    const [entry, setEntry] = useState([]);
+const NewsLetterTeamSidebar = ({ entries, activeSlug, setActiveSlug }) => {
+  return (
+    <div className="newsletterTeam-folder">
+      <ul>
+        <li className="title">Meet the Newsletter Team</li>
 
-    useEffect(() => {
-        const fetchPage = async () => {
-            try {
-                const response = await client.getEntries({
-                    content_type: "newsletterTeam",
-                });
-                console.log(response)
-                if (response.items.length) {
-                    setEntry(response.items);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchPage();
-    }, []);
-    return (
-        <>
-            <div className="newsletterTeam-folder">
-                <ul>
-                    <li className="title">
-                        Meet the Newsletter Team 
-                    </li>
-                    {
-                        entry.map((item) => {
-                            const { slug, title } = item.fields;
-                            return (
-                                <React.Fragment key={slug}>
-                                    <li>
-                                        <NavLink to={`/newsletterTeam/${slug}`}>{title}</NavLink>
-                                    </li>
-                                </React.Fragment>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-        </>
-    )
-}
+        {entries.map((item) => {
+          const { slug, title } = item.fields;
 
-export default NewsLetterTeamSidebar
+          return (
+            <li key={slug}>
+              <a
+                href={`#${slug}`}
+                className={activeSlug === slug ? "active" : ""}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveSlug(slug);
+                  window.location.hash = slug;
+                }}
+              >
+                {title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
+
+export default NewsLetterTeamSidebar;

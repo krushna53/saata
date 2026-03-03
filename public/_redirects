@@ -13,7 +13,6 @@
 
 # Newsletter routes
 /newsletterlist/*    /index.html   200
-/newsletterTeam/*    /index.html   200
 
 # Specific routes
 /gallery    /index.html   200
@@ -27,6 +26,7 @@
 /saata-conference-2025-registration    /index.html   200
 /saata-conference-2025-advertise    /index.html   200
 /certificates-saata-conference-2025    /index.html   200
+/newsletterTeam   /index.html   200
 
 # Final fallback for SPA
 /*    /index.html   200
