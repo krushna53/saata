@@ -34,7 +34,7 @@ const NewsLetterTeamSidebar = () => {
                             return (
                                 <React.Fragment key={slug}>
                                     <li>
-                                        <NavLink to={`/newsletterTeam/${slug}`}>{title}</NavLink>
+                                        <NavLink to={`/newsletterteam/${slug}`}>{title}</NavLink>
                                     </li>
                                 </React.Fragment>
                             )

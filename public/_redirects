@@ -13,7 +13,7 @@
 
 # Newsletter routes
 /newsletterlist/*    /index.html   200
-/newsletterTeam/*    /index.html   200
+/newsletterteam/*    /index.html   200
 
 # Specific routes
 /gallery    /index.html   200

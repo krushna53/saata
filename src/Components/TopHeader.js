@@ -210,7 +210,7 @@ const TopHeader = () => {
                 <ul className="hover">
                   <li>
                     <NavLink
-                      to="/newsletterTeam/truth-seeker"
+                      to="/newsletterteam/truth-seeker"
                       onClick={toggleMenu}
                     >
                       Newsletter Team
