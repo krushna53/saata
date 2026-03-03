@@ -3468,3 +3468,14 @@ select.inner-input {
   margin: 10px 0;
   font-size: 14px;
 }
+
+@media (min-width: 992px) {
+  .newsletterTeam-folder ul li:has(a.active) {
+    border-left: 6px solid #a37bb6;
+    transition: all 0.1s ease-in;
+  }
+  .newsletterTeam-folder ul li a.active{
+  margin-left: 20px;
+    transition: all 0.1s ease-in;
+  }
+}

@@ -96,6 +96,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/newsletterteam"
+  to = "/index.html"
+  status = 200
+  force = true
+  
 # Final fallback for SPA
 [[redirects]]
   from = "/*"

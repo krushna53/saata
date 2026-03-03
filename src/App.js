@@ -46,7 +46,7 @@ function App() {
         <Route exact path='/' element={<Home />} />
         <Route path='page/:slug' element={<BasicPage />} />
         <Route exact path='/newsletterlist/' element={<CurrentandPreviousIssues />} />
-        <Route exact path='/newsletterTeam/:slug' element={<NewsletterTeam />} />
+        <Route exact path='/newsletterteam' element={<NewsletterTeam />} />
         <Route exact path='/gallery' element={<Gallery />} />
         <Route exact path='/membershipregistration' element={<MembershipRegistration />} />
         <Route exact path='/Certifiedmembers' element={<CertifiedMembers />} />
