@@ -577,7 +577,7 @@ select.inner-input:focus{
 
 .input-icons {
   position: absolute;
-  top: 44%;
+  top: 50%;
   right: 6%;
   transform: translateY(-50%);
   font-size: 18px;
@@ -3433,7 +3433,7 @@ li.title {
 }
 
 select.inner-input {
-  /* appearance: none; */
+  appearance: none;
   cursor: pointer;
 }
 
