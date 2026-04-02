@@ -245,15 +245,15 @@ const TopHeader = () => {
                 </ul>
               </li>
               <li className="News_hover">
-                <NavLink to="/page/journals" onClick={toggleMenu}>
+                <NavLink to="/sajta-journals" onClick={toggleMenu}>
                   SAJTA Journals
                 </NavLink>
                 <ul className="hover">
-                  <li>
+                  {/* <li>
                     <NavLink to="/sajta-journals" onClick={toggleMenu}>
                       Current and Previous Issues
                     </NavLink>
-                  </li>
+                  </li> */}
                   <li>
                     <NavLink to="/SAJTATeam" onClick={toggleMenu}>
                       SAJTA Team
