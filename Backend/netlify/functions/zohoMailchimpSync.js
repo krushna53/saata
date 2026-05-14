@@ -92,21 +92,28 @@ function buildMember(sub) {
   const email = (sub.email || sub.customer_email || "").toLowerCase().trim();
   if (!email) return null;
   const { firstName, lastName } = parseName(sub.customer_name || "");
-  return {
-    email_address: email,
-    status_if_new: "subscribed",
-    merge_fields: {
-      FNAME:    firstName,
-      LNAME:    lastName,
-      PHONE:    sub.phone || "",
-      MMERGE5:  String(sub.subscription_id || ""),
-      MMERGE6:  sub.subscription_number || sub.number || "",
-      MMERGE7:  sub.status || "",
-      MMERGE8:  String(sub.amount || sub.sub_total || ""),
-      MMERGE9:  toMailchimpDate(sub.next_billing_at || sub.current_term_ends_at),
-      MMERGE10: sub.plan_name || sub.plan?.name || "",
-    },
-  };
+ return {
+  email_address: email,
+  status_if_new: "subscribed",
+
+  tags: [
+    "active-member-may-2026"
+  ],
+
+  merge_fields: {
+    FNAME: firstName,
+    LNAME: lastName,
+    PHONE: sub.phone || "",
+    MMERGE5: String(sub.subscription_id || ""),
+    MMERGE6: sub.subscription_number || sub.number || "",
+    MMERGE7: sub.status || "",
+    MMERGE8: String(sub.amount || sub.sub_total || ""),
+    MMERGE9: toMailchimpDate(
+      sub.next_billing_at || sub.current_term_ends_at
+    ),
+    MMERGE10: sub.plan_name || sub.plan?.name || "",
+  },
+};
 }
 
 // Batch upsert up to 500 members per call — much faster than individual PUTs
