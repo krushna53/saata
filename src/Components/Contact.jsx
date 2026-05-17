@@ -3,6 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUserAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { FaList } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 
 const Contact = () => {
@@ -11,19 +13,19 @@ const Contact = () => {
   const [subject, setSubject] = useState("");
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
-
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
-
+  const [isSubjectFocused, setIsSubjectFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isTypeFocused, setIsTypeFocused] = useState(false);
 
   const notifySuccess = () => {
     toast.success(
-      "Thank you for contacting saata. We will respond to your message within 3 working days.😊",
+      "Thank you for contacting SAATA. We will respond to your message within 3 working days.😊",
       {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -51,13 +53,7 @@ const Contact = () => {
     const trimmedSubject = subject.trim();
     const trimmedMessage = message.trim();
 
-    if (
-      !trimmedName ||
-      !trimmedEmail ||
-      !trimmedSubject ||
-      !type ||
-      !trimmedMessage
-    ) {
+    if (!trimmedName || !trimmedEmail || !type || !trimmedMessage) {
       setError("⚠️ Please fill in all fields.");
       return;
     }
@@ -163,6 +159,8 @@ const Contact = () => {
               <select
                 className="inner-input"
                 value={type}
+                onFocus={() => setIsTypeFocused(true)}
+                onBlur={() => setIsTypeFocused(false)}
                 onChange={(e) => {
                   setType(e.target.value);
                   setError("");
@@ -188,6 +186,11 @@ const Contact = () => {
                 </option>
                 <option value="Other">Other</option>
               </select>
+              {!isTypeFocused && (
+                <span className="input-icons">
+                  <FaList />
+                </span>
+              )}
             </div>
 
             <div className="input_field">
@@ -198,9 +201,16 @@ const Contact = () => {
                 value={subject}
                 onChange={(e) => {
                   setSubject(e.target.value);
-                  setError("");
                 }}
+                onFocus={() => setIsSubjectFocused(true)}
+                onBlur={() => setIsSubjectFocused(false)}
               />
+
+              {!isSubjectFocused && (
+                <span className="input-icons">
+                  <FaRegCommentDots />
+                </span>
+              )}
             </div>
           </div>
 
