@@ -86,10 +86,17 @@ const TopHeader = () => {
           <li className="Membership menu_item Newsletter">
             <NavLink to="/">Membership</NavLink>
             <ul className="Membership-folder">
-              <li>
+              <li className="News_hover">
                 <NavLink to="/page/membership-details" onClick={toggleMenu}>
                   Membership Details
                 </NavLink>
+                <ul className="hover">
+                  <li>
+                    <NavLink to="/page/update-membership" onClick={toggleMenu}>
+                     Update Membership
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
               <li>
                 <NavLink to="/membershipRegistration" onClick={toggleMenu}>

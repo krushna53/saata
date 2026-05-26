@@ -3479,3 +3479,87 @@ select.inner-input {
     transition: all 0.1s ease-in;
   }
 }
+
+.page-update-membership .about_us_wrapper h2 {
+  font-weight: 700;
+}
+.page-update-membership .about_us_content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 45px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  color: #111;
+}
+.page-update-membership .about_us_content p {
+  font-size: 18px;
+}
+
+.page-update-membership .about_us_content ol {
+  padding-left: 35px;
+  margin-top: 20px;
+  margin-bottom: 35px;
+  counter-reset: item;
+}
+
+.page-update-membership .about_us_content ol li {
+  font-size: 18px;
+  list-style: decimal !important;
+
+}
+.page-update-membership .about_us_content ol li ul li {
+  list-style: disc !important;
+
+}
+.page-update-membership .about_us_content ul {
+  margin-top: 14px;
+  margin-bottom: 10px;
+  padding-left: 28px;
+  list-style-type: disc;
+}
+
+.page-update-membership .about_us_content ul li {
+  margin-bottom: 12px;
+  line-height: 1.8;
+  font-size: 17px;
+  color: #444;
+}
+
+.page-update-membership .about_us_content b,
+.page-update-membership .about_us_content strong {
+  font-weight: 700;
+  color: #111;
+}
+
+.page-update-membership .about_us_content hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 45px 0;
+}
+
+/* Links */
+.page-update-membership .about_us_content a u {
+  color: #a37bb6;
+  text-decoration: underline;
+  transition: 0.3s ease;
+}
+
+.page-update-membership .about_us_content a:hover u {
+  color: #a37bb6;
+}
+
+.page-update-membership .about_us_content li b {
+  display: inline-block;
+  margin-top: 5px;
+  color: #000;
+}
+
+ @media (max-width: 768px) {
+  .page-update-membership .about_us_content h2 {
+    font-size: 24px;
+  }
+.page-update-membership .about_us {
+    max-width: 380px;
+  }
+} 
+  
