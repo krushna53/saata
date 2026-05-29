@@ -92,28 +92,23 @@ function buildMember(sub) {
   const email = (sub.email || sub.customer_email || "").toLowerCase().trim();
   if (!email) return null;
   const { firstName, lastName } = parseName(sub.customer_name || "");
- return {
-  email_address: email,
-  status_if_new: "subscribed",
-
-  tags: [
-    "active-member-may-2026"
-  ],
-
-  merge_fields: {
-    FNAME: firstName,
-    LNAME: lastName,
-    PHONE: sub.phone || "",
-    MMERGE5: String(sub.subscription_id || ""),
-    MMERGE6: sub.subscription_number || sub.number || "",
-    MMERGE7: sub.status || "",
-    MMERGE8: String(sub.amount || sub.sub_total || ""),
-    MMERGE9: toMailchimpDate(
-      sub.next_billing_at || sub.current_term_ends_at
-    ),
-    MMERGE10: sub.plan_name || sub.plan?.name || "",
-  },
-};
+  const isLive = sub.status?.toLowerCase() === "live";
+  return {
+    email_address: email,
+    status_if_new: "subscribed",
+    tags: isLive ? ["live-subscriptions"] : ["expired"],
+    merge_fields: {
+      FNAME: firstName,
+      LNAME: lastName,
+      PHONE: sub.phone || "",
+      MMERGE5: String(sub.subscription_id || ""),
+      MMERGE6: sub.subscription_number || sub.number || "",
+      MMERGE7: sub.status || "",
+      MMERGE8: String(sub.amount || sub.sub_total || ""),
+      MMERGE9: toMailchimpDate(sub.next_billing_at || sub.current_term_ends_at),
+      MMERGE10: sub.plan_name || sub.plan?.name || "",
+    },
+  };
 }
 
 // Batch upsert up to 500 members per call — much faster than individual PUTs
@@ -130,6 +125,40 @@ async function batchUpsertMailchimp(members) {
   const result = await res.json();
   if (!res.ok) throw new Error(result.detail || result.title || `HTTP ${res.status}`);
   return result; // { new_members, updated_members, errors[] }
+}
+
+// Batch upsert only adds tags — this removes the opposite stale tag per member
+async function removeStaleTags(members) {
+  const { MAILCHIMP_AUDIENCE_ID, MAILCHIMP_SERVER } = process.env;
+  const BATCH_SIZE = 20;
+
+  for (let i = 0; i < members.length; i += BATCH_SIZE) {
+    const batch = members.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.map(async (member) => {
+        const isLive = member.tags.includes("live-subscriptions");
+        const tagToRemove = isLive ? "expired" : "live-subscriptions";
+        const hash = crypto.createHash("md5").update(member.email_address).digest("hex");
+
+        try {
+          const res = await fetch(
+            `https://${MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${MAILCHIMP_AUDIENCE_ID}/members/${hash}/tags`,
+            {
+              method: "POST",
+              headers: { Authorization: mailchimpAuth(), "Content-Type": "application/json" },
+              body: JSON.stringify({ tags: [{ name: tagToRemove, status: "inactive" }] }),
+            }
+          );
+          if (!res.ok && res.status !== 204) {
+            const err = await res.json().catch(() => ({}));
+            console.warn(`Tag removal failed for ${member.email_address}: ${err.detail || res.status}`);
+          }
+        } catch (err) {
+          console.warn(`Tag removal error for ${member.email_address}:`, err.message);
+        }
+      })
+    );
+  }
 }
 
 // ── Handler ───────────────────────────────────────────────────────────────────
@@ -159,7 +188,6 @@ exports.handler = async (event) => {
     }
 
     const members = Array.from(emailMap.values());
-
     console.log(`Eligible to sync: ${members.length}, skipped: ${skipped}`);
 
     // Batch upsert in chunks of 500 (Mailchimp limit per call)
@@ -183,6 +211,11 @@ exports.handler = async (event) => {
         console.error("Batch failed:", err.message);
       }
     }
+
+    // Remove stale opposite tags (live-subscriptions from expired members, expired from live members)
+    console.log("Removing stale tags...");
+    await removeStaleTags(members);
+    console.log("Tag cleanup complete");
 
     const summary = { total: subscriptions.length, eligible: members.length, synced, skipped, failed, errors: errors.slice(0, 20) };
     console.log("Sync complete:", JSON.stringify(summary));
