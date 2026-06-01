@@ -3480,30 +3480,20 @@ select.inner-input {
   }
 }
 
-.page-update-membership .about_us_wrapper h2 {
-  font-weight: 700;
-}
 .page-update-membership .about_us_content h2 {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 45px;
-  margin-bottom: 20px;
-  line-height: 1.4;
-  color: #111;
-}
-.page-update-membership .about_us_content p {
-  font-size: 18px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .page-update-membership .about_us_content ol {
   padding-left: 35px;
   margin-top: 20px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
   counter-reset: item;
 }
 
 .page-update-membership .about_us_content ol li {
-  font-size: 18px;
   list-style: decimal !important;
 
 }
@@ -3520,21 +3510,13 @@ select.inner-input {
 
 .page-update-membership .about_us_content ul li {
   margin-bottom: 12px;
-  line-height: 1.8;
-  font-size: 17px;
-  color: #444;
 }
 
-.page-update-membership .about_us_content b,
-.page-update-membership .about_us_content strong {
-  font-weight: 700;
-  color: #111;
-}
 
 .page-update-membership .about_us_content hr {
   border: none;
   border-top: 1px solid #d8d8d8;
-  margin: 45px 0;
+  margin: 30px 0;
 }
 
 /* Links */
@@ -3546,12 +3528,6 @@ select.inner-input {
 
 .page-update-membership .about_us_content a:hover u {
   color: #a37bb6;
-}
-
-.page-update-membership .about_us_content li b {
-  display: inline-block;
-  margin-top: 5px;
-  color: #000;
 }
 
  @media (max-width: 768px) {
