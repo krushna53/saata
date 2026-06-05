@@ -3481,9 +3481,14 @@ select.inner-input {
 }
 
 .page-update-membership .about_us_content h2 {
-  font-size: 16px;
+  font-size: 22px;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-weight: 400;
+  color: #a37bb6;
+}
+.page-update-membership .about_us_content h2 b {
+  font-weight: 500;
 }
 
 .page-update-membership .about_us_content ol {
