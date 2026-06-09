@@ -4,6 +4,7 @@ import client from "../client";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, INLINES, MARKS } from '@contentful/rich-text-types';
 import Faq from '../Components/Faq';
+import PdfViewer from '../Components/PdfViewer';
 
 // Returns true if a node should become a card header.
 // Matches: h2, h3, h4 nodes, AND paragraphs whose text is entirely bold.
@@ -54,10 +55,10 @@ const BasicPage = () => {
   const renderNode = (node) => {
     if (node.nodeType === 'embedded-asset-block' && node.data.target.sys.contentType.sys.id === 'pdf') {
       const { title, file } = node.data.target.fields;
-      const url = file.url;
+      const pdfUrl = `https:${file.url}`;
       return (
-        <div style={{ width: '100%', height: '100vh' }}>
-          <iframe src={url} title={title} style={{ width: '100%', height: '100%' }}></iframe>
+        <div className="custom-rich-text-pdf">
+          <PdfViewer url={pdfUrl} title={title} />
         </div>
       );
     }
@@ -83,10 +84,14 @@ const BasicPage = () => {
           );
         }
         if (file.contentType === 'application/pdf') {
+          const pdfUrl = `https:${url}`;
           return (
             <div className="custom-rich-text-pdf">
-              <iframe src={url} title={title} style={{ width: '100%', height: '100vh' }}></iframe>
-              <p>{description}</p>
+              <iframe
+                src={pdfUrl}
+                title={title}
+                style={{ width: '100%', height: '80vh', border: 'none', borderRadius: '10px' }}
+              />
             </div>
           );
         }
