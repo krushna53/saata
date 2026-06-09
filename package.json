@@ -48,6 +48,7 @@
     "react-helmet": "^6.1.0",
     "react-icons": "^4.9.0",
     "react-loader-spinner": "^5.4.5",
+    "react-pdf": "^10.4.1",
     "react-router-dom": "^6.8.2",
     "react-scripts": "^5.0.1",
     "react-slick": "^0.29.0",
