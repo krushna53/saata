@@ -1,4 +1,4 @@
-.main-container {
+﻿.main-container {
   color: #fff;
 }
 
@@ -1646,20 +1646,25 @@ ul .menu_item:hover > a {
   transition: max-height 0.3s ease;
 }
 .page-memorial-endowment-lecture .about_us_content p,
+.page-memorial-endowment-lecture-2026 .about_us_content p,
 .page-p-k-saru-memorial-endowment-fund .about_us_content p,
 .page-memorial-endowment-lecture .about_us_wrapper h2,
+.page-memorial-endowment-lecture-2026 .about_us_wrapper h2,
 .page-p-k-saru-memorial-endowment-fund .about_us_wrapper h2,
 .page-memorial-endowment-lecture .about_us_wrapper,
+.page-memorial-endowment-lecture-2026 .about_us_wrapper,
 .page-p-k-saru-memorial-endowment-fund .about_us_wrapper {
   text-align: center;
 }
 
 .page-memorial-endowment-lecture .about_us_content p,
+.page-memorial-endowment-lecture-2026 .about_us_content p,
 .page-p-k-saru-memorial-endowment-fund .about_us_content p {
   padding: 6px 0;
 }
 
 .page-memorial-endowment-lecture .about_us_content h5,
+.page-memorial-endowment-lecture-2026 .about_us_content h5,
 .page-p-k-saru-memorial-endowment-fund .about_us_content h5 {
   /*   color: #faf010; */
   padding: 12px 0;
@@ -1667,6 +1672,7 @@ ul .menu_item:hover > a {
 }
 
 .page-memorial-endowment-lecture .about_us_content h6,
+.page-memorial-endowment-lecture-2026 .about_us_content h6,
 .page-p-k-saru-memorial-endowment-fund .about_us_content h6 {
   /*       color: #faf010; */
   padding: 12px 0;
@@ -1872,13 +1878,16 @@ ul .menu_item:hover > a {
   }
 }
 .page-memorial-endowment-lecture .aboutus_parent,
+.page-memorial-endowment-lecture-2026 .aboutus_parent,
 .page-p-k-saru-memorial-endowment-fund .aboutus_parent,
 .page-memorial-endowment-lecture .about_us_content,
+.page-memorial-endowment-lecture-2026 .about_us_content,
 .page-p-k-saru-memorial-endowment-fund .about_us_content {
   text-align: center;
 }
 
 .page-memorial-endowment-lecture .about_us_content p a,
+.page-memorial-endowment-lecture-2026 .about_us_content p a,
 .page-p-k-saru-memorial-endowment-fund .about_us_content p a {
   background: #a37bb6;
   border: none;
@@ -1894,16 +1903,19 @@ ul .menu_item:hover > a {
 }
 @media only screen and (max-width: 768px) {
  .page-memorial-endowment-lecture .about_us,
+  .page-memorial-endowment-lecture-2026 .about_us,
 .page-p-k-saru-memorial-endowment-fund .about_us {
   width: 100%;
 }
 
 .page-memorial-endowment-lecture .about_us_wrapper h2,
+.page-memorial-endowment-lecture-2026 .about_us_wrapper h2,
 .page-p-k-saru-memorial-endowment-fund .about_us_wrapper h2 {
   margin-left: 0;
 }
 
 .page-memorial-endowment-lecture iframe,
+.page-memorial-endowment-lecture-2026 iframe,
 .page-p-k-saru-memorial-endowment-fund iframe {
   max-width: 100%;
 }
@@ -2857,12 +2869,14 @@ ul .menu_item:hover > a {
   color: #fff;
 }
 .page-memorial-endowment-lecture .about_us_img,
+.page-memorial-endowment-lecture-2026 .about_us_img,
 .page-p-k-saru-memorial-endowment-fund .about_us_img {
   max-width: 100%;
   width: 100%;
 }
 
 .page-memorial-endowment-lecture .about_us_img h3,
+.page-memorial-endowment-lecture-2026 .about_us_img h3,
 .page-p-k-saru-memorial-endowment-fund .about_us_img h3 {
   font-size: 18px;
   font-weight: 500;
@@ -2870,6 +2884,7 @@ ul .menu_item:hover > a {
 }
 
 .page-memorial-endowment-lecture .about_us_content i,
+.page-memorial-endowment-lecture-2026 .about_us_content i,
 .page-p-k-saru-memorial-endowment-fund .about_us_content i {
   color: red;
   font-style: normal;
