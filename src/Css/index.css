@@ -1646,13 +1646,10 @@ ul .menu_item:hover > a {
   transition: max-height 0.3s ease;
 }
 .page-memorial-endowment-lecture .about_us_content p,
-.page-memorial-endowment-lecture-2026 .about_us_content p,
 .page-p-k-saru-memorial-endowment-fund .about_us_content p,
 .page-memorial-endowment-lecture .about_us_wrapper h2,
-.page-memorial-endowment-lecture-2026 .about_us_wrapper h2,
 .page-p-k-saru-memorial-endowment-fund .about_us_wrapper h2,
 .page-memorial-endowment-lecture .about_us_wrapper,
-.page-memorial-endowment-lecture-2026 .about_us_wrapper,
 .page-p-k-saru-memorial-endowment-fund .about_us_wrapper {
   text-align: center;
 }
@@ -1670,7 +1667,10 @@ ul .menu_item:hover > a {
   padding: 12px 0;
   font-size: 25px;
 }
-
+.page-memorial-endowment-lecture-2026 .about_us_img h3,
+.page-memorial-endowment-lecture-2026 .about_us_content h6{
+text-align: left;
+}
 .page-memorial-endowment-lecture .about_us_content h6,
 .page-memorial-endowment-lecture-2026 .about_us_content h6,
 .page-p-k-saru-memorial-endowment-fund .about_us_content h6 {
