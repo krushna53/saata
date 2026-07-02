@@ -3552,7 +3552,10 @@ select.inner-input {
 .page-update-membership .about_us_content a:hover u {
   color: #a37bb6;
 }
-
+a[href*="memorial-endowment-lecture-2026"] img {
+   object-fit: contain;
+   background:#a37bb6 ;
+}
  @media (max-width: 768px) {
   .page-update-membership .about_us_content h2 {
     font-size: 24px;
@@ -3560,5 +3563,9 @@ select.inner-input {
 .page-update-membership .about_us {
     max-width: 380px;
   }
+  a[href*="memorial-endowment-lecture-2026"] img {
+   object-fit: unset;
+   background: unset ;
+}
 } 
   
