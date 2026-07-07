@@ -132,6 +132,11 @@ const TopHeader = () => {
                   TA 101 - Program Details
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/page/memorial-endowment-lecture-2026" onClick={toggleMenu}>
+                Memorial Endowment Lecture
+                </NavLink>
+              </li>
               {/* <li>
                 <NavLink to="/page/sajta-event" onClick={toggleMenu}>
                   SAJTA Event
