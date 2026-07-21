@@ -5,7 +5,12 @@ const ZF_SCRIPT_ID = "zoho-zf-widget-script";
 const ZF_SCRIPT_SRC =
   "https://js.zohostatic.com/books/zfwidgets/assets/js/zf-widget.js";
 const WIDGET_CONTAINER_ID = "zf-widget-root-id";
-const MAX_WAIT_MS = 20000;
+// Fixed widget-name token Zoho's script expects as the first arg to
+// ZFWidget.init - NOT the container DOM id (that comes from
+// pricingTableComponentOptions.id / WIDGET_CONTAINER_ID below). Passing
+// the container id here triggers "Invalid Value passed for widget name"
+// inside zf-widget.js.
+const ZF_WIDGET_NAME = "zf-pricing-table";
 const POLL_INTERVAL_MS = 250;
 
 const pricingTableComponentOptions = {
@@ -75,76 +80,15 @@ const pricingTableComponentOptions = {
 
 const MembershipRegistration = () => {
   const [loading, setLoading] = useState(true);
-  const [loadFailed, setLoadFailed] = useState(false);
 
   // Persists across React Strict Mode's mount -> cleanup -> mount replay
   // (same component instance, so refs are not reset), preventing
   // ZFWidget.init from ever being called more than once.
   const initializedRef = useRef(false);
-  const pollIntervalRef = useRef(null);
-  const startTimeRef = useRef(null);
 
+  // Loads the script and calls ZFWidget.init once. Doesn't touch the
+  // spinner - that's handled separately below.
   useEffect(() => {
-    startTimeRef.current = Date.now();
-
-    const stopPolling = () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-        pollIntervalRef.current = null;
-      }
-    };
-
-    const fail = () => {
-      stopPolling();
-      setLoadFailed(true);
-      setLoading(false);
-    };
-
-    const succeed = () => {
-      stopPolling();
-      setLoading(false);
-    };
-
-    const tick = () => {
-      // Already failed/stopped in a previous tick; nothing left to do.
-      if (!pollIntervalRef.current) return;
-
-      if (!initializedRef.current) {
-        // Wait until the widget library has fully attached itself to
-        // window before calling init - no fixed-delay guessing.
-        if (window.ZFWidget && typeof window.ZFWidget.init === "function") {
-          try {
-            window.ZFWidget.init(
-              WIDGET_CONTAINER_ID,
-              pricingTableComponentOptions
-            );
-            initializedRef.current = true;
-          } catch (err) {
-            fail();
-            return;
-          }
-        }
-      } else {
-        const iframe = document.querySelector(
-          `#${WIDGET_CONTAINER_ID} iframe`
-        );
-        if (iframe) {
-          succeed();
-          return;
-        }
-      }
-
-      if (Date.now() - startTimeRef.current >= MAX_WAIT_MS) {
-        fail();
-      }
-    };
-
-    const handleScriptError = () => {
-      fail();
-    };
-
-    // Reuse an already-injected tag (e.g. from a previous mount) instead
-    // of adding a second <script src="..."> to the document.
     let script = document.getElementById(ZF_SCRIPT_ID);
 
     if (!script) {
@@ -156,16 +100,54 @@ const MembershipRegistration = () => {
       document.body.appendChild(script);
     }
 
-    script.addEventListener("error", handleScriptError);
+    const initInterval = setInterval(() => {
+      if (initializedRef.current) {
+        clearInterval(initInterval);
+        return;
+      }
 
-    pollIntervalRef.current = setInterval(tick, POLL_INTERVAL_MS);
-    tick(); // covers the case where ZFWidget is already loaded/ready
+      if (window.ZFWidget && typeof window.ZFWidget.init === "function") {
+        window.ZFWidget.init(ZF_WIDGET_NAME, pricingTableComponentOptions);
+        initializedRef.current = true;
+        clearInterval(initInterval);
+      }
+    }, POLL_INTERVAL_MS);
 
     return () => {
-      script.removeEventListener("error", handleScriptError);
-      stopPolling();
+      clearInterval(initInterval);
     };
   }, []);
+
+ // Show spinner until Zoho iframe is fully loaded
+useEffect(() => {
+  const interval = setInterval(() => {
+    const iframe = document.querySelector("#zf-widget-root-id iframe");
+
+    if (iframe) {
+      clearInterval(interval);
+
+      // Agar iframe pehle hi load ho chuka ho
+      if (
+        iframe.contentDocument?.readyState === "complete" ||
+        iframe.contentWindow
+      ) {
+        setLoading(false);
+      } else {
+        iframe.addEventListener(
+          "load",
+          () => {
+            setLoading(false);
+          },
+          { once: true }
+        );
+      }
+    }
+  }, 500);
+
+  return () => {
+    clearInterval(interval);
+  };
+}, []);
 
   return (
     <>
@@ -173,15 +155,6 @@ const MembershipRegistration = () => {
         <div className="membership-loader">
           <div className="membership-spinner"></div>
           <h3>Please wait while the page loads</h3>
-        </div>
-      )}
-
-      {loadFailed && (
-        <div className="membership-loader">
-          <h3>
-            We couldn't load the membership plans. Please refresh the page or
-            try again later.
-          </h3>
         </div>
       )}
 
