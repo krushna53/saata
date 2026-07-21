@@ -89,63 +89,105 @@ const MembershipRegistration = () => {
   // Loads the script and calls ZFWidget.init once. Doesn't touch the
   // spinner - that's handled separately below.
   useEffect(() => {
-    let script = document.getElementById(ZF_SCRIPT_ID);
+  console.log("MembershipRegistration mounted");
 
-    if (!script) {
-      script = document.createElement("script");
-      script.id = ZF_SCRIPT_ID;
-      script.src = ZF_SCRIPT_SRC;
-      script.type = "text/javascript";
-      script.async = true;
-      document.body.appendChild(script);
+  let script = document.getElementById(ZF_SCRIPT_ID);
+
+  if (!script) {
+    console.log("Creating script...");
+
+    script = document.createElement("script");
+    script.id = ZF_SCRIPT_ID;
+    script.src = ZF_SCRIPT_SRC;
+    script.type = "text/javascript";
+    script.async = true;
+
+    script.onload = () => {
+      console.log("✅ Script Loaded");
+      console.log("ZFWidget:", window.ZFWidget);
+    };
+
+    script.onerror = () => {
+      console.log("❌ Script Failed");
+    };
+
+    document.body.appendChild(script);
+
+    console.log("Script appended:", document.getElementById(ZF_SCRIPT_ID));
+  }
+
+  const initInterval = setInterval(() => {
+    console.log("Polling:", window.ZFWidget);
+
+    if (initializedRef.current) {
+      clearInterval(initInterval);
+      return;
     }
 
-    const initInterval = setInterval(() => {
-      if (initializedRef.current) {
-        clearInterval(initInterval);
-        return;
-      }
+    if (window.ZFWidget && typeof window.ZFWidget.init === "function") {
+      console.log("Calling ZFWidget.init()");
 
-      if (window.ZFWidget && typeof window.ZFWidget.init === "function") {
-        window.ZFWidget.init(ZF_WIDGET_NAME, pricingTableComponentOptions);
-        initializedRef.current = true;
-        clearInterval(initInterval);
-      }
-    }, POLL_INTERVAL_MS);
+      window.ZFWidget.init(
+        ZF_WIDGET_NAME,
+        pricingTableComponentOptions
+      );
 
-    return () => {
+      initializedRef.current = true;
       clearInterval(initInterval);
-    };
-  }, []);
-
- // Show spinner until Zoho iframe is fully loaded
-useEffect(() => {
-  const interval = setInterval(() => {
-    const iframe = document.querySelector("#zf-widget-root-id iframe");
-
-    if (iframe) {
-      clearInterval(interval);
-
-      // Agar iframe pehle hi load ho chuka ho
-      if (
-        iframe.contentDocument?.readyState === "complete" ||
-        iframe.contentWindow
-      ) {
-        setLoading(false);
-      } else {
-        iframe.addEventListener(
-          "load",
-          () => {
-            setLoading(false);
-          },
-          { once: true }
-        );
-      }
     }
   }, 500);
 
+  return () => clearInterval(initInterval);
+}, []);
+
+ // Show spinner until the widget's content has rendered, then hide it
+// shortly after. Waiting for mutations to go fully "quiet" doesn't work
+// here - this widget keeps touching the DOM (hover states etc.) even
+// after the real pricing cards are visible, so that quiet window never
+// arrives and the spinner never hides. Instead: wait for the *first*
+// sign of real content, then hide the spinner a fixed short delay after
+// that (enough time for an empty-wrapper-then-fill swap to finish).
+const RENDER_GRACE_MS = 2000;
+
+useEffect(() => {
+  const container = document.getElementById("zf-widget-root-id");
+  if (!container) return undefined;
+
+  let renderTimer = null;
+  let contentSeen = false;
+
+  const finish = () => {
+    console.log("Widget content ready");
+    setLoading(false);
+    observer.disconnect();
+  };
+
+  const onContentDetected = () => {
+    if (contentSeen) return;
+    contentSeen = true;
+    renderTimer = setTimeout(finish, RENDER_GRACE_MS);
+  };
+
+  const observer = new MutationObserver(() => {
+    if (container.childElementCount > 0) {
+      onContentDetected();
+    }
+  });
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Covers the case where content is already there by the time this
+  // effect runs.
+  if (container.childElementCount > 0) {
+    onContentDetected();
+  }
+
   return () => {
-    clearInterval(interval);
+    observer.disconnect();
+    if (renderTimer) clearTimeout(renderTimer);
   };
 }, []);
 
