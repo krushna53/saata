@@ -3018,7 +3018,7 @@ text-align: left;
   text-decoration: none;
 }
 
-.News_hover:hover .hover,
+.News_hover:hover > .hover,
 .directory:hover .hover {
   display: block;
   left: 100%;

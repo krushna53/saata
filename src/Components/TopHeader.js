@@ -132,33 +132,38 @@ const TopHeader = () => {
                   TA 101 - Program Details
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/page/memorial-endowment-lecture-2026" onClick={toggleMenu}>
-                Memorial Endowment Lecture
-                </NavLink>
-              </li>
               {/* <li>
                 <NavLink to="/page/sajta-event" onClick={toggleMenu}>
                   SAJTA Event
                 </NavLink>
               </li> */}
-              <li>
-                <NavLink to="/page/mll-2026" onClick={toggleMenu}>
-                  MLL 2026
-                </NavLink>
-              </li>
               <li className="News_hover">
-                <NavLink to="/">Past Events</NavLink>
+                <NavLink to="/" onClick={(e) => e.preventDefault()}>Past Events</NavLink>
                 <ul className="hover">
                   <li>
-                    <NavLink to="/page/mll-2025" onClick={toggleMenu}>
-                      MLL 2025
+                    <NavLink to="/page/memorial-endowment-lecture-2026" onClick={toggleMenu}>
+                      Memorial Endowment Lecture
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink to="/page/mll-2024" onClick={toggleMenu}>
-                      MLL 2024
-                    </NavLink>
+                  <li className="News_hover">
+                    <NavLink to="/" onClick={(e) => e.preventDefault()}>MLL</NavLink>
+                    <ul className="hover">
+                      <li>
+                        <NavLink to="/page/mll-2026" onClick={toggleMenu}>
+                          MLL 2026
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/page/mll-2025" onClick={toggleMenu}>
+                          MLL 2025
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/page/mll-2024" onClick={toggleMenu}>
+                          MLL 2024
+                        </NavLink>
+                      </li>
+                    </ul>
                   </li>
                   <li>
                     <NavLink to="/page/saata-conference" onClick={toggleMenu}>
