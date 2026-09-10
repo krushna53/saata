@@ -10,7 +10,7 @@ import CertifiedMembers from "./Pages/CertifiedMembers";
 // import Article from "./Pages/Article";
 // import Articles from "./Pages/ArticleDetail";
 import BasicPage from './Pages/BasicPage'
-import NewsletterTeam from './Pages/NewsletterTeam';
+// import NewsletterTeam from './Pages/NewsletterTeam';
 import CurrentandPreviousIssues from './Components/CurrentandPreviousIssues';
 import Videos from './Components/Videos';
 import SatjaTeam from './Pages/SatjaTeam';
@@ -46,7 +46,7 @@ function App() {
         <Route exact path='/' element={<Home />} />
         <Route path='page/:slug' element={<BasicPage />} />
         <Route exact path='/newsletterlist/' element={<CurrentandPreviousIssues />} />
-        <Route exact path='/newsletterteam' element={<NewsletterTeam />} />
+        {/* <Route exact path='/newsletterteam' element={<NewsletterTeam />} /> */}
         <Route exact path='/gallery' element={<Gallery />} />
         <Route exact path='/membershipregistration' element={<MembershipRegistration />} />
         <Route exact path='/Certifiedmembers' element={<CertifiedMembers />} />
