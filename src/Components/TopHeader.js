@@ -34,14 +34,7 @@ const TopHeader = () => {
             {""}
             <i className="fa-brands fa-instagram"></i>
           </a>
-          <a
-            href="https://twitter.com/saataorg"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {" "}
-            <i className="fa-brands fa-twitter"></i>
-          </a>
+        
           <a
             href="https://www.youtube.com/channel/UCGTMW3BmOElfJNNoUH2x9JA/videos"
             target="_blank"
@@ -225,14 +218,7 @@ const TopHeader = () => {
               <li className="News_hover">
                 <NavLink to="/">Newsletter</NavLink>
                 <ul className="hover">
-                  <li>
-                    <NavLink
-                      to="/newsletterteam"
-                      onClick={toggleMenu}
-                    >
-                      Newsletter Team
-                    </NavLink>
-                  </li>
+                
                   <li>
                     <NavLink to="/newsletterlist/" onClick={toggleMenu}>
                       Current and Previous Issues
@@ -297,21 +283,6 @@ const TopHeader = () => {
               <li>
                 <NavLink to="/page/ai-disclosure-policy" onClick={toggleMenu}>
                   AI Disclosure Policy
-                </NavLink>
-              </li>
-            </ul>
-          </li>
-          <li className="Newsletter menu_item">
-            <NavLink to="/">Resources</NavLink>
-            <ul className="Newsletter-folder">
-              <li>
-                <NavLink to="/" onClick={toggleMenu}>
-                  Articles
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/video" onClick={toggleMenu}>
-                  Videos
                 </NavLink>
               </li>
             </ul>
