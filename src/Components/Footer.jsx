@@ -57,9 +57,9 @@ const Footer = () => {
                   <li>
                     <Link to='/page/governance'>Governance</Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/#contact">Contact Us</Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to='/page/refund-policy'>Refund Policy</Link>
                   </li>
