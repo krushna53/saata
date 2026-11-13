@@ -3300,7 +3300,8 @@ text-align: left;
     width: 100%;
     margin: auto;
 }
-.page-mll-2026 .about_us.about_ta {
+.page-mll-2026 .about_us.about_ta,
+.page-mll-2027 .about_us.about_ta {
     width: 90%;
 }
 }
@@ -3311,7 +3312,8 @@ text-align: left;
 .page-advertise option{
   font-size: 14px;
 }
-.page-mll-2026 .about_us_content p a{
+.page-mll-2026 .about_us_content p a,
+.page-mll-2027 .about_us_content p a{
 color: #a37bb6;
 text-decoration: underline;
 }
