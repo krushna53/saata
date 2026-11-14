@@ -970,3 +970,100 @@ margin: auto;
 margin: auto;
 }
 }
+
+// SAATA BOT – year-wise accordion
+.page-saata-bot {
+  .bot-accordion {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+
+    td,
+    td p,
+    h4 {
+      text-align: left !important;
+    }
+  }
+
+  .bot-accordion-item {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .bot-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+
+    &:hover,
+    &:focus-visible {
+      color: #a37bb6;
+    }
+  }
+
+  .bot-accordion-item.is-open .bot-accordion-header {
+    color: #a37bb6;
+  }
+
+  .bot-accordion-icon {
+    font-size: 22px;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .bot-accordion-panel {
+    padding: 4px 8px 20px;
+  }
+
+  .bot-accordion-section {
+    h4 {
+      font-size: 16px;
+      margin: 10px 0;
+      color: #a37bb6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+
+      td {
+        padding: 8px 12px;
+        border: 1px solid #e5e5e5;
+        vertical-align: top;
+
+        p {
+          padding-bottom: 0;
+          margin: 0;
+        }
+      }
+
+      tr:nth-child(1) td {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .bot-accordion-more {
+    display: block;
+    width: 100%;
+    padding: 16px 8px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #e5e5e5;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #a37bb6;
+    text-align: left;
+  }
+}
