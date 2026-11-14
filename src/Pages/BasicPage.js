@@ -5,6 +5,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, INLINES, MARKS } from '@contentful/rich-text-types';
 import Faq from '../Components/Faq';
 import PdfViewer from '../Components/PdfViewer';
+import BotAccordion from '../Components/BotAccordion';
 
 // Returns true if a node should become a card header.
 // Matches: h2, h3, h4 nodes, AND paragraphs whose text is entirely bold.
@@ -51,6 +52,7 @@ const BasicPage = () => {
   }, [slug]);
 
   const isPathways = slug === 'pathways-to-TA-credentialing';
+  const isBot = slug === 'saata-bot';
 
   const renderNode = (node) => {
     if (node.nodeType === 'embedded-asset-block' && node.data.target.sys.contentType.sys.id === 'pdf') {
@@ -151,7 +153,9 @@ const BasicPage = () => {
         const id = item.sys.id;
         const imageUrl = item?.fields?.image?.fields?.file?.url ?? '';
 
-        const richTextContent = isPathways
+        const richTextContent = isBot
+          ? <BotAccordion description={description} />
+          : isPathways
           ? buildPathwaysContent(description)
           : documentToReactComponents(description, {
               renderNode: {
