@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS } from '@contentful/rich-text-types';
 
@@ -79,8 +79,14 @@ const renderCell = (cell) =>
 
 const BotAccordion = ({ description }) => {
   const years = useMemo(() => buildBotYears(description), [description]);
-  const [openYear, setOpenYear] = useState(null);
+  // Latest year (e.g. 2026) is open by default.
+  const [openYear, setOpenYear] = useState(() => years[0]?.year ?? null);
   const [showMore, setShowMore] = useState(false);
+
+  // If the content changes, open its latest year again.
+  useEffect(() => {
+    setOpenYear(years[0]?.year ?? null);
+  }, [years]);
 
   const recent = years.filter((y) => Number(y.year) >= MORE_CUTOFF_YEAR);
   const older = years.filter((y) => Number(y.year) < MORE_CUTOFF_YEAR);

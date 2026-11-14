@@ -975,8 +975,14 @@ margin: auto;
 .page-saata-bot {
   .bot-accordion {
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
+    margin: 0;
+    text-align: left;
+
+    td,
+    td p,
+    h4 {
+      text-align: left !important;
+    }
   }
 
   .bot-accordion-item {
