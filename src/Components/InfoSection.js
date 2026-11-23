@@ -66,6 +66,42 @@ const InfoSection = () => {
       </a>
       </h3>
       </div> */}
+      <div className="info-container mll-card">
+        <div className="info-body">
+          <span className="mll-badge">Celebrating 20 years of SAATA</span>
+          <h2 className="info-title">MLL 2027</h2>
+          <div className="mll-meta">
+            <span className="mll-meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M3 10h18M8 3v4M16 3v4" />
+              </svg>
+              9–10 January 2027
+            </span>
+            <span className="mll-meta-dot" aria-hidden="true">•</span>
+            <span className="mll-meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
+                <circle cx="12" cy="9.5" r="2.5" />
+              </svg>
+              Montfort College, Bengaluru
+            </span>
+          </div>
+          <p className="mll-theme">
+            “The Many Faces of Confidentiality: Building Trust in a Complex World”
+          </p>
+          <div className="mll-deadline">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            Registration closes <strong>30 November 2026</strong>
+          </div>
+          <Link to="/page/mll-2027">
+            <button className="read-more">Read More</button>
+          </Link>
+        </div>
+      </div>
       {info.map((item, index) => {
         const richTextContent = documentToReactComponents(item.infoDesc, {
           renderNode: {
