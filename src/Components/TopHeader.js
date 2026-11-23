@@ -130,6 +130,11 @@ const TopHeader = () => {
                   SAJTA Event
                 </NavLink>
               </li> */}
+              <li>
+                <NavLink to="/page/mll-2027" onClick={toggleMenu}>
+                  MLL 2027
+                </NavLink>
+              </li>
               <li className="News_hover">
                 <NavLink to="/" onClick={(e) => e.preventDefault()}>Past Events</NavLink>
                 <ul className="hover">
@@ -141,11 +146,6 @@ const TopHeader = () => {
                   <li className="News_hover">
                     <NavLink to="/" onClick={(e) => e.preventDefault()}>MLL</NavLink>
                     <ul className="hover">
-                      <li>
-                        <NavLink to="/page/mll-2027" onClick={toggleMenu}>
-                          MLL 2027
-                        </NavLink>
-                      </li>
                       <li>
                         <NavLink to="/page/mll-2026" onClick={toggleMenu}>
                           MLL 2026

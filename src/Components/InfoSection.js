@@ -66,6 +66,19 @@ const InfoSection = () => {
       </a>
       </h3>
       </div> */}
+      <div className="info-container">
+        <div className="info-body">
+          <h2 className="info-title">MLL 2027</h2>
+          <p className="info-desc mll-desc">
+            <span>9th &amp; 10th January 2027 | Montfort College, Bengaluru</span>
+            <span>Theme: “The Many Faces of Confidentiality: Building Trust in a Complex World”</span>
+            <span>Celebrating 20 years of SAATA. Last date to register: 30 November 2026</span>
+          </p>
+          <Link to="/page/mll-2027">
+            <button className="read-more">Read More</button>
+          </Link>
+        </div>
+      </div>
       {info.map((item, index) => {
         const richTextContent = documentToReactComponents(item.infoDesc, {
           renderNode: {

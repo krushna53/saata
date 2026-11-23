@@ -431,6 +431,10 @@ code {
   color: #6f6f6f;
 }
 
+.info-desc.mll-desc span {
+  display: block;
+}
+
 .read-more {
   padding: 13px 25px;
   font-size: 17px;
@@ -2256,6 +2260,16 @@ text-align: left;
     font-size: 14px;
     max-width: 327px;
     margin: 34px auto 20px auto;
+  }
+
+  /* MLL 2027 home section: narrower so text clears the social icons, tighter lines */
+  .info-desc.mll-desc {
+    max-width: 290px;
+    line-height: 21px;
+  }
+
+  .info-desc.mll-desc span + span {
+    margin-top: 10px;
   }
 
   .read-more {
