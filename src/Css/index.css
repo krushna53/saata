@@ -431,8 +431,93 @@ code {
   color: #6f6f6f;
 }
 
-.info-desc.mll-desc span {
-  display: block;
+/* MLL 2027 card on the home page */
+.info-container.mll-card {
+  background-color: #fff;
+  color: inherit;
+}
+.mll-card .info-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+.mll-card .mll-badge {
+  display: inline-block;
+  background: #f3ecf8;
+  color: #7a4e93;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 20px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.mll-card .info-title {
+  color: #a37bb6;
+  font-size: 56px;
+  line-height: 1.15;
+  margin: 0;
+}
+.mll-card .mll-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 24px;
+  margin-top: 42px;
+  font-size: 18px;
+  color: #555;
+}
+.mll-card .mll-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.mll-card svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mll-card .mll-meta-item svg {
+  color: #8e67a8;
+}
+.mll-card .mll-meta-dot {
+  color: #c4c4c4;
+  font-size: 14px;
+}
+.mll-card .mll-theme {
+  font-size: 26px;
+  font-style: italic;
+  line-height: 1.6;
+  color: #333;
+  max-width: 720px;
+  margin: 28px auto 0;
+}
+.mll-card .mll-deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fbf1f1;
+  color: #8a3b3b;
+  font-size: 17px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  margin: 30px 0 32px;
+}
+.mll-card .mll-deadline strong {
+  margin-left: 4px;
+  font-weight: 600;
+}
+.mll-card .read-more {
+  background: #8e67a8;
+  color: #fff;
+  font-size: 19px;
+  padding: 14px 37px;
 }
 
 .read-more {
@@ -2262,14 +2347,51 @@ text-align: left;
     margin: 34px auto 20px auto;
   }
 
-  /* MLL 2027 home section: narrower so text clears the social icons, tighter lines */
-  .info-desc.mll-desc {
-    max-width: 290px;
-    line-height: 21px;
+  /* MLL 2027 card on mobile: smaller type, side padding clears the social icons */
+  .mll-card .info-body {
+    padding: 0 40px;
   }
 
-  .info-desc.mll-desc span + span {
-    margin-top: 10px;
+  .mll-card .mll-badge {
+    font-size: 13px;
+    padding: 5px 14px;
+    margin-bottom: 12px;
+  }
+
+  .mll-card .info-title {
+    font-size: 36px;
+  }
+
+  .mll-card .mll-meta {
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 30px;
+    font-size: 14px;
+  }
+
+  .mll-card .mll-meta-dot {
+    display: none;
+  }
+
+  .mll-card svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mll-card .mll-theme {
+    font-size: 17px;
+    margin-top: 18px;
+  }
+
+  .mll-card .mll-deadline {
+    font-size: 13px;
+    padding: 8px 14px;
+    margin: 20px 0 22px;
+  }
+
+  .mll-card .read-more {
+    font-size: 13px;
+    padding: 11px 24px;
   }
 
   .read-more {
